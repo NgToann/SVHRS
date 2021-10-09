@@ -383,7 +383,7 @@
     <system:String x:Key="workerCheckInTitle">SCAN GIỜ VÀO</system:String>
     <system:String x:Key="workerCheckOutTitle">SCAN GIỜ RA</system:String>
     <system:String x:Key="workerCheckInScanCardId">Xin Mời Quẹt Thẻ</system:String>
-    <system:String x:Key="workerCheckInLblNotYetCheckOut">Chưa scan giờ ra ngày</system:String>
+    <system:String x:Key="workerCheckInLblNotYetCheckOut">Did not complete the Covid test</system:String>
     <system:String x:Key="menuWorkerCheckIn">1. Scan Giờ Vào</system:String>
     <system:String x:Key="menuWorkerCheckOut">2. Scan Giờ Ra</system:String>
     <system:String x:Key="menuReportCheckInOut">Báo Cáo Giờ Ra, Vào (Scan Thẻ)</system:String>

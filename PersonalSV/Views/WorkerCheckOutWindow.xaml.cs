@@ -105,10 +105,9 @@ namespace PersonalSV.Views
             try
             {
                 grDisplay.DataContext = record;
-                brDisplay.Background = Brushes.LightGreen;
+                //brDisplay.Background = Brushes.LightGreen;
 
                 WorkerCheckInController.Insert(record);
-                
                 SetTxtDefault();
             }
             catch (Exception ex)

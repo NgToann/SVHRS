@@ -149,7 +149,7 @@ namespace PersonalSV.Views
             try
             {
                 grDisplay.DataContext = record;
-                brDisplay.Background = Brushes.LightGreen;
+                brDisplay.Background = Brushes.Green;
                 WorkerCheckInController.Insert(record);
                 sources.Add(record);
                 dgWorkerCheckIn.ItemsSource = sources;

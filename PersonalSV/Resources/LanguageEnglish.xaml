@@ -387,9 +387,9 @@
     <system:String x:Key="workerCheckInTitle">CHECK IN</system:String>
     <system:String x:Key="workerCheckOutTitle">CHECK OUT</system:String>
     <system:String x:Key="workerCheckInScanCardId">Scan CardID</system:String>
-    <system:String x:Key="workerCheckInLblNotYetCheckOut">Not yet checkout</system:String>
+    <system:String x:Key="workerCheckInLblNotYetCheckOut">Did not complete the Covid test</system:String>
     <system:String x:Key="menuWorkerCheckIn">1. Worker Check In</system:String>
-    <system:String x:Key="menuWorkerCheckOut">2. Worker Out In</system:String>
+    <system:String x:Key="menuWorkerCheckOut">2. Worker Check Out</system:String>
     <system:String x:Key="menuReportCheckInOut">Report Scan Time In,Out</system:String>
     <system:String x:Key="reportCheckInOutWindowTitle">SV-HRS Report Scan Time In,Out</system:String>
     
