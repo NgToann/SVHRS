@@ -219,6 +219,7 @@
     <system:String x:Key="dailyAttendanceChart">   Chart   </system:String>
     <system:String x:Key="dailyAttendanceCheckDisplayChart">Display Chart</system:String>
     
+    
     <!--Leave Day Window-->
     <system:String x:Key="leaveDayTotalDay">Total Day</system:String>
     <system:String x:Key="leaveDayRemark">Remark</system:String>
@@ -288,6 +289,7 @@
     <system:String x:Key="commonDatePickerOverTime">Over Time</system:String>
     <system:String x:Key="commonDatePickerTimeOutLimit">Timeout Limit</system:String>
     <system:String x:Key="commonTime">Record Time</system:String>
+    <system:String x:Key="commonCheckType">Check Type</system:String>
     <system:String x:Key="commonDatePickerRemarks">Remarks</system:String>
     
     <!--Common TextBlock-->
@@ -379,6 +381,22 @@
     <system:String x:Key="dayOfWeekSaturday">Saturday</system:String>
     <system:String x:Key="dayOfWeekSunday">Sunday</system:String>
     
+    <!--Worker Check In Window-->
+    <system:String x:Key="workerCheckInWindowTitle">SV-HRS Worker Check In</system:String>
+    <system:String x:Key="workerCheckOutWindowTitle">SV-HRS Worker Check Out</system:String>
+    <system:String x:Key="workerCheckInTitle">CHECK IN</system:String>
+    <system:String x:Key="workerCheckOutTitle">CHECK OUT</system:String>
+    <system:String x:Key="workerCheckInScanCardId">Scan CardID</system:String>
+    <system:String x:Key="workerCheckInLblNotYetCheckOut">Not yet checkout</system:String>
+    <system:String x:Key="menuWorkerCheckIn">1. Worker Check In</system:String>
+    <system:String x:Key="menuWorkerCheckOut">2. Worker Out In</system:String>
+    <system:String x:Key="menuReportCheckInOut">Report Scan Time In,Out</system:String>
+    <system:String x:Key="reportCheckInOutWindowTitle">SV-HRS Report Scan Time In,Out</system:String>
+    
+    <system:String x:Key="reportCheckInOutOption">Option</system:String>
+    <system:String x:Key="reportRadCheckIn">Check In</system:String>
+    <system:String x:Key="reportRadCheckOut">Check Out</system:String>
+    <system:String x:Key="reportRadAll">All</system:String>
     
     
 </ResourceDictionary>

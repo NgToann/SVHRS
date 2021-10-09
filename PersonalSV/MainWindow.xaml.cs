@@ -172,6 +172,42 @@ namespace PersonalSV
             window.Show();
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (account.IsCovidTest)
+            {
+                miCovidTest.IsEnabled = true;
+                miManager.IsEnabled = false;
+                miSalary.IsEnabled = false;
+                miReports.IsEnabled = false;
+            }
+            if (account.IsPersonel)
+            {
+                miCovidTest.IsEnabled = true;
+                miManager.IsEnabled = true;
+                miSalary.IsEnabled = true;
+                miReports.IsEnabled = true;
+            }
+        }
+
+        private void miWorkerCheckIn_Click(object sender, RoutedEventArgs e)
+        {
+            WorkerCheckInWindow window = new WorkerCheckInWindow();
+            window.ShowDialog();
+        }
+
+        private void miWorkerCheckOut_Click(object sender, RoutedEventArgs e)
+        {
+            WorkerCheckOutWindow window = new WorkerCheckOutWindow();
+            window.ShowDialog();
+        }
+
+        private void miReportScanTimeInOut_Click(object sender, RoutedEventArgs e)
+        {
+            WorkerCheckInReportWindow window = new WorkerCheckInReportWindow();
+            window.Show();
+        }
+
         //private void miLeaveWithReason_Click(object sender, RoutedEventArgs e)
         //{
         //    //AbsenteesReasonWindow window = new AbsenteesReasonWindow();

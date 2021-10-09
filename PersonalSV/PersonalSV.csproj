@@ -101,6 +101,7 @@
     <Compile Include="Controllers\AddressController.cs" />
     <Compile Include="Controllers\AttendanceInforController.cs" />
     <Compile Include="Controllers\AttendanceRecordController.cs" />
+    <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\DepartmentController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\EmployeeFaceController.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="Controllers\PositionController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\SourceController.cs" />
+    <Compile Include="Controllers\WorkerCheckInController.cs" />
     <Compile Include="Controllers\WorkerLeaveDetailController.cs" />
     <Compile Include="Controllers\WorkerRemarksController.cs" />
     <Compile Include="Controllers\WorkingShiftController.cs" />
@@ -156,6 +158,8 @@
     <Compile Include="Models\LeaveDayTotalModel.cs" />
     <Compile Include="Models\LeaveWithReasonModel.cs" />
     <Compile Include="Models\MissingRecordTimeModel.cs" />
+    <Compile Include="Models\PrivateDefineModel.cs" />
+    <Compile Include="Models\WorkerCheckInModel.cs" />
     <Compile Include="Models\WorkerLeaveDetailModel.cs" />
     <Compile Include="Models\WorkerRemarkModel.cs" />
     <Compile Include="ViewModels\EmployeeViewModel.cs" />
@@ -252,6 +256,15 @@
     </Compile>
     <Compile Include="Views\Report2020Window.xaml.cs">
       <DependentUpon>Report2020Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WorkerCheckInReportWindow.xaml.cs">
+      <DependentUpon>WorkerCheckInReportWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WorkerCheckInWindow.xaml.cs">
+      <DependentUpon>WorkerCheckInWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WorkerCheckOutWindow.xaml.cs">
+      <DependentUpon>WorkerCheckOutWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WorkingDaySummaryReportWindow.xaml.cs">
       <DependentUpon>WorkingDaySummaryReportWindow.xaml</DependentUpon>
@@ -401,6 +414,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Report2020Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WorkerCheckInReportWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WorkerCheckInWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WorkerCheckOutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

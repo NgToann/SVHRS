@@ -376,4 +376,22 @@
     <system:String x:Key="dayOfWeekFriday">Thứ Sáu</system:String>
     <system:String x:Key="dayOfWeekSaturday">Thứ Bảy</system:String>
     <system:String x:Key="dayOfWeekSunday">Chủ Nhật</system:String>
+    
+    <!--Worker Check In Window-->
+    <system:String x:Key="workerCheckInWindowTitle">SV-HRS Scan giờ vào</system:String>
+    <system:String x:Key="workerCheckOutWindowTitle">SV-HRS Scan giờ ra</system:String>
+    <system:String x:Key="workerCheckInTitle">SCAN GIỜ VÀO</system:String>
+    <system:String x:Key="workerCheckOutTitle">SCAN GIỜ RA</system:String>
+    <system:String x:Key="workerCheckInScanCardId">Xin Mời Quẹt Thẻ</system:String>
+    <system:String x:Key="workerCheckInLblNotYetCheckOut">Chưa scan giờ ra ngày</system:String>
+    <system:String x:Key="menuWorkerCheckIn">1. Scan Giờ Vào</system:String>
+    <system:String x:Key="menuWorkerCheckOut">2. Scan Giờ Ra</system:String>
+    <system:String x:Key="menuReportCheckInOut">Báo Cáo Giờ Ra, Vào (Scan Thẻ)</system:String>
+    <system:String x:Key="reportCheckInOutWindowTitle">SV-HRS  Báo Cáo Giờ Ra, Vào (Scan Thẻ)</system:String>
+    
+    <system:String x:Key="reportCheckInOutOption">Tùy Chọn</system:String>
+    <system:String x:Key="reportRadCheckIn">Giờ Vào</system:String>
+    <system:String x:Key="reportRadCheckOut">Giờ Ra</system:String>
+    <system:String x:Key="reportRadAll">Tất Cả</system:String>
+    
 </ResourceDictionary>

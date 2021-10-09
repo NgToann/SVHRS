@@ -1,15 +1,18 @@
 ﻿
 
-FF:\SV PROJECT\HRS\Original_11 Add Missing RecordTime\PersonalSV\Views\AddUpdateEmployeeWindow_1.xaml;;
-FF:\SV PROJECT\HRS\Original_11 Add Missing RecordTime\PersonalSV\Views\ChangeEmployeeCodeWindow_1.xaml;;
-FF:\SV PROJECT\HRS\Original_11 Add Missing RecordTime\PersonalSV\Views\CheckOutWindow.xaml;;
-FF:\SV PROJECT\HRS\Original_11 Add Missing RecordTime\PersonalSV\Views\LeaveWithSalaryWindow.xaml;;
-FF:\SV PROJECT\HRS\Original_11 Add Missing RecordTime\PersonalSV\Views\LoginWindow.xaml;;
-FF:\SV PROJECT\HRS\Original_11 Add Missing RecordTime\PersonalSV\Views\MissingRecordTimeWindow.xaml;;
-FF:\SV PROJECT\HRS\Original_11 Add Missing RecordTime\PersonalSV\Views\Report2020Window.xaml;;
-FF:\SV PROJECT\HRS\Original_11 Add Missing RecordTime\PersonalSV\Views\WorkingShiftDetailWindow.xaml;;
-FF:\SV PROJECT\HRS\Original_11 Add Missing RecordTime\PersonalSV\Views\EditWorkingShiftWindow.xaml;;
-FF:\SV PROJECT\HRS\Original_11 Add Missing RecordTime\PersonalSV\Views\EmployeeListWindow.xaml;;
-FF:\SV PROJECT\HRS\Original_11 Add Missing RecordTime\PersonalSV\Views\EmployeeChartWindow.xaml;;
-FF:\SV PROJECT\HRS\Original_11 Add Missing RecordTime\PersonalSV\Views\ImportRemarksWorkerWindow.xaml;;
+FC:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\Views\AddUpdateEmployeeWindow_1.xaml;;
+FC:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\Views\ChangeEmployeeCodeWindow_1.xaml;;
+FC:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\Views\CheckOutWindow.xaml;;
+FC:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\Views\EmployeeChartWindow.xaml;;
+FC:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\Views\EmployeeListWindow.xaml;;
+FC:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\Views\ImportRemarksWorkerWindow.xaml;;
+FC:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\Views\LeaveWithSalaryWindow.xaml;;
+FC:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\Views\LoginWindow.xaml;;
+FC:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\Views\MissingRecordTimeWindow.xaml;;
+FC:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\Views\Report2020Window.xaml;;
+FC:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\Views\WorkingShiftDetailWindow.xaml;;
+FC:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\Views\EditWorkingShiftWindow.xaml;;
+FC:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\Views\WorkerCheckInWindow.xaml;;
+FC:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\Views\WorkerCheckOutWindow.xaml;;
+FC:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\Views\WorkerCheckInReportWindow.xaml;;
 
