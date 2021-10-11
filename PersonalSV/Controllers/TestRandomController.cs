@@ -43,5 +43,57 @@ namespace PersonalSV.Controllers
                 return false;
             }
         }
+        /// <summary>
+        /// Update Test Random Record
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="option">1: update TimeIn, 2: update TimeOut, 3: Update Result</param>
+        /// <returns></returns>
+        public static bool Update(TestRandomModel model, int option)
+        {
+            var @Id = new SqlParameter("@Id", model.Id);
+            var @Result = new SqlParameter("@Result", model.Result);
+            var @PersonConfirm = new SqlParameter("@PersonConfirm", model.PersonConfirm);
+            var @Remark = new SqlParameter("@Remark", model.Remark);
+            var @TimeIn = new SqlParameter("@TimeIn", model.TimeIn);
+            var @TimeOut = new SqlParameter("@TimeOut", model.TimeOut);
+            var @Status = new SqlParameter("@Status", model.Status);
+
+            using (var db = new PersonalDataEntities())
+            {
+                db.CommandTimeout = 45;
+                if (option == 1)
+                {
+                    if (db.ExecuteStoreCommand("EXEC spm_UpdateTestRandomTimeInById @Id, @TimeIn, @Status", @Id, @TimeIn, @Status) >= 1)
+                        return true;
+                }
+                else if (option == 2)
+                {
+                    if (db.ExecuteStoreCommand("EXEC spm_UpdateTestRandomTimeOutById @Id, @TimeOut, @Status", @Id, @TimeOut, @Status) >= 1)
+                        return true;
+                }
+                else if (option == 3)
+                {
+                    if (db.ExecuteStoreCommand("EXEC spm_UpdateTestRandomResultById @Id, @Result, @PersonConfirm, @Remark, @Status",
+                                                                                    @Id, @Result, @PersonConfirm, @Remark, @Status) >= 1)
+                        return true;
+                }
+                return false;
+
+            }
+        }
+        public static bool DeleteRecord(TestRandomModel model)
+        {
+            var @Id = new SqlParameter("@Id", model.Id);
+            using (var db = new PersonalDataEntities())
+            {
+                db.CommandTimeout = 45;
+
+                if (db.ExecuteStoreCommand("EXEC spm_DeleteTestRandomById @Id",
+                                                                          @Id) >= 1)
+                    return true;
+                return false;
+            }
+        }
     }
 }

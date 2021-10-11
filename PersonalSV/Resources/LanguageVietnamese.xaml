@@ -390,6 +390,9 @@
     <system:String x:Key="reportCheckInOutWindowTitle">SV-HRS  Báo Cáo Giờ Ra, Vào (Scan Thẻ)</system:String>
     
     <system:String x:Key="workerCheckInMessageNotPriority">KHÔNG CÓ TRONG DANH SÁCH ĐI LÀM</system:String>
+    <system:String x:Key="workerCheckInMessageExistInF0List">CÓ TRONG DANH SÁCH F0</system:String>
+    <system:String x:Key="workerCheckInMessageDoTheCovidTest">Do The Covid Test</system:String>
+    <system:String x:Key="workerCheckOutMessageDoNotScan">Do Not Scan</system:String>
     
     <system:String x:Key="reportCheckInOutOption">Tùy Chọn</system:String>
     <system:String x:Key="reportRadCheckIn">Giờ Vào</system:String>
@@ -413,6 +416,7 @@
     <system:String x:Key="testRandomInfoRound">Vòng</system:String>
     <system:String x:Key="testRandomInfoTotalWorker">Tổng số</system:String>
     <system:String x:Key="testRandomInfoCurrent">Hiện tại</system:String>
+    <system:String x:Key="testRandomInfoRandomRatio">Tỷ Lệ</system:String>
     
     <system:String x:Key="testRequestListWindowTitle">SV-HRS Danh Sách Test</system:String>
     <system:String x:Key="testRequestListHeader">DANH SÁCH CẦN TEST NHANH</system:String>

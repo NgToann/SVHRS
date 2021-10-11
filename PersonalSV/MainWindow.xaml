@@ -118,7 +118,7 @@
                 </MenuItem.Header>
                 <MenuItem x:Name="miWorkerCheckIn" Header="{DynamicResource ResourceKey=menuWorkerCheckIn}" Click="miWorkerCheckIn_Click"/>
                 <MenuItem x:Name="miWorkerCheckOut" Header="{DynamicResource ResourceKey=menuWorkerCheckOut}" Click="miWorkerCheckOut_Click"/>
-                <MenuItem x:Name="miTestCovidRandom" Header="3. Test Random" Click="miTestCovidRandom_Click" Visibility="Collapsed"/>
+                <MenuItem x:Name="miTestCovidRandom" Header="3. Test Random" Click="miTestCovidRandom_Click"/>
             </MenuItem>
             <MenuItem Padding="0,2,10,2">
                 <MenuItem.Header>

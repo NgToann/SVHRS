@@ -32,7 +32,7 @@ namespace PersonalSV.Views
         List<TestRandomModel> testRandomList;
         List<TestRandomModel> testRequestListToDay;
         private DateTime toDay = DateTime.Now.Date;
-        private string lblInfoTestDate = "", lblInfoTerm = "", lblInfoRound = "", lblInfoTotalWorker = "", lblInfoCurrent = "", lblResourceNotFound = "", lblResourceTime = "", lblResouceVaccine = "", lblResouceVaccineNull = "", lblRequireTest = "", lblResouceWelcome = "", lblResourceHeader = "";
+        private string lblInfoRatio = "", lblInfoTestDate = "", lblInfoTerm = "", lblInfoRound = "", lblInfoTotalWorker = "", lblInfoCurrent = "", lblResourceNotFound = "", lblResourceTime = "", lblResouceVaccine = "", lblResouceVaccineNull = "", lblRequireTest = "", lblResouceWelcome = "", lblResourceHeader = "";
         public TestRandomWindow()
         {
             employeeList = new List<EmployeeModel>();
@@ -60,7 +60,7 @@ namespace PersonalSV.Views
             lblInfoRound = LanguageHelper.GetStringFromResource("testRandomInfoRound");
             lblInfoTotalWorker = LanguageHelper.GetStringFromResource("testRandomInfoTotalWorker");
             lblInfoCurrent = LanguageHelper.GetStringFromResource("testRandomInfoCurrent");
-
+            lblInfoRatio = LanguageHelper.GetStringFromResource("testRandomInfoRandomRatio");
 
             InitializeComponent();
         }
@@ -236,14 +236,31 @@ namespace PersonalSV.Views
             var firstTestRequest = testRequestListToDay.FirstOrDefault();
             var testInfo = new TestDisplayInfo
             {
-                TestDate = string.Format("{0}: {1:dd/MM/yyyy}", lblInfoTestDate ,firstTestRequest.TestDate),
-                Term = String.Format("{0}: {1}", lblInfoTerm ,firstTestRequest.Term),
+                TestDate = string.Format("{0}: {1:dd/MM/yyyy}", lblInfoTestDate, firstTestRequest.TestDate),
+                Term = String.Format("{0}: {1}", lblInfoTerm, firstTestRequest.Term),
                 Round = String.Format("{0}: {1}", lblInfoRound, firstTestRequest.Round),
                 TotalRequestWorker = String.Format("{0}: {1}", lblInfoTotalWorker, testRequestListToDay.Count()),
                 CurrentScan = "",
+                RandomRatio = String.Format("{0}: {1} %", lblInfoRatio, defModel.TestRandomRatio)
             };
             grTestInfo.DataContext = testInfo;
+            UpdateCurrentScanned(testRequestListToDay);
         }
+        
+        private void UpdateCurrentScanned(List<TestRandomModel> testRequestToday)
+        {
+            var total = testRequestToday.Count();
+            var scanned = testRequestToday.Where(w => !String.IsNullOrEmpty(w.TimeIn)).ToList();
+
+            var currentInfoDisplay = grTestInfo.DataContext as TestDisplayInfo;
+            if (currentInfoDisplay != null)
+            {
+                currentInfoDisplay.CurrentScan = String.Format("{0}: {1} / {2}", lblInfoCurrent, scanned.Count(), total);
+            }
+            grTestInfo.DataContext = null;
+            grTestInfo.DataContext = currentInfoDisplay;
+        }
+
         private void btnRefresh_Click(object sender, RoutedEventArgs e)
         {
             if (bwLoad.IsBusy == false)
@@ -280,7 +297,8 @@ namespace PersonalSV.Views
                 {
                     var empNotFound = new DisplayInfo
                     {
-                        EmployeeName = lblResourceNotFound
+                        EmployeeName = findWhat,
+                        TimeDisplay = lblResourceNotFound
                     };
                     brDisplay.DataContext = empNotFound;
                     SetTxtDefault();
@@ -296,12 +314,27 @@ namespace PersonalSV.Views
                         VaccineStatus = string.Format("{0}: {1}", lblResouceVaccine, vaccinceStatus),
                         RequireTest = lblRequireTest,
                         TimeDisplay = string.Format("{0} {1:hh:mm}", lblResourceTime, DateTime.Now),
-                        Time = string.Format("{0:hh:mm}", DateTime.Now)
+                        TimeIn = string.Format("{0:hh:mm}", DateTime.Now),
+                        IdDisplay = string.Format("testId: {0}", testRequestByEmpId.Id)
                     };
 
+                    var updateTestModelById = testRequestListToDay.FirstOrDefault(f => f.EmployeeCode == testRequestByEmpId.EmployeeCode);
+                    updateTestModelById.TimeIn = displayRequireTestInfo.TimeIn;
+                    updateTestModelById.Status = "Scanned";
 
-                    brDisplay.DataContext = displayRequireTestInfo;
-                    SetTxtDefault();
+                    try
+                    {
+                        TestRandomController.Update(updateTestModelById, 1);
+                        brDisplay.DataContext = displayRequireTestInfo;
+                        UpdateCurrentScanned(testRequestListToDay);
+
+                        SetTxtDefault();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message.ToString());
+                        SetTxtDefault();                       
+                    }
                 }
                 else
                 {
@@ -313,7 +346,7 @@ namespace PersonalSV.Views
                         VaccineStatus = string.Format("{0}: {1}", lblResouceVaccine, vaccinceStatus),
                         RequireTest = lblResouceWelcome,
                         TimeDisplay = string.Format("{0} {1:hh:mm}", lblResourceTime, DateTime.Now),
-                        Time = string.Format("{0:hh:mm}", DateTime.Now)
+                        TimeIn = string.Format("{0:hh:mm}", DateTime.Now)
                     };
 
                     brDisplay.DataContext = displayWelcomeInfo;
@@ -330,7 +363,7 @@ namespace PersonalSV.Views
         private void hlViewWorkerList_Click(object sender, RoutedEventArgs e)
         {
             var sources = dgWorkerNeedToTestList.ItemsSource.OfType<EmployeeModel>().ToList();
-            TestRequestListWindow window = new TestRequestListWindow(sources);
+            TestRequestListWindow window = new TestRequestListWindow(sources, testRequestListToDay);
             window.ShowDialog();
             SetTxtDefault();
         }
@@ -341,11 +374,12 @@ namespace PersonalSV.Views
         }
         private class DisplayInfo
         {
+            public string IdDisplay { get; set; }
             public string EmployeeName { get; set; }
             public string DepartmentName { get; set; }
             public string VaccineStatus { get; set; }
             public string RequireTest { get; set; }
-            public string Time { get; set; }
+            public string TimeIn { get; set; }
             public string TimeDisplay { get; set; }
         }
         
@@ -354,7 +388,7 @@ namespace PersonalSV.Views
             public string TestDate { get; set; }
             public string Term { get; set; }
             public string Round { get; set; }
-
+            public string RandomRatio { get; set; }
             public string TotalRequestWorker { get; set; }
             public string CurrentScan { get; set; }
         }

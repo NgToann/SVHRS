@@ -393,7 +393,10 @@
     <system:String x:Key="menuReportCheckInOut">Report Scan Time In,Out</system:String>
     <system:String x:Key="reportCheckInOutWindowTitle">SV-HRS Report Scan Time In,Out</system:String>
     
-    <system:String x:Key="workerCheckInMessageNotPriority">Not Exist in Priority List</system:String>
+    <system:String x:Key="workerCheckInMessageNotPriority">Not Exist in Work List</system:String>
+    <system:String x:Key="workerCheckInMessageExistInF0List">Exist in F0 List</system:String>
+    <system:String x:Key="workerCheckInMessageDoTheCovidTest">Do The Covid Test</system:String>
+    <system:String x:Key="workerCheckOutMessageDoNotScan">Do Not Scan</system:String>
     
     <system:String x:Key="reportCheckInOutOption">Option</system:String>
     <system:String x:Key="reportRadCheckIn">Check In</system:String>
@@ -415,6 +418,7 @@
     <system:String x:Key="testRandomInfoRound">Round</system:String>
     <system:String x:Key="testRandomInfoTotalWorker">Total Worker</system:String>
     <system:String x:Key="testRandomInfoCurrent">Current</system:String>
+    <system:String x:Key="testRandomInfoRandomRatio">Ratio</system:String>
     
     
     <system:String x:Key="testRequestListWindowTitle">SV-HRS Test Request List</system:String>

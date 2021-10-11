@@ -117,6 +117,7 @@
     <Compile Include="Controllers\WorkerLeaveDetailController.cs" />
     <Compile Include="Controllers\WorkerRemarksController.cs" />
     <Compile Include="Controllers\WorkingShiftController.cs" />
+    <Compile Include="Controllers\WorkListController.cs" />
     <Compile Include="DataSets\AttendanceRecordDataSet.cs">
       <DependentUpon>AttendanceRecordDataSet.xsd</DependentUpon>
     </Compile>
@@ -162,9 +163,11 @@
     <Compile Include="Models\PrivateDefineModel.cs" />
     <Compile Include="Models\TestRandomModel.cs" />
     <Compile Include="Models\WorkerCheckInModel.cs" />
+    <Compile Include="Models\WorkerF0Model.cs" />
     <Compile Include="Models\WorkerLeaveDetailModel.cs" />
     <Compile Include="Models\WorkerPriorityModel.cs" />
     <Compile Include="Models\WorkerRemarkModel.cs" />
+    <Compile Include="Models\WorkListModel.cs" />
     <Compile Include="ViewModels\EmployeeViewModel.cs" />
     <Compile Include="Models\EnumIsEditable.cs" />
     <Compile Include="Models\OverTimeLimitModel.cs" />

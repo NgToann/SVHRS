@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using PersonalSV.Models;
+using System.Linq;
 
 namespace PersonalSV.Views
 {
@@ -11,14 +13,22 @@ namespace PersonalSV.Views
     public partial class TestRequestListWindow : Window
     {
         List<EmployeeModel> sources;
-        public TestRequestListWindow(List<EmployeeModel> sources)
+        List<TestRandomModel> testRequestToday;
+        public TestRequestListWindow(List<EmployeeModel> sources, List<TestRandomModel> testRequestToday)
         {
             this.sources = sources;
+            this.testRequestToday = testRequestToday;
             InitializeComponent();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            foreach (var item in sources)
+            {
+                var testRequestByEmpId = testRequestToday.FirstOrDefault(f => f.EmployeeCode == item.EmployeeCode);
+                if (testRequestByEmpId != null)
+                    item.TestRandomTimeIn = testRequestByEmpId.TimeIn;
+            }
             dgTestRequest.ItemsSource = sources;
             dgTestRequest.Items.Refresh();
         }

@@ -27,7 +27,9 @@ namespace PersonalSV.Views
         DispatcherTimer clock;
         BackgroundWorker bwLoad;
         List<EmployeeModel> employeeList;
-        private string lblResourceNotFound = "";
+        List<WorkListModel> workList;
+        private string lblResourceNotFound = "", lblNotExistInWorkListAlert = "", lblDoNotScan="";
+        private DateTime toDay = DateTime.Now.Date;
         
         public WorkerCheckOutWindow()
         {
@@ -37,8 +39,11 @@ namespace PersonalSV.Views
 
             
             employeeList = new List<EmployeeModel>();
-            lblResourceNotFound = LanguageHelper.GetStringFromResource("messageNotFound");
+            workList = new List<WorkListModel>();
 
+            lblResourceNotFound = LanguageHelper.GetStringFromResource("messageNotFound");
+            lblNotExistInWorkListAlert = LanguageHelper.GetStringFromResource("workerCheckInMessageNotPriority");
+            lblDoNotScan = LanguageHelper.GetStringFromResource("workerCheckOutMessageDoNotScan");
             clock = new DispatcherTimer();
             clock.Tick += Clock_Tick;
             clock.Start();
@@ -63,6 +68,7 @@ namespace PersonalSV.Views
             try
             {
                 employeeList = EmployeeController.GetAvailable();
+                workList = WorkListController.Get();
             }
             catch (Exception ex)
             {
@@ -84,7 +90,23 @@ namespace PersonalSV.Views
                 var empById = employeeList.FirstOrDefault(f => f.EmployeeCode == scanWhat);
                 if (empById != null)
                 {
-                    AddRecord(empById);
+                    var workListToDayByEmpId = workList.Where(w => w.TestDate == toDay && w.EmployeeID.Trim().ToLower().ToString() == empById.EmployeeID.Trim().ToLower().ToString()).ToList();
+                    if (workListToDayByEmpId.Count == 0)
+                    {
+                        brDisplay.Background = Brushes.Yellow;
+                        var notExistInWorkList = new WorkerCheckInModel
+                        {
+                            EmployeeName = empById.EmployeeName,
+                            EmployeeID = empById.EmployeeID,
+                            RecordTime = string.Format("{0} {1:dd/MM/yyyy}", lblDoNotScan, toDay)
+                        };
+                        grDisplay.DataContext = notExistInWorkList;
+                        SetTxtDefault();
+                    }
+                    else
+                    {
+                        AddRecord(empById);
+                    }
                 }
                 else
                 {
@@ -118,6 +140,13 @@ namespace PersonalSV.Views
                 //brDisplay.Background = Brushes.LightGreen;
 
                 WorkerCheckInController.Insert(record);
+                var workListModelUpdate = new WorkListModel
+                {
+                    EmployeeID = record.EmployeeID,
+                    TestDate = DateTime.Now.Date,
+                    TestStatus = 1
+                };
+                WorkListController.UpdateTestStatus(workListModelUpdate);
                 SetTxtDefault();
             }
             catch (Exception ex)
