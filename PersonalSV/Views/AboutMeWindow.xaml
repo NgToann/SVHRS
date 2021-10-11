@@ -93,11 +93,12 @@
                 <TextBlock Grid.Row="1" Text="{DynamicResource aboutWindowProject}"/>
                 <TextBlock Grid.Row="1" Grid.Column="2" Text="Saoviet HRS" FontStyle="Italic"/>
                 <TextBlock Grid.Row="3" Text="{DynamicResource aboutWindowVersion}"/>
-                <TextBlock Grid.Row="3" Grid.Column="2" Text="1.0.1.1" FontStyle="Italic"/>
+                <TextBlock Grid.Row="3" Grid.Column="2" Text="1.0.1.4" FontStyle="Italic"/>
                 <TextBlock Grid.Row="5" Text="{DynamicResource aboutWindowCreatedBy}"/>
                 <TextBlock Grid.Row="5" Grid.Column="2" Text="IT Saoviet" FontStyle="Italic"/>
                 <TextBlock Grid.Row="7" Text="{DynamicResource aboutWindowContact}" VerticalAlignment="Center"/>
-                <TextBox   Grid.Row="7" Grid.Column="2" Text="it02@sv.chungphi.com" FontStyle="Italic" Background="Transparent" BorderThickness="0,0,0,0"/>
+                <TextBox   Grid.Row="7" Grid.Column="2" Text="it01@sv.chungphi.com" FontStyle="Italic" Background="Transparent" BorderThickness="0,0,0,0"/>
+                <TextBox   Grid.Row="8" Grid.Column="2" Text="nguyentoan712@gmail.com" FontStyle="Italic" Background="Transparent" BorderThickness="0,0,0,0"/>
             </Grid>
         </Grid>
     </Grid>
