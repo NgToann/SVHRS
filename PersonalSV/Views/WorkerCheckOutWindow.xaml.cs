@@ -60,7 +60,17 @@ namespace PersonalSV.Views
 
         private void BwLoad_DoWork(object sender, DoWorkEventArgs e)
         {
-            employeeList = EmployeeController.GetAvailable();
+            try
+            {
+                employeeList = EmployeeController.GetAvailable();
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    MessageBox.Show(ex.Message.ToString());
+                }));
+            }
         }
 
         private void txtCardId_PreviewKeyUp(object sender, KeyEventArgs e)

@@ -389,9 +389,35 @@
     <system:String x:Key="menuReportCheckInOut">Báo Cáo Giờ Ra, Vào (Scan Thẻ)</system:String>
     <system:String x:Key="reportCheckInOutWindowTitle">SV-HRS  Báo Cáo Giờ Ra, Vào (Scan Thẻ)</system:String>
     
+    <system:String x:Key="workerCheckInMessageNotPriority">KHÔNG CÓ TRONG DANH SÁCH ĐI LÀM</system:String>
+    
     <system:String x:Key="reportCheckInOutOption">Tùy Chọn</system:String>
     <system:String x:Key="reportRadCheckIn">Giờ Vào</system:String>
     <system:String x:Key="reportRadCheckOut">Giờ Ra</system:String>
     <system:String x:Key="reportRadAll">Tất Cả</system:String>
+    
+    
+    <!--Test Random Feature-->
+    <system:String x:Key="testRandomWindowTitle">SV-HRS Test Nhanh Covid Ngẫu Nhiên</system:String>
+    <system:String x:Key="testRandomLblTime">Thời gian</system:String>
+    <system:String x:Key="testRandomHeader">TEST NHANH COVID RANDOM</system:String>
+    <system:String x:Key="testRandomGroupTestInfo">Thông tin Test</system:String>
+    <system:String x:Key="testRandomLblVaccine">Vaccine</system:String>
+    <system:String x:Key="testRandomLblVaccineNull">Chưa Tiêm</system:String>
+    <system:String x:Key="testRandomLblRequireTest">DO THE COVID TEST</system:String>
+    <system:String x:Key="testRandomLblWelcome">WELCOME</system:String>
+    <system:String x:Key="testRandomLinkButtonViewData">Xem danh sách</system:String>
+    
+    <system:String x:Key="testRandomInfoTestDate">Ngày kiểm tra</system:String>
+    <system:String x:Key="testRandomInfoTerm">Kỳ</system:String>
+    <system:String x:Key="testRandomInfoRound">Vòng</system:String>
+    <system:String x:Key="testRandomInfoTotalWorker">Tổng số</system:String>
+    <system:String x:Key="testRandomInfoCurrent">Hiện tại</system:String>
+    
+    <system:String x:Key="testRequestListWindowTitle">SV-HRS Danh Sách Test</system:String>
+    <system:String x:Key="testRequestListHeader">DANH SÁCH CẦN TEST NHANH</system:String>
+    <system:String x:Key="testRequestListVaccince1st">Vắc Xin Mũi 1</system:String>
+    <system:String x:Key="testRequestListVaccince2nd">Vắc Xin Mũi 2</system:String>
+    <system:String x:Key="testRequestListRecordTime">Giờ Vào</system:String>
     
 </ResourceDictionary>

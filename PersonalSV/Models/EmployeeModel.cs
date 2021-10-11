@@ -86,5 +86,12 @@ namespace PersonalSV.ViewModels
         public string Reason { get; set; }
         public string LeaveRemark { get; set; }
         public string FromToDisplay { get; set; }
+
+        public string VaccineFirstType { get; set; }
+        public DateTime FirstInjectDate { get; set; }
+        public string VaccineSecondType { get; set; }
+        public DateTime SecondInjectDate { get; set; }
+
+        public string TestRandomTimeIn { get; set; }
     }
 }

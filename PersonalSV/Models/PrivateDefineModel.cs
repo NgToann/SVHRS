@@ -10,5 +10,6 @@ namespace PersonalSV.Models
         public int PrivateDefineId { get; set; }
         public int NoOfValueDate { get; set; }
         public DateTime StartDateScanWorkerCheckIn { get; set; }
+        public int TestRandomRatio { get; set; }
     }
 }

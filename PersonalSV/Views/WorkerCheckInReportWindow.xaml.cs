@@ -46,18 +46,28 @@ namespace PersonalSV.Views
 
         private void BwLoad_DoWork(object sender, DoWorkEventArgs e)
         {
-            sources = WorkerCheckInController.Get();
-            employeeList = EmployeeController.GetAvailable();
-            foreach (var item in sources)
+            try
             {
-                var empById = employeeList.FirstOrDefault(f => f.EmployeeCode == item.EmployeeCode);
-                if (empById != null)
+                sources = WorkerCheckInController.Get();
+                employeeList = EmployeeController.GetAvailable();
+                foreach (var item in sources)
                 {
-                    item.EmployeeID = empById.EmployeeID;
-                    item.EmployeeName = empById.EmployeeName;
-                    item.DepartmentName = empById.DepartmentName;
-                    item.CheckTypeDisplay = item.CheckType == 0 ? "In" : "Out";
+                    var empById = employeeList.FirstOrDefault(f => f.EmployeeCode == item.EmployeeCode);
+                    if (empById != null)
+                    {
+                        item.EmployeeID = empById.EmployeeID;
+                        item.EmployeeName = empById.EmployeeName;
+                        item.DepartmentName = empById.DepartmentName;
+                        item.CheckTypeDisplay = item.CheckType == 0 ? "In" : "Out";
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    MessageBox.Show(ex.Message.ToString());
+                }));
             }
         }
 

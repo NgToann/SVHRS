@@ -28,6 +28,14 @@ namespace PersonalSV.Controllers
                 return db.ExecuteStoreQuery<EmployeeModel>("EXEC spm_SelectPersonalAvailabe").ToList();
             };
         }
+        //
+        public static List<EmployeeModel> GetAvailableForTestCovid()
+        {
+            using (var db = new PersonalDataEntities())
+            {
+                return db.ExecuteStoreQuery<EmployeeModel>("EXEC spm_SelectPersonalAvailabeForTestCovid").ToList();
+            };
+        }
 
         public static List<EmployeeModel> GetFromSourceByDate(DateTime dateSearch)
         {

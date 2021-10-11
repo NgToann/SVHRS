@@ -1635,3 +1635,7 @@ C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\WorkerCheck
 C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\WorkerCheckOutWindow.baml
 C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\WorkerCheckInReportWindow.g.cs
 C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\WorkerCheckInReportWindow.baml
+C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\TestRandomWindow.g.cs
+C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\TestRandomWindow.baml
+C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\TestRequestListWindow.g.cs
+C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\TestRequestListWindow.baml

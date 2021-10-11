@@ -18,5 +18,13 @@ namespace PersonalSV.Controllers
                 return db.ExecuteStoreQuery<PrivateDefineModel>("EXEC spm_SelectPrivateDefine").FirstOrDefault();
             };
         }
+
+        public static List<WorkerPriorityModel> GetWorkerPriorityList()
+        {
+            using (var db = new PersonalDataEntities())
+            {
+                return db.ExecuteStoreQuery<WorkerPriorityModel>("EXEC spm_SelectWorkerPriority").ToList();
+            };
+        }
     }
 }

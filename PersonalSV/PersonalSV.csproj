@@ -112,6 +112,7 @@
     <Compile Include="Controllers\PositionController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\SourceController.cs" />
+    <Compile Include="Controllers\TestRandomController.cs" />
     <Compile Include="Controllers\WorkerCheckInController.cs" />
     <Compile Include="Controllers\WorkerLeaveDetailController.cs" />
     <Compile Include="Controllers\WorkerRemarksController.cs" />
@@ -159,8 +160,10 @@
     <Compile Include="Models\LeaveWithReasonModel.cs" />
     <Compile Include="Models\MissingRecordTimeModel.cs" />
     <Compile Include="Models\PrivateDefineModel.cs" />
+    <Compile Include="Models\TestRandomModel.cs" />
     <Compile Include="Models\WorkerCheckInModel.cs" />
     <Compile Include="Models\WorkerLeaveDetailModel.cs" />
+    <Compile Include="Models\WorkerPriorityModel.cs" />
     <Compile Include="Models\WorkerRemarkModel.cs" />
     <Compile Include="ViewModels\EmployeeViewModel.cs" />
     <Compile Include="Models\EnumIsEditable.cs" />
@@ -256,6 +259,12 @@
     </Compile>
     <Compile Include="Views\Report2020Window.xaml.cs">
       <DependentUpon>Report2020Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TestRandomWindow.xaml.cs">
+      <DependentUpon>TestRandomWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TestRequestListWindow.xaml.cs">
+      <DependentUpon>TestRequestListWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WorkerCheckInReportWindow.xaml.cs">
       <DependentUpon>WorkerCheckInReportWindow.xaml</DependentUpon>
@@ -414,6 +423,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Report2020Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TestRandomWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TestRequestListWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

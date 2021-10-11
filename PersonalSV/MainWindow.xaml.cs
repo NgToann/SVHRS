@@ -208,6 +208,12 @@ namespace PersonalSV
             window.Show();
         }
 
+        private void miTestCovidRandom_Click(object sender, RoutedEventArgs e)
+        {
+            TestRandomWindow window = new TestRandomWindow();
+            window.Show();
+        }
+
         //private void miLeaveWithReason_Click(object sender, RoutedEventArgs e)
         //{
         //    //AbsenteesReasonWindow window = new AbsenteesReasonWindow();
