@@ -27,14 +27,18 @@ namespace PersonalSV.Views
         List<WorkerCheckInModel> sources;
         List<EmployeeModel> employeeList;
         BackgroundWorker bwLoad;
+        List<WorkListModel> workList;
         private int checkType = 2;
         public WorkerCheckInReportWindow()
         {
             bwLoad = new BackgroundWorker();
-            bwLoad.DoWork += BwLoad_DoWork; ;
-            bwLoad.RunWorkerCompleted += BwLoad_RunWorkerCompleted; ;
+            bwLoad.DoWork += BwLoad_DoWork;
+            bwLoad.RunWorkerCompleted += BwLoad_RunWorkerCompleted;
+
             sources = new List<WorkerCheckInModel>();
             employeeList = new List<EmployeeModel>();
+            workList = new List<WorkListModel>();
+
             InitializeComponent();
         }
 
@@ -50,17 +54,7 @@ namespace PersonalSV.Views
             {
                 sources = WorkerCheckInController.Get();
                 employeeList = EmployeeController.GetAvailable();
-                foreach (var item in sources)
-                {
-                    var empById = employeeList.FirstOrDefault(f => f.EmployeeCode == item.EmployeeCode);
-                    if (empById != null)
-                    {
-                        item.EmployeeID = empById.EmployeeID;
-                        item.EmployeeName = empById.EmployeeName;
-                        item.DepartmentName = empById.DepartmentName;
-                        item.CheckTypeDisplay = item.CheckType == 0 ? "In" : "Out";
-                    }
-                }
+                workList = WorkListController.Get();
             }
             catch (Exception ex)
             {
@@ -76,35 +70,18 @@ namespace PersonalSV.Views
             e.Row.Header = e.Row.GetIndex() + 1;
         }
 
-        private void radCheckIn_Checked(object sender, RoutedEventArgs e)
-        {
-            if (this.IsLoaded)
-            {
-                checkType = 0;
-                FilterData();
-            }
-        }
-
-        private void radAll_Checked(object sender, RoutedEventArgs e)
-        {
-            if (this.IsLoaded)
-            {
-                checkType = 2;
-                FilterData();
-            }
-        }
-
-        private void radCheckOut_Checked(object sender, RoutedEventArgs e)
-        {
-            if (this.IsLoaded)
-            {
-                checkType = 1;
-                FilterData();
-            }
-        }
-
         private void btnPreview_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                sources = WorkerCheckInController.Get();
+                workList = WorkListController.Get();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
+
             FilterData();
         }
 
@@ -121,39 +98,56 @@ namespace PersonalSV.Views
 
         private void FilterData()
         {
-            List<WorkerCheckInModel> dislpayList = new List<WorkerCheckInModel>();
             var findWhat = txtFindWhat.Text.Trim().ToUpper().ToString();
 
             var dateFrom = dpFilterDate.SelectedDate.Value;
             var dateTo = dpFilterDateTo.SelectedDate.Value;
-            dislpayList = sources.Where(w => w.CheckInDate >= dateFrom && w.CheckInDate <= dateTo).OrderBy(o => o.CheckInDate).ThenBy(th => th.DepartmentName).ThenBy(th => th.EmployeeID).ThenBy(th => th.RecordTime).ToList();
+
+            var workListByTime = workList.Where(w => w.TestDate >= dateFrom && w.TestDate <= dateTo).ToList();
+            var dateList = workListByTime.Select(s => s.TestDate.Date).Distinct().ToList();
+            List<DisplayDataModel> dataList = new List<DisplayDataModel>();
+            foreach (var date in dateList)
+            {
+                var workListByDate = workListByTime.Where(w => w.TestDate == date).ToList();
+                var empIds = workListByDate.Select(s => s.EmployeeID).Distinct().ToList();
+                foreach (var empId in empIds)
+                {
+                    var workListByEmpId = workListByDate.FirstOrDefault(f => f.EmployeeID == empId);
+                    var employeeById = employeeList.FirstOrDefault(f => f.EmployeeID.Trim().ToLower().ToString() == empId.Trim().ToLower().ToString());
+                    var workerCheckByEmpIdByDate = sources.Where(w => w.CheckInDate == date && w.EmployeeCode == employeeById.EmployeeCode);
+                    var timeInRecords = workerCheckByEmpIdByDate.Where(w => w.CheckType == 0).ToList();
+                    var timeOutRecords = workerCheckByEmpIdByDate.Where(w => w.CheckType == 1).ToList();
+                    string timeIn = timeInRecords.Count() > 0 ? timeInRecords.Max(m => m.RecordTime) : "";
+                    string timeOut = timeOutRecords.Count() > 0 ? timeOutRecords.Max(m => m.RecordTime) : "";
+
+                    if (employeeById == null)
+                        continue;
+
+                    var displayModel = new DisplayDataModel
+                    {
+                        EmployeeID = employeeById.EmployeeID,
+                        EmployeeCode = employeeById.EmployeeCode,
+                        EmployeeName = employeeById.EmployeeName,
+                        DepartmentName = employeeById.DepartmentName,
+                        TestDate = date,
+                        TestStatus = workListByEmpId.TestStatus,
+                        TimeIn=timeIn,
+                        TimeOut=timeOut
+                    };
+                    dataList.Add(displayModel);
+                }
+            }
+            dataList = dataList.OrderBy(o => o.TestDate).ThenBy(th => th.DepartmentName).ThenBy(th => th.EmployeeID).ToList();
+
+            
 
             if (!string.IsNullOrEmpty(findWhat))
             {
-                dislpayList = dislpayList.Where(w => w.EmployeeCode == findWhat || w.EmployeeID.Trim().ToUpper() == findWhat).ToList();
-                if (checkType != 2)
-                {
-                    dislpayList = dislpayList.Where(w => w.CheckType == checkType).ToList();
-                }
+                dataList = dataList.Where(w => w.EmployeeCode == findWhat || w.EmployeeID.Trim().ToUpper() == findWhat).ToList();
+                
             }
-            else if (checkType != 2)
-            {
-                dislpayList = dislpayList.Where(w => w.CheckType == checkType).ToList();
-            }
-
-            dgReport.ItemsSource = dislpayList;
+            dgReport.ItemsSource = dataList;
             dgReport.Items.Refresh();
-            if (dislpayList.Count() > 0)
-            {
-                var totalWorker = dislpayList.Select(s => s.EmployeeCode).Distinct().ToList().Count();
-                lblTotalWorker.Visibility = Visibility.Visible;
-                lblTotalWorker.Text = String.Format("Total: {0}", totalWorker);
-            }
-            else
-            {
-                lblTotalWorker.Visibility = Visibility.Collapsed;
-                lblTotalWorker.Text = "";
-            }
         }
         private void txtFindWhat_PreviewKeyUp(object sender, KeyEventArgs e)
         {
@@ -161,6 +155,19 @@ namespace PersonalSV.Views
             {
                 FilterData();
             }
+        }
+        
+        private class DisplayDataModel
+        {
+            public string EmployeeCode { get; set; }
+            public string EmployeeID { get; set; }
+            public string EmployeeName { get; set; }
+            public DateTime TestDate { get; set; }
+            public string DepartmentName { get; set; }
+            public string TimeIn { get; set; }
+            public string TimeOut { get; set; }
+            public int TestStatus { get; set; }
+
         }
     }
 }

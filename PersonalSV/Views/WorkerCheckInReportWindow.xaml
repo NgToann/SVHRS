@@ -39,16 +39,6 @@
                     <TextBlock Text="{DynamicResource ResourceKey=commonDatePickerTo}" VerticalAlignment="Bottom" Margin="5,0,5,0"/>
                     <DatePicker x:Name="dpFilterDateTo" Grid.Row="4" Margin="0,5,0,0" VerticalContentAlignment="Center"/>
                 </StackPanel>
-                <Grid Grid.Row="2" Margin="0,5,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <RadioButton x:Name="radCheckIn" Content="{DynamicResource ResourceKey=reportRadCheckIn}" Style="{DynamicResource ResourceKey=RadioBlueStyle}" GroupName="Filter" VerticalAlignment="Center" Checked="radCheckIn_Checked" VerticalContentAlignment="Center"/>
-                    <RadioButton Grid.Column="1" x:Name="radCheckOut" Content="{DynamicResource ResourceKey=reportRadCheckOut}" Style="{DynamicResource ResourceKey=RadioBlueStyle}" GroupName="Filter" VerticalAlignment="Center" Checked="radCheckOut_Checked"  VerticalContentAlignment="Center"/>
-                    <RadioButton Grid.Column="2" x:Name="radAll" Content="{DynamicResource ResourceKey=reportRadAll}" Style="{DynamicResource ResourceKey=RadioBlueStyle}" GroupName="Filter" VerticalAlignment="Center" IsChecked="True" Checked="radAll_Checked" VerticalContentAlignment="Center"/>
-                </Grid>
                 <Button x:Name="btnPreview" Margin="5,0,0,0" Template="{DynamicResource ResourceKey=ButtonTemplate}" Grid.Column="3" Grid.RowSpan="5" Click="btnPreview_Click" IsEnabled="False">
                     <Button.Content>
                         <Grid>
@@ -116,24 +106,31 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeDate}" SortMemberPath="CheckInDate">
+                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeDate}" SortMemberPath="TestDate">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding CheckInDate, StringFormat=MM/dd/yyyy}" Margin="3" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding TestDate, StringFormat=MM/dd/yyyy}" Margin="3" VerticalAlignment="Center"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonTime}" SortMemberPath="RecordTime">
+                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=reportGridTimeIn}" SortMemberPath="TimeIn">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding RecordTime}" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding TimeIn}" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonCheckType}" SortMemberPath="CheckTypeDisplay">
+                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=reportGridTimeOut}" SortMemberPath="TimeOut">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding CheckTypeDisplay}" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding TimeOut}" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=reportGridStatus}" SortMemberPath="TestStatus">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding TestStatus}" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

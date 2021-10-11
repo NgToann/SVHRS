@@ -404,6 +404,9 @@
     <system:String x:Key="reportRadCheckIn">Check In</system:String>
     <system:String x:Key="reportRadCheckOut">Check Out</system:String>
     <system:String x:Key="reportRadAll">All</system:String>
+    <system:String x:Key="reportGridTimeIn">Time In</system:String>
+    <system:String x:Key="reportGridTimeOut">Time Out</system:String>
+    <system:String x:Key="reportGridStatus">Status</system:String>
     
     <!--Test Random Feature-->
     <system:String x:Key="testRandomWindowTitle">SV-HRS Covid Quick Test Random</system:String>

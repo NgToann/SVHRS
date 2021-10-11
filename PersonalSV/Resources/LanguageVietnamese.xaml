@@ -400,6 +400,9 @@
     <system:String x:Key="reportRadCheckIn">Giờ Vào</system:String>
     <system:String x:Key="reportRadCheckOut">Giờ Ra</system:String>
     <system:String x:Key="reportRadAll">Tất Cả</system:String>
+    <system:String x:Key="reportGridTimeIn">Giờ vào</system:String>
+    <system:String x:Key="reportGridTimeOut">Giờ ra</system:String>
+    <system:String x:Key="reportGridStatus">Trạng thái</system:String>
     
     
     <!--Test Random Feature-->
