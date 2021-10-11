@@ -396,7 +396,9 @@
     <system:String x:Key="workerCheckInMessageNotPriority">Not Exist in Work List</system:String>
     <system:String x:Key="workerCheckInMessageExistInF0List">Exist in F0 List</system:String>
     <system:String x:Key="workerCheckInMessageDoTheCovidTest">Do The Covid Test</system:String>
+    <system:String x:Key="workerCheckInMessageNotAllowed">Not Allowed</system:String>
     <system:String x:Key="workerCheckOutMessageDoNotScan">Do Not Scan</system:String>
+    <system:String x:Key="workerCheckInMessageNotExistInTestList">Not Exist in Test List</system:String>
     
     <system:String x:Key="reportCheckInOutOption">Option</system:String>
     <system:String x:Key="reportRadCheckIn">Check In</system:String>

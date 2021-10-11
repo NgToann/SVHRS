@@ -29,7 +29,7 @@ namespace PersonalSV.Views
         List<WorkerCheckInModel> sources;
         List<WorkerCheckInModel> checkOutList;
         List<EmployeeModel> employeeList;
-        private string lblResourceNotFound = "", lblNotYetCheckOut="", lblNotPriorityAlert="", lblF0Alert="", lblDoTheTestCovidAlert="";
+        private string lblResourceNotFound = "", lblNotYetCheckOut="", lblNotExitsInWorkList="", lblNotAllowed="", lblDoTheTestCovidAlert="", lblNotExistInTestList = "";
         private PrivateDefineModel defineModel;
         private List<WorkerPriorityModel> workerPriorityList;
         private List<WorkerF0Model> workerF0List;
@@ -45,10 +45,11 @@ namespace PersonalSV.Views
             sources = new List<WorkerCheckInModel>();
             employeeList = new List<EmployeeModel>();
             lblResourceNotFound = LanguageHelper.GetStringFromResource("messageNotFound");
-            lblNotPriorityAlert = LanguageHelper.GetStringFromResource("workerCheckInMessageNotPriority");
+            lblNotExitsInWorkList = LanguageHelper.GetStringFromResource("workerCheckInMessageNotPriority");
             lblNotYetCheckOut = LanguageHelper.GetStringFromResource("workerCheckInLblNotYetCheckOut");
-            lblF0Alert = LanguageHelper.GetStringFromResource("workerCheckInMessageExistInF0List");
+            lblNotAllowed = LanguageHelper.GetStringFromResource("workerCheckInMessageNotAllowed");
             lblDoTheTestCovidAlert = LanguageHelper.GetStringFromResource("workerCheckInMessageDoTheCovidTest");
+            lblNotExistInTestList = LanguageHelper.GetStringFromResource("workerCheckInMessageNotExistInTestList");
 
             defineModel = new PrivateDefineModel();
             workerPriorityList = new List<WorkerPriorityModel>();
@@ -146,13 +147,13 @@ namespace PersonalSV.Views
                                 if (workerHasStatusBeforeToday.TestStatus == 2)
                                 {
                                     brDisplay.Background = Brushes.Red;
-                                    var doTheTestCovid = new WorkerCheckInModel
+                                    var notAllowedAlert = new WorkerCheckInModel
                                     {
                                         EmployeeName = empById.EmployeeName,
                                         EmployeeID = empById.EmployeeID,
-                                        RecordTime = lblDoTheTestCovidAlert
+                                        RecordTime = lblNotAllowed
                                     };
-                                    grDisplay.DataContext = doTheTestCovid;
+                                    grDisplay.DataContext = notAllowedAlert;
                                     SetTxtDefault();
                                 }
                                 else if (workerHasStatusBeforeToday.TestStatus == 1)
@@ -160,20 +161,31 @@ namespace PersonalSV.Views
                                     brDisplay.Background = Brushes.Green;
                                     AddRecord(empById);
                                 }
+                                else if (workerHasStatusBeforeToday.TestStatus == 0)
+                                {
+                                    brDisplay.Background = Brushes.Red;
+                                    var notExistInWorkList = new WorkerCheckInModel
+                                    {
+                                        EmployeeName = empById.EmployeeName,
+                                        EmployeeID = empById.EmployeeID,
+                                        RecordTime = string.Format("{0} - {1:dd/MM/yyyy}", lblNotExistInTestList, today)
+                                    };
+                                    grDisplay.DataContext = notExistInWorkList;
+                                    SetTxtDefault();
+                                }
                             }
                         }
                     }
                     else
                     {
                         brDisplay.Background = Brushes.Red;
-                        var notPriority = new WorkerCheckInModel
+                        var notExistInWorkList = new WorkerCheckInModel
                         {
                             EmployeeName = empById.EmployeeName,
                             EmployeeID = empById.EmployeeID,
-                            RecordTime = lblNotPriorityAlert
+                            RecordTime = lblNotExitsInWorkList
                         };
-                        grDisplay.DataContext = notPriority;
-
+                        grDisplay.DataContext = notExistInWorkList;
                         SetTxtDefault();
                     }
 
@@ -257,7 +269,7 @@ namespace PersonalSV.Views
                 DepartmentName = empById.DepartmentName,
                 CheckType = 0,
                 CheckInDate = DateTime.Now,
-                RecordTime = String.Format("{0:hh:mm}", DateTime.Now)
+                RecordTime = String.Format("{0:HH:mm}", DateTime.Now)
             };
 
             try

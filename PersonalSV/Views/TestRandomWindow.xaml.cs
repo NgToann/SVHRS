@@ -313,8 +313,8 @@ namespace PersonalSV.Views
                         DepartmentName = empById.DepartmentName,
                         VaccineStatus = string.Format("{0}: {1}", lblResouceVaccine, vaccinceStatus),
                         RequireTest = lblRequireTest,
-                        TimeDisplay = string.Format("{0} {1:hh:mm}", lblResourceTime, DateTime.Now),
-                        TimeIn = string.Format("{0:hh:mm}", DateTime.Now),
+                        TimeDisplay = string.Format("{0} {1:HH:mm}", lblResourceTime, DateTime.Now),
+                        TimeIn = string.Format("{0:HH:mm}", DateTime.Now),
                         IdDisplay = string.Format("testId: {0}", testRequestByEmpId.Id)
                     };
 
@@ -345,8 +345,8 @@ namespace PersonalSV.Views
                         DepartmentName = empById.DepartmentName,
                         VaccineStatus = string.Format("{0}: {1}", lblResouceVaccine, vaccinceStatus),
                         RequireTest = lblResouceWelcome,
-                        TimeDisplay = string.Format("{0} {1:hh:mm}", lblResourceTime, DateTime.Now),
-                        TimeIn = string.Format("{0:hh:mm}", DateTime.Now)
+                        TimeDisplay = string.Format("{0} {1:HH:mm}", lblResourceTime, DateTime.Now),
+                        TimeIn = string.Format("{0:HH:mm}", DateTime.Now)
                     };
 
                     brDisplay.DataContext = displayWelcomeInfo;

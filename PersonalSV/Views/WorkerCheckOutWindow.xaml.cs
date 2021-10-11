@@ -131,7 +131,7 @@ namespace PersonalSV.Views
                 DepartmentName = empById.DepartmentName,
                 CheckType = 1,
                 CheckInDate = DateTime.Now,
-                RecordTime = String.Format("{0:hh:mm}", DateTime.Now)
+                RecordTime = String.Format("{0:HH:mm}", DateTime.Now)
             };
 
             try

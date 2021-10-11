@@ -391,8 +391,10 @@
     
     <system:String x:Key="workerCheckInMessageNotPriority">KHÔNG CÓ TRONG DANH SÁCH ĐI LÀM</system:String>
     <system:String x:Key="workerCheckInMessageExistInF0List">CÓ TRONG DANH SÁCH F0</system:String>
-    <system:String x:Key="workerCheckInMessageDoTheCovidTest">Do The Covid Test</system:String>
-    <system:String x:Key="workerCheckOutMessageDoNotScan">Do Not Scan</system:String>
+    <system:String x:Key="workerCheckInMessageDoTheCovidTest">Làm Test Nhanh</system:String>
+    <system:String x:Key="workerCheckInMessageNotAllowed">Không Cho Phép</system:String>
+    <system:String x:Key="workerCheckOutMessageDoNotScan">Chưa Scan</system:String>
+    <system:String x:Key="workerCheckInMessageNotExistInTestList">Không Có Trong Danh Sách Test</system:String>
     
     <system:String x:Key="reportCheckInOutOption">Tùy Chọn</system:String>
     <system:String x:Key="reportRadCheckIn">Giờ Vào</system:String>
@@ -407,7 +409,7 @@
     <system:String x:Key="testRandomGroupTestInfo">Thông tin Test</system:String>
     <system:String x:Key="testRandomLblVaccine">Vaccine</system:String>
     <system:String x:Key="testRandomLblVaccineNull">Chưa Tiêm</system:String>
-    <system:String x:Key="testRandomLblRequireTest">DO THE COVID TEST</system:String>
+    <system:String x:Key="testRandomLblRequireTest">Làm Test Nhanh</system:String>
     <system:String x:Key="testRandomLblWelcome">WELCOME</system:String>
     <system:String x:Key="testRandomLinkButtonViewData">Xem danh sách</system:String>
     
