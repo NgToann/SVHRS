@@ -106,14 +106,14 @@ namespace PersonalSV.Views
                 {
                     var workListByEmpId = workListByDate.FirstOrDefault(f => f.EmployeeID == empId);
                     var employeeById = employeeList.FirstOrDefault(f => f.EmployeeID.Trim().ToLower().ToString() == empId.Trim().ToLower().ToString());
-                    var workerCheckByEmpIdByDate = sources.Where(w => w.CheckInDate == date && w.EmployeeCode == employeeById.EmployeeCode);
+                    if (employeeById == null)
+                        continue;
+
+                    var workerCheckByEmpIdByDate = sources.Where(w => w.CheckInDate == date && w.EmployeeCode == employeeById.EmployeeCode).ToList();
                     var timeInRecords = workerCheckByEmpIdByDate.Where(w => w.CheckType == 0).ToList();
                     var timeOutRecords = workerCheckByEmpIdByDate.Where(w => w.CheckType == 1).ToList();
                     string timeIn = timeInRecords.Count() > 0 ? timeInRecords.Max(m => m.RecordTime) : "";
                     string timeOut = timeOutRecords.Count() > 0 ? timeOutRecords.Max(m => m.RecordTime) : "";
-
-                    if (employeeById == null)
-                        continue;
 
                     var displayModel = new DisplayDataModel
                     {

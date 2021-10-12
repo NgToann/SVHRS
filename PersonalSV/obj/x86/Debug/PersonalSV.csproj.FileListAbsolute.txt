@@ -1639,3 +1639,5 @@ C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\TestRandomW
 C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\TestRandomWindow.baml
 C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\TestRequestListWindow.g.cs
 C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\TestRequestListWindow.baml
+C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\TestCovidCreateTestTermWindow.g.cs
+C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\TestCovidCreateTestTermWindow.baml
