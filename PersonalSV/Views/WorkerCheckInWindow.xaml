@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PersonalSV.Views" Loaded="Window_Loaded"
         mc:Ignorable="d" Background="WhiteSmoke" FontSize="14" WindowStartupLocation="CenterScreen"
-        Title="{DynamicResource ResourceKey=workerCheckInWindowTitle}" Height="500" Width="1200" WindowState="Maximized">
+        Title="{DynamicResource ResourceKey=workerCheckInWindowTitle}" Height="500" Width="1200" MinWidth="800" WindowState="Maximized">
     <Grid Margin="2">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -13,7 +13,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="400"/>
+            <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Border Grid.ColumnSpan="2"  Margin="0,0,0,15" CornerRadius="5" BorderThickness="1,1,1,1" BorderBrush="Gray">
@@ -23,7 +23,7 @@
                    TextAlignment="Center"/>
         </Border>
         
-        <Grid Grid.Row="1" Margin="0,3,0,0">
+        <Grid Grid.Row="1" Width="400" MinWidth="400" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="2,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -36,12 +36,40 @@
                      BorderBrush="Black" FontSize="25" Foreground="Blue" FontWeight="SemiBold"
                      VerticalContentAlignment="Center" GotKeyboardFocus="txtCardId_GotKeyboardFocus"
                      TextAlignment="Center" PreviewKeyUp="txtCardId_PreviewKeyUp"/>
-            
-            <Border Grid.Row="4" Padding="5" Margin="0,0,0,5" BorderThickness="1,1,1,1" BorderBrush="Gray" CornerRadius="5" Visibility="Collapsed">
-                <TextBlock x:Name="lblTotal" TextAlignment="Center" VerticalAlignment="Center" Foreground="Blue" FontSize="20"/>
-            </Border>
         </Grid>
-        <TextBlock x:Name="lblClock" Text="Clock" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="25" Foreground="Blue" FontWeight="SemiBold" />
+        <Border Grid.Row="1" Grid.Column="1" Margin="0,0,2,0" Padding="15,4,15,4" Style="{DynamicResource ResourceKey=BorderStyle}" BorderBrush="Gray" CornerRadius="5" BorderThickness="1,1,1,1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Border BorderBrush="Gray" Visibility="Collapsed">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{DynamicResource ResourceKey=workerCheckInStatistics}" Foreground="Blue" FontWeight="SemiBold" FontSize="18"/>
+                        <TextBlock Grid.Column="1" HorizontalAlignment="Right" x:Name="lblClock" Text="CLOCK" FontSize="18" Foreground="Blue" FontWeight="SemiBold"/>
+                    </Grid>
+                </Border>
+                <Grid x:Name="grStatistics" Grid.Row="1" Margin="0,5,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{Binding TestDate}" FontSize="18" FontWeight="SemiBold" Foreground="DarkBlue"/>
+                    <TextBlock Grid.Column="1" Text="{Binding TotalWorkList}" FontSize="18" FontWeight="SemiBold" Foreground="DarkBlue"/>
+                    <TextBlock Grid.Column="2" Text="{Binding Scanned}" FontSize="18" FontWeight="SemiBold" Foreground="Green"/>
+                    <TextBlock Grid.Row="1" Text="{Binding Ratio}" FontSize="18" Foreground="Blue" FontWeight="Bold" Visibility="Collapsed"/>
+                </Grid>
+            </Grid>
+        </Border>
         <Border x:Name="brDisplay" Grid.Row="2" Grid.ColumnSpan="2" Margin="2" BorderBrush="Gray" BorderThickness="1,1,1,1" CornerRadius="5" Padding="4">
             <Viewbox Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Grid x:Name="grDisplay">
@@ -57,83 +85,6 @@
                     <TextBlock Grid.Row="4" Text="{Binding RecordTime}" HorizontalAlignment="Center"/>
                 </Grid>
             </Viewbox>
-        </Border>
-        
-        <Border Grid.Row="1" Grid.Column="1" BorderBrush="Gray" Margin="5,0,0,0" BorderThickness="1,0,0,0" Padding="5" Visibility="Collapsed">
-            <DataGrid x:Name="dgWorkerCheckIn" AutoGenerateColumns="False" AlternationCount="2" AlternatingRowBackground="LightCyan"
-                      CanUserAddRows="False" SelectionUnit="FullRow" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
-                      IsReadOnly="True" FontFamily="Times New Roman" FontSize="16" FrozenColumnCount="3" RowHeaderWidth="NaN" LoadingRow="dgWorkerCheckIn_LoadingRow">
-                <DataGrid.Resources>
-                    <Style TargetType="{x:Type DataGridCell}">
-                        <Style.Triggers>
-                            <Trigger Property="DataGridCell.IsSelected" Value="True">
-                                <Setter Property="Background" Value="DodgerBlue"/>
-                                <Setter Property="Foreground" Value="White" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </DataGrid.Resources>
-                <DataGrid.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem x:Name="miRemove" Header="{DynamicResource ResourceKey=commonMenuItemRemove}" Click="miRemove_Click">
-                        </MenuItem>
-                    </ContextMenu>
-                </DataGrid.ContextMenu>
-                <DataGrid.ColumnHeaderStyle>
-                    <Style TargetType="DataGridColumnHeader">
-                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                        <Setter Property="FontSize" Value="16"/>
-                        <Setter Property="Background" Value="{DynamicResource ResourceKey=DataGridRowHeaderBG}"/>
-                        <Setter Property="BorderBrush" Value="Gray"/>
-                        <Setter Property="BorderThickness" Value="0.5,0.5,0.5,0"/>
-                        <Setter Property="Padding" Value="5"/>
-                    </Style>
-                </DataGrid.ColumnHeaderStyle>
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeCode}" SortMemberPath="EmployeeCode">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding EmployeeCode}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeID}" SortMemberPath="EmployeeID">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding EmployeeID}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeName}" SortMemberPath="EmployeeName">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding EmployeeName}" Margin="3" VerticalAlignment="Center"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeDepartment}" SortMemberPath="DepartmentName">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding DepartmentName}" Margin="3" VerticalAlignment="Center"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeDate}" SortMemberPath="CheckInDate">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding CheckInDate, StringFormat=MM/dd/yyyy}" Margin="3" VerticalAlignment="Center"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonTime}" SortMemberPath="RecordTime">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding RecordTime}" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
         </Border>
     </Grid>
 </Window>

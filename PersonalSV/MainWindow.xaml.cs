@@ -201,7 +201,7 @@ namespace PersonalSV
                 //reports
                 miReportScanTimeInOut.IsEnabled = false;
             }
-            else if(account.Branch.Equals("SAOVIET"))
+            else if(account.Branch.Equals("SAOVIET") || account.Branch.Equals("DAILOC"))
             {
                 miCreateTestTerm.Visibility = Visibility.Collapsed;
             }
@@ -233,7 +233,8 @@ namespace PersonalSV
 
         private void miCreateTestTerm_Click(object sender, RoutedEventArgs e)
         {
-
+            TestCovidCreateTestTermWindow window = new TestCovidCreateTestTermWindow();
+            window.ShowDialog();
         }
 
         //private void miLeaveWithReason_Click(object sender, RoutedEventArgs e)

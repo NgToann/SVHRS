@@ -18,6 +18,15 @@ namespace PersonalSV.Controllers
             };
         }
         //
+        public static List<WorkListModel> GetByDate(DateTime date)
+        {
+            var @TestDate = new SqlParameter("@TestDate", date);
+            using (var db = new PersonalDataEntities())
+            {
+                return db.ExecuteStoreQuery<WorkListModel>("EXEC spm_SelectWorkListByDate @TestDate", @TestDate).ToList();
+            };
+        }
+
         public static List<WorkListModel> GetByEmpId(string empId)
         {
             var @EmployeeID = new SqlParameter("@EmployeeID", empId);

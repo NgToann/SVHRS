@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using EXCEL = Microsoft.Office.Interop.Excel;
 
 namespace PersonalSV.Views
 {
@@ -20,12 +21,17 @@ namespace PersonalSV.Views
         List<WorkerCheckInModel> sources;
         List<EmployeeModel> employeeList;
         BackgroundWorker bwLoad;
+        BackgroundWorker bwExportExcel;
         List<WorkListModel> workList;
         public WorkerCheckInReportWindow()
         {
             bwLoad = new BackgroundWorker();
             bwLoad.DoWork += BwLoad_DoWork;
             bwLoad.RunWorkerCompleted += BwLoad_RunWorkerCompleted;
+
+            bwExportExcel = new BackgroundWorker();
+            bwExportExcel.DoWork += BwExportExcel_DoWork;
+            bwExportExcel.RunWorkerCompleted += BwExportExcel_RunWorkerCompleted;
 
             sources = new List<WorkerCheckInModel>();
             employeeList = new List<EmployeeModel>();
@@ -106,27 +112,36 @@ namespace PersonalSV.Views
                 {
                     var workListByEmpId = workListByDate.FirstOrDefault(f => f.EmployeeID == empId);
                     var employeeById = employeeList.FirstOrDefault(f => f.EmployeeID.Trim().ToLower().ToString() == empId.Trim().ToLower().ToString());
-                    if (employeeById == null)
-                        continue;
-
-                    var workerCheckByEmpIdByDate = sources.Where(w => w.CheckInDate == date && w.EmployeeCode == employeeById.EmployeeCode).ToList();
-                    var timeInRecords = workerCheckByEmpIdByDate.Where(w => w.CheckType == 0).ToList();
-                    var timeOutRecords = workerCheckByEmpIdByDate.Where(w => w.CheckType == 1).ToList();
-                    string timeIn = timeInRecords.Count() > 0 ? timeInRecords.Max(m => m.RecordTime) : "";
-                    string timeOut = timeOutRecords.Count() > 0 ? timeOutRecords.Max(m => m.RecordTime) : "";
-
-                    var displayModel = new DisplayDataModel
+                    if (employeeById != null)
                     {
-                        EmployeeID = employeeById.EmployeeID,
-                        EmployeeCode = employeeById.EmployeeCode,
-                        EmployeeName = employeeById.EmployeeName,
-                        DepartmentName = employeeById.DepartmentName,
-                        TestDate = date,
-                        TestStatus = workListByEmpId.TestStatus,
-                        TimeIn = timeIn,
-                        TimeOut = timeOut
-                    };
-                    dataList.Add(displayModel);
+                        var workerCheckByEmpIdByDate = sources.Where(w => w.CheckInDate == date && w.EmployeeCode == employeeById.EmployeeCode).ToList();
+                        var timeInRecords = workerCheckByEmpIdByDate.Where(w => w.CheckType == 0).ToList();
+                        var timeOutRecords = workerCheckByEmpIdByDate.Where(w => w.CheckType == 1).ToList();
+                        string timeIn = timeInRecords.Count() > 0 ? timeInRecords.Max(m => m.RecordTime) : "";
+                        string timeOut = timeOutRecords.Count() > 0 ? timeOutRecords.Max(m => m.RecordTime) : "";
+
+                        var displayModel = new DisplayDataModel
+                        {
+                            EmployeeID = employeeById.EmployeeID,
+                            EmployeeCode = employeeById.EmployeeCode,
+                            EmployeeName = employeeById.EmployeeName,
+                            DepartmentName = employeeById.DepartmentName,
+                            TestDate = date,
+                            TestStatus = workListByEmpId.TestStatus,
+                            TimeIn = timeIn,
+                            TimeOut = timeOut
+                        };
+                        dataList.Add(displayModel);
+                    }
+                    else
+                    {
+                        var workerNotInPersonal = new DisplayDataModel
+                        {
+                            EmployeeID = empId,
+                            TestDate = date
+                        };
+                        dataList.Add(workerNotInPersonal);
+                    }
                 }
             }
             dataList = dataList.OrderBy(o => o.TestDate).ThenBy(th => th.DepartmentName).ThenBy(th => th.EmployeeID).ToList();
@@ -159,6 +174,112 @@ namespace PersonalSV.Views
             public string TimeIn { get; set; }
             public string TimeOut { get; set; }
             public int TestStatus { get; set; }
+        }
+
+        private void btnExportExcel_Click(object sender, RoutedEventArgs e)
+        {
+            if (dgReport.ItemsSource == null)
+                return;
+
+            if (bwExportExcel.IsBusy == false)
+            {
+                var sources = dgReport.ItemsSource.OfType<DisplayDataModel>().ToList();
+                btnExportExcel.IsEnabled = false;
+                this.Cursor = Cursors.Wait;
+                bwExportExcel.RunWorkerAsync(sources);
+            }
+        }
+
+
+        private void BwExportExcel_DoWork(object sender, DoWorkEventArgs e)
+        {
+            EXCEL._Application excel = new Microsoft.Office.Interop.Excel.Application();
+            EXCEL._Workbook workbook = excel.Workbooks.Add(Type.Missing);
+            EXCEL._Worksheet worksheet = null;
+
+            var sources = e.Argument as List<DisplayDataModel>;
+
+            try
+            {
+                worksheet = workbook.ActiveSheet;
+                worksheet.Cells.HorizontalAlignment = EXCEL.XlHAlign.xlHAlignCenter;
+                worksheet.Cells.Font.Name = "Arial";
+                worksheet.Cells.Font.Size = 10;
+                string reportName = String.Format("CheckInReport{0:ddMMyyyy}", DateTime.Now.Date);
+                worksheet.Name = reportName;
+
+                worksheet.Cells.Rows[1].Font.Size = 11;
+                worksheet.Cells.Rows[1].Font.FontStyle = "Bold";
+
+                var headerList = new List<String>();
+                headerList.Add("EmployeeCode");
+                headerList.Add("EmployeeID");
+                headerList.Add("FullName");
+                headerList.Add("Department(Line)");
+                headerList.Add("Date");
+                headerList.Add("TimeIn");
+                headerList.Add("TimeOut");
+                headerList.Add("Status");
+
+                for (int i = 0; i < headerList.Count(); i++)
+                {
+                    worksheet.Cells[1, i + 1] = headerList[i];
+                }
+                int rowIndex = 2;
+                foreach (var item in sources)
+                {
+                    worksheet.Cells[rowIndex, 1] = String.Format("'{0}", item.EmployeeCode);
+                    worksheet.Cells[rowIndex, 2] = item.EmployeeID;
+                    worksheet.Cells[rowIndex, 3] = item.EmployeeName;
+                    worksheet.Cells[rowIndex, 4] = item.DepartmentName;
+                    worksheet.Cells[rowIndex, 5] = item.TestDate;
+                    worksheet.Cells[rowIndex, 6] = item.TimeIn;
+                    worksheet.Cells[rowIndex, 7] = item.TimeOut;
+                    worksheet.Cells[rowIndex, 8] = item.TestStatus;
+
+                    rowIndex++;
+                    Dispatcher.Invoke(new Action(() => {
+                        dgReport.SelectedItem = item;
+                        dgReport.ScrollIntoView(item);
+                    }));
+                }
+                worksheet.Cells.Rows[1].Font.FontStyle = "Bold";
+
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    if (workbook != null)
+                    {
+                        var sfd = new System.Windows.Forms.SaveFileDialog();
+                        sfd.Title = "SV-HRS Export Excel File";
+                        sfd.Filter = "Excel Documents (*.xls)|*.xls|Excel Documents (*.xlsx)|*.xlsx";
+                        sfd.FilterIndex = 2;
+                        sfd.FileName = reportName;
+                        if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                        {
+                            workbook.SaveAs(sfd.FileName);
+                            MessageBox.Show("Export Successful !", "SV-HRS Export Excel File", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                    }
+                }));
+            }
+            catch (System.Exception ex)
+            {
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    MessageBox.Show(ex.Message, "SV-HRS Export Excel File", MessageBoxButton.OK, MessageBoxImage.Error);
+                }));
+            }
+            finally
+            {
+                excel.Quit();
+                workbook = null;
+                excel = null;
+            }
+        }
+        private void BwExportExcel_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            this.Cursor = null;
+            btnExportExcel.IsEnabled = true;
         }
     }
 }

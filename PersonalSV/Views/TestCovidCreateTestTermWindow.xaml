@@ -4,15 +4,57 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PersonalSV.Views"
-        mc:Ignorable="d"
-        Title="{DynamicResource ResourceKey=createTestTermWindowTitle}" Height="450" Width="800">
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen" FontSize="15"
+        Title="{DynamicResource ResourceKey=createTestTermWindowTitle}" Height="600" Width="1000">
     <Grid Margin="2">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+        <GroupBox Template="{DynamicResource ResourceKey=GroupBoxTemplate}">
+            <GroupBox.Header>
+                <Border Background="{DynamicResource ResourceKey=Background1}" Style="{DynamicResource ResourceKey=BorderStyle}">
+                    <TextBlock x:Name="txtGroupSummaryHeader" Text="{DynamicResource ResourceKey=createTestTermGroupHeader}" Padding="3"/>
+                </Border>
+            </GroupBox.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="{DynamicResource ResourceKey=createTestTestDate}"/>
+                <DatePicker x:Name="dpTestDate" Grid.Row="1" VerticalContentAlignment="Center"/>
 
-        <DataGrid Grid.Row="2" x:Name="dgRandomList" AutoGenerateColumns="False" AlternationCount="2" AlternatingRowBackground="LightCyan"
+                <TextBlock Grid.Row="1" Grid.Column="1" Margin="10,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                    <Hyperlink x:Name="hlViewWorkerList" Click="hlViewWorkerList_Click">
+                        <TextBlock Cursor="Hand" Text="{DynamicResource ResourceKey=createTestViewWorkerList}"/>
+                    </Hyperlink>
+                </TextBlock>
+
+                <Button x:Name="btnCreate" Grid.Column="2" Grid.RowSpan="2" Margin="5,0,0,0" Template="{DynamicResource ResourceKey=ButtonTemplate}"  Click="btnCreate_Click" Cursor="Hand">
+                    <Button.Content>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Margin="2,0,0,0" Grid.Row="1" VerticalAlignment="Center" Text="{DynamicResource ResourceKey=createTestBtnCreate}"/>
+                        </Grid>
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </GroupBox>
+
+        <DataGrid Grid.Row="1" Grid.ColumnSpan="2" Margin="0,2,0,0" x:Name="dgRandomList" AutoGenerateColumns="False" AlternationCount="2" AlternatingRowBackground="LightCyan"
                       CanUserAddRows="False" SelectionUnit="FullRow" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
                       IsReadOnly="True" FontFamily="Arial" FontSize="15" FrozenColumnCount="3" RowHeaderWidth="NaN" LoadingRow="dgRandomList_LoadingRow">
             <DataGrid.Resources>

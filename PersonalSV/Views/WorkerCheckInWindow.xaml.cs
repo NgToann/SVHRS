@@ -26,37 +26,39 @@ namespace PersonalSV.Views
     {
         DispatcherTimer clock;
         BackgroundWorker bwLoad;
-        List<WorkerCheckInModel> sources;
-        List<WorkerCheckInModel> checkOutList;
         List<EmployeeModel> employeeList;
-        private string lblResourceNotFound = "", lblNotYetCheckOut="", lblNotExitsInWorkList="", lblNotAllowed="", lblDoTheTestCovidAlert="", lblNotExistInTestList = "";
-        private PrivateDefineModel defineModel;
-        private List<WorkerPriorityModel> workerPriorityList;
-        private List<WorkerF0Model> workerF0List;
+
+        private string lblResourceNotFound = "", lblNotExitsInWorkList = "", lblNotAllowed = "", lblNotExistInTestList = "";
+        private string lblInfoTestDate = "", lblInfoTotalWorkList = "", lblInfoScanned = "", lblInfoRatio = "";
+        
 
         private List<WorkListModel> workList;
-        private DateTime today = DateTime.Now.Date;
+        private List<WorkListModel> workListStatistics;
+        private List<WorkerCheckInModel> workerCheckInList;
+
+        private DateTime toDay = DateTime.Now.Date;
         public WorkerCheckInWindow()
         {
             bwLoad = new BackgroundWorker();
             bwLoad.DoWork += BwLoad_DoWork;
             bwLoad.RunWorkerCompleted += BwLoad_RunWorkerCompleted;
 
-            sources = new List<WorkerCheckInModel>();
             employeeList = new List<EmployeeModel>();
+            workList = new List<WorkListModel>();
+            workListStatistics = new List<WorkListModel>();
+            workerCheckInList = new List<WorkerCheckInModel>();
+
             lblResourceNotFound = LanguageHelper.GetStringFromResource("messageNotFound");
             lblNotExitsInWorkList = LanguageHelper.GetStringFromResource("workerCheckInMessageNotPriority");
-            lblNotYetCheckOut = LanguageHelper.GetStringFromResource("workerCheckInLblNotYetCheckOut");
             lblNotAllowed = LanguageHelper.GetStringFromResource("workerCheckInMessageNotAllowed");
-            lblDoTheTestCovidAlert = LanguageHelper.GetStringFromResource("workerCheckInMessageDoTheCovidTest");
             lblNotExistInTestList = LanguageHelper.GetStringFromResource("workerCheckInMessageNotExistInTestList");
 
-            defineModel = new PrivateDefineModel();
-            workerPriorityList = new List<WorkerPriorityModel>();
-            workerF0List = new List<WorkerF0Model>();
-            workList = new List<WorkListModel>();
+            lblInfoTestDate = LanguageHelper.GetStringFromResource("workerCheckInStatisticsTestDate");
+            lblInfoTotalWorkList = LanguageHelper.GetStringFromResource("workerCheckInStatisticsTotalWorkList");
+            lblInfoScanned = LanguageHelper.GetStringFromResource("workerCheckInStatisticsCurrentScan");
+            lblInfoRatio = LanguageHelper.GetStringFromResource("workerCheckInStatisticsRatio");
 
-            checkOutList = new List<WorkerCheckInModel>();
+
             clock = new DispatcherTimer();
             clock.Tick += Clock_Tick;
             clock.Start();
@@ -72,10 +74,7 @@ namespace PersonalSV.Views
         private void BwLoad_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             this.Cursor = null;
-            // display sources today
-            var displayList = sources.Where(w => w.CheckInDate == DateTime.Now.Date).ToList();
-            dgWorkerCheckIn.ItemsSource = displayList;
-            CountTotal(displayList);
+            DoStatistics(workListStatistics, workerCheckInList);
 
             txtCardId.IsEnabled = true;
             SetTxtDefault();
@@ -85,24 +84,10 @@ namespace PersonalSV.Views
         {
             try
             {
-                defineModel = CommonController.GetDefineProps();
-                workerPriorityList = CommonController.GetWorkerPriorityList();
-                workerF0List = CommonController.GetWorkerF0();
                 employeeList = EmployeeController.GetAvailable();
-                sources = WorkerCheckInController.Get();
-                //workList = WorkListController.Get();
-
-                checkOutList = sources.Where(w => w.CheckInDate == defineModel.StartDateScanWorkerCheckIn && w.CheckType == 1).ToList();
-                foreach (var item in sources)
-                {
-                    var empById = employeeList.FirstOrDefault(f => f.EmployeeCode == item.EmployeeCode);
-                    if (empById != null)
-                    {
-                        item.EmployeeID = empById.EmployeeID;
-                        item.EmployeeName = empById.EmployeeName;
-                        item.DepartmentName = empById.DepartmentName;
-                    }
-                }
+                
+                workListStatistics = WorkListController.GetByDate(toDay);
+                workerCheckInList = WorkerCheckInController.GetByDate(toDay);
             }
             catch (Exception ex)
             {
@@ -129,6 +114,7 @@ namespace PersonalSV.Views
                     try
                     {
                         workList = WorkListController.GetByEmpId(empById.EmployeeID);
+                        workListStatistics = WorkListController.GetByDate(toDay);
                     }
                     catch (Exception ex)
                     {
@@ -139,7 +125,7 @@ namespace PersonalSV.Views
                     // Check in worklist
                     if (workList.Count() > 0)
                     {
-                        var workListToday = workList.Where(w => w.TestDate == today).ToList();
+                        var workListToday = workList.Where(w => w.TestDate == toDay).ToList();
                         // Check Worker in worklist today
                         if (workListToday.Count() > 0)
                         {
@@ -167,7 +153,7 @@ namespace PersonalSV.Views
                         else
                         {
                             // Check Status
-                            var workerWithStatusHistory = workList.Where(w => w.TestDate < today).OrderBy(o => o.TestDate).LastOrDefault();
+                            var workerWithStatusHistory = workList.Where(w => w.TestDate < toDay).OrderBy(o => o.TestDate).LastOrDefault();
                             if (workerWithStatusHistory != null)
                             {
                                 if (workerWithStatusHistory.TestStatus == 2)
@@ -181,16 +167,18 @@ namespace PersonalSV.Views
                                 }
                                 else if (workerWithStatusHistory.TestStatus == 0)
                                 {
-                                    string msgNotExistInWorkListToday = string.Format("{0} - {1:dd/MM/yyyy}", lblNotExistInTestList, today);
+                                    string msgNotExistInWorkListToday = string.Format("{0} - {1:dd/MM/yyyy}", lblNotExistInTestList, toDay);
                                     AlertScan(msgNotExistInWorkListToday, Brushes.Red, empById);
                                 }
                             }
                             else
                             {
-                                string msgNotExistInWorkListToday = string.Format("{0} - {1:dd/MM/yyyy}", lblNotExistInTestList, today);
+                                string msgNotExistInWorkListToday = string.Format("{0} - {1:dd/MM/yyyy}", lblNotExistInTestList, toDay);
                                 AlertScan(msgNotExistInWorkListToday, Brushes.Red, empById);
                             }
                         }
+
+                        DoStatistics(workListStatistics, workerCheckInList);
                     }
                     else
                     {
@@ -207,8 +195,33 @@ namespace PersonalSV.Views
                     grDisplay.DataContext = notFound;
                     SetTxtDefault();
                 }
+                
+                // Refresh Counter
             }
         }
+
+        private void DoStatistics(List<WorkListModel> workListStatistics, List<WorkerCheckInModel> workerCheckInList)
+        {
+            var totalWorker = workListStatistics.Select(s => s.EmployeeID).Distinct().ToList().Count();
+            var totalCheckedIn = workerCheckInList.Where(w => !string.IsNullOrEmpty(w.RecordTime) && w.CheckType == 0).Select(s => s.EmployeeCode).Distinct().ToList().Count();
+            double percent = 0;
+            if (totalWorker != 0)
+            {
+                percent = Math.Round(((double)totalCheckedIn / (double)totalWorker * 100), 1);
+            }
+
+            var displayModel = new CheckInStatistics
+            {
+                TestDate = string.Format("{0}: {1:dd/MM/yyyy}", lblInfoTestDate, toDay),
+                TotalWorkList = string.Format("{0}: {1}", lblInfoTotalWorkList, totalWorker),
+                Scanned = string.Format("{0}: {1} / {2}", lblInfoScanned, totalCheckedIn, totalWorker),
+                Ratio = string.Format("{0}: {1} %", lblInfoRatio, percent)
+            };
+
+            grStatistics.DataContext = null;
+            grStatistics.DataContext = displayModel;
+        }
+
         private void AlertScan(string msg, SolidColorBrush color ,EmployeeModel empById)
         {
             brDisplay.Background = color;
@@ -221,6 +234,7 @@ namespace PersonalSV.Views
             grDisplay.DataContext = alert;
             SetTxtDefault();
         }
+        
         private void AddRecord( EmployeeModel empById)
         {
             var record = new WorkerCheckInModel()
@@ -239,14 +253,7 @@ namespace PersonalSV.Views
             {
                 grDisplay.DataContext = record;
                 WorkerCheckInController.Insert(record);
-                sources.Add(record);
-
-                dgWorkerCheckIn.ItemsSource = sources;
-                dgWorkerCheckIn.Items.Refresh();
-                dgWorkerCheckIn.SelectedItem = record;
-                dgWorkerCheckIn.ScrollIntoView(record);
-
-                CountTotal(sources);
+                workerCheckInList.Add(record);
 
                 SetTxtDefault();
             }
@@ -256,15 +263,7 @@ namespace PersonalSV.Views
                 SetTxtDefault();
             }
         }
-        private void CountTotal(List<WorkerCheckInModel> sources)
-        {
-            lblTotal.Text = "";
-            if (sources.Count()>0)
-            {
-                var totalWorker = sources.Select(s => s.EmployeeCode).Distinct().ToList();
-                lblTotal.Text = string.Format("Total: {0}", totalWorker.Count());
-            }
-        }
+
         private void SetTxtDefault()
         {
             txtCardId.SelectAll();
@@ -288,46 +287,17 @@ namespace PersonalSV.Views
             e.Row.Header = e.Row.GetIndex() + 1;
         }
 
-        private void miRemove_Click(object sender, RoutedEventArgs e)
-        {
-            var items = dgWorkerCheckIn.SelectedItems.OfType<WorkerCheckInModel>().ToList();
-            if (items.Count() > 0 && dgWorkerCheckIn.ItemsSource != null)
-            {
-                string msgConfirmDelete = LanguageHelper.GetStringFromResource("messageConfirmDelete");
-                if (MessageBox.Show(msgConfirmDelete, this.Title, MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
-                {
-                    return;
-                }
-                else
-                {
-                    var idsRemove = items.Select(s => s.Id).Distinct().ToList();
-                    var sources = dgWorkerCheckIn.ItemsSource.OfType<WorkerCheckInModel>().ToList();
-
-                    try
-                    {
-                        foreach (var id in idsRemove)
-                        {
-                            WorkerCheckInController.Delete(id);
-                        }
-                        var sourcesAfterRemove = sources.RemoveAll(r => idsRemove.Contains(r.Id));
-
-                        dgWorkerCheckIn.ItemsSource = sources;
-                        dgWorkerCheckIn.Items.Refresh();
-                        CountTotal(sources);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message.ToString());
-                    }
-
-                    
-                }
-            }
-        }
-
         private void txtCardId_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             txtCardId.SelectAll();
+        }
+        
+        private class CheckInStatistics
+        {
+            public string TestDate { get; set; }
+            public string TotalWorkList { get; set; }
+            public string Scanned { get; set; }
+            public string Ratio { get; set; }
         }
     }
 }

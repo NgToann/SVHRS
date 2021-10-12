@@ -138,5 +138,17 @@
             </DataGrid>
         </Border>
         <TextBlock Grid.Row="2" x:Name="lblTotalWorker" Foreground="Blue" FontWeight="SemiBold" Visibility="Collapsed"/>
+        <Button x:Name="btnExportExcel" Width="150" Margin="0,2,0,0" HorizontalAlignment="Right" Grid.Row="2" Grid.Column="2" Template="{DynamicResource ResourceKey=ButtonTemplate}"  Click="btnExportExcel_Click" Cursor="Hand">
+            <Button.Content>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Margin="2,0,0,0" Grid.Row="1" VerticalAlignment="Center" Text="{DynamicResource ResourceKey=reportExportExcel}"/>
+                </Grid>
+            </Button.Content>
+        </Button>
+
     </Grid>
 </Window>

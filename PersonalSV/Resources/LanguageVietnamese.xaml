@@ -377,7 +377,7 @@
     <system:String x:Key="dayOfWeekSaturday">Thứ Bảy</system:String>
     <system:String x:Key="dayOfWeekSunday">Chủ Nhật</system:String>
     
-    <!--Worker Check In Window-->
+    <!--Worker Check In, Out Window-->
     <system:String x:Key="workerCheckInWindowTitle">SV-HRS Scan giờ vào</system:String>
     <system:String x:Key="workerCheckOutWindowTitle">SV-HRS Scan giờ ra</system:String>
     <system:String x:Key="workerCheckInTitle">SCAN GIỜ VÀO</system:String>
@@ -387,7 +387,19 @@
     <system:String x:Key="menuWorkerCheckIn">1. Scan Giờ Vào</system:String>
     <system:String x:Key="menuWorkerCheckOut">2. Scan Giờ Ra</system:String>
     <system:String x:Key="menuReportCheckInOut">Báo Cáo Giờ Ra, Vào (Scan Thẻ)</system:String>
-    <system:String x:Key="reportCheckInOutWindowTitle">SV-HRS  Báo Cáo Giờ Ra, Vào (Scan Thẻ)</system:String>
+    <system:String x:Key="reportCheckInOutWindowTitle">SV-HRS  Báo Cáo Giờ Ra, Vào (Scan Thẻ)</system:String>    
+    
+    <system:String x:Key="workerCheckInStatistics">Thống kê</system:String>
+    <system:String x:Key="workerCheckInStatisticsTestDate">Ngày</system:String>
+    <system:String x:Key="workerCheckInStatisticsTotalWorkList">Danh sách đi làm</system:String>
+    <system:String x:Key="workerCheckInStatisticsCurrentScan">Đã Scan</system:String>
+    <system:String x:Key="workerCheckInStatisticsRatio">Tỷ Lệ</system:String>    
+    
+    <system:String x:Key="workerCheckOutStatisticsCheckOutDate">Ngày kiểm tra</system:String>
+    <system:String x:Key="workerCheckOutStatisticsCheckIn">Check In</system:String>
+    <system:String x:Key="workerCheckOutStatisticsCheckOut">Check Out</system:String>
+    
+    <system:String x:Key="workerCheckOutMessageDoNotCheckIn">Chưa Check In</system:String>    
     
     <system:String x:Key="workerCheckInMessageNotPriority">KHÔNG CÓ TRONG DANH SÁCH ĐI LÀM</system:String>
     <system:String x:Key="workerCheckInMessageExistInF0List">CÓ TRONG DANH SÁCH F0</system:String>
@@ -421,7 +433,7 @@
     <system:String x:Key="testRandomInfoRound">Vòng</system:String>
     <system:String x:Key="testRandomInfoTotalWorker">Tổng số</system:String>
     <system:String x:Key="testRandomInfoCurrent">Hiện tại</system:String>
-    <system:String x:Key="testRandomInfoRandomRatio">Tỷ Lệ</system:String>
+    <system:String x:Key="testRandomInfoRandomRatio">Tỷ Lệ</system:String>    
     
     <system:String x:Key="testRequestListWindowTitle">SV-HRS Danh Sách Test</system:String>
     <system:String x:Key="testRequestListHeader">DANH SÁCH CẦN TEST NHANH</system:String>
