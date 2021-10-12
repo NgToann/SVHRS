@@ -22,5 +22,10 @@ namespace PersonalSV.Views
         {
             InitializeComponent();
         }
+
+        private void dgRandomList_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+
+        }
     }
 }

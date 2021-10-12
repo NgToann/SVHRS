@@ -179,7 +179,11 @@ namespace PersonalSV
                 miCovidTest.IsEnabled = true;
                 miManager.IsEnabled = false;
                 miSalary.IsEnabled = false;
-                miReports.IsEnabled = false;
+
+                miDailyReport.IsEnabled = false;
+                miSalarySummaryReport.IsEnabled = false;
+                miReport2020.IsEnabled = false;
+                miReportMissingRecordTime.IsEnabled = false;
             }
             if (account.IsPersonel)
             {
@@ -187,6 +191,19 @@ namespace PersonalSV
                 miManager.IsEnabled = true;
                 miSalary.IsEnabled = true;
                 miReports.IsEnabled = true;
+            }
+
+            if (account.Branch.Equals("THIENLOC"))
+            {
+                miWorkerCheckIn.IsEnabled = false;
+                miWorkerCheckOut.IsEnabled = false;
+
+                //reports
+                miReportScanTimeInOut.IsEnabled = false;
+            }
+            else if(account.Branch.Equals("SAOVIET"))
+            {
+                miCreateTestTerm.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -212,6 +229,11 @@ namespace PersonalSV
         {
             TestRandomWindow window = new TestRandomWindow();
             window.Show();
+        }
+
+        private void miCreateTestTerm_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
         //private void miLeaveWithReason_Click(object sender, RoutedEventArgs e)

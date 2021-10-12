@@ -5,8 +5,88 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PersonalSV.Views"
         mc:Ignorable="d"
-        Title="TestCovidCreateTestTermWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="{DynamicResource ResourceKey=createTestTermWindowTitle}" Height="450" Width="800">
+    <Grid Margin="2">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <DataGrid Grid.Row="2" x:Name="dgRandomList" AutoGenerateColumns="False" AlternationCount="2" AlternatingRowBackground="LightCyan"
+                      CanUserAddRows="False" SelectionUnit="FullRow" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
+                      IsReadOnly="True" FontFamily="Arial" FontSize="15" FrozenColumnCount="3" RowHeaderWidth="NaN" LoadingRow="dgRandomList_LoadingRow">
+            <DataGrid.Resources>
+                <Style TargetType="{x:Type DataGridCell}">
+                    <Style.Triggers>
+                        <Trigger Property="DataGridCell.IsSelected" Value="True">
+                            <Setter Property="Background" Value="DodgerBlue"/>
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Resources>
+
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="FontSize" Value="16"/>
+                    <Setter Property="Background" Value="{DynamicResource ResourceKey=DataGridRowHeaderBG}"/>
+                    <Setter Property="BorderBrush" Value="Gray"/>
+                    <Setter Property="BorderThickness" Value="0.5,0.5,0.5,0"/>
+                    <Setter Property="Padding" Value="5"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeCode}" SortMemberPath="EmployeeCode">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding EmployeeCode}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeID}" SortMemberPath="EmployeeID">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding EmployeeID}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeName}" SortMemberPath="EmployeeName">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding EmployeeName}" Margin="3" VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeDepartment}" SortMemberPath="DepartmentName">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DepartmentName}" Margin="3" VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=testRequestListVaccince1st}" SortMemberPath="VaccineFirstType">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding VaccineFirstType}" Margin="3" VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=testRequestListVaccince2nd}" SortMemberPath="VaccinceSecondType">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding VaccineSecondType}" Margin="3" VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=testRequestListRecordTime}" SortMemberPath="TestRandomTimeIn">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding TestRandomTimeIn}" Margin="3" VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>
