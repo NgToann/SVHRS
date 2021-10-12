@@ -41,6 +41,7 @@ namespace PersonalSV.Views
             bwLoad.RunWorkerCompleted += BwLoad_RunWorkerCompleted;
             
             employeeList = new List<EmployeeModel>();
+            workerCheckInList = new List<WorkerCheckInModel>();
 
             lblResourceNotFound = LanguageHelper.GetStringFromResource("messageNotFound");
             lblDoNotCheckIn = LanguageHelper.GetStringFromResource("workerCheckOutMessageDoNotCheckIn");
