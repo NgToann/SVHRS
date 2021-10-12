@@ -1,21 +1,14 @@
-﻿using System;
+﻿using PersonalSV.Controllers;
+using PersonalSV.Models;
+using PersonalSV.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-using PersonalSV.Controllers;
-using PersonalSV.Helpers;
-using PersonalSV.Models;
-using PersonalSV.ViewModels;
 
 namespace PersonalSV.Views
 {
@@ -28,7 +21,6 @@ namespace PersonalSV.Views
         List<EmployeeModel> employeeList;
         BackgroundWorker bwLoad;
         List<WorkListModel> workList;
-        private int checkType = 2;
         public WorkerCheckInReportWindow()
         {
             bwLoad = new BackgroundWorker();
@@ -131,8 +123,8 @@ namespace PersonalSV.Views
                         DepartmentName = employeeById.DepartmentName,
                         TestDate = date,
                         TestStatus = workListByEmpId.TestStatus,
-                        TimeIn=timeIn,
-                        TimeOut=timeOut
+                        TimeIn = timeIn,
+                        TimeOut = timeOut
                     };
                     dataList.Add(displayModel);
                 }
@@ -167,7 +159,6 @@ namespace PersonalSV.Views
             public string TimeIn { get; set; }
             public string TimeOut { get; set; }
             public int TestStatus { get; set; }
-
         }
     }
 }

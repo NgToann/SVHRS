@@ -78,56 +78,56 @@
                     </Style>
                 </DataGrid.ColumnHeaderStyle>
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeCode}" SortMemberPath="EmployeeCode">
+                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeCode}" SortMemberPath="EmployeeCode" ClipboardContentBinding="{Binding EmployeeCode}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding EmployeeCode}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeID}" SortMemberPath="EmployeeID">
+                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeID}" SortMemberPath="EmployeeID" ClipboardContentBinding="{Binding EmployeeID}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding EmployeeID}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeName}" SortMemberPath="EmployeeName">
+                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeName}" SortMemberPath="EmployeeName" ClipboardContentBinding="{Binding EmployeeName}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding EmployeeName}" Margin="3" VerticalAlignment="Center"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeDepartment}" SortMemberPath="DepartmentName">
+                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeDepartment}" SortMemberPath="DepartmentName" ClipboardContentBinding="{Binding DepartmentName}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding DepartmentName}" Margin="3" VerticalAlignment="Center"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeDate}" SortMemberPath="TestDate">
+                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeDate}" SortMemberPath="TestDate" ClipboardContentBinding="{Binding TestDate}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding TestDate, StringFormat=MM/dd/yyyy}" Margin="3" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding TestDate, StringFormat=dd/MM/yyyy}" Margin="3" VerticalAlignment="Center"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=reportGridTimeIn}" SortMemberPath="TimeIn">
+                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=reportGridTimeIn}" SortMemberPath="TimeIn" ClipboardContentBinding="{Binding TimeIn}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding TimeIn}" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=reportGridTimeOut}" SortMemberPath="TimeOut">
+                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=reportGridTimeOut}" SortMemberPath="TimeOut" ClipboardContentBinding="{Binding TimeOut}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding TimeOut}" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=reportGridStatus}" SortMemberPath="TestStatus">
+                    <DataGridTemplateColumn Header="{DynamicResource ResourceKey=reportGridStatus}" SortMemberPath="TestStatus" ClipboardContentBinding="{Binding TestStatus}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding TestStatus}" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>

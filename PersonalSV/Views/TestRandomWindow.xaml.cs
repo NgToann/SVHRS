@@ -305,8 +305,7 @@ namespace PersonalSV.Views
                 }
                 else if (testRequestByEmpId != null)
                 {
-                    this.Background = Brushes.Yellow;
-
+                    brDisplay.Background = Brushes.Yellow;
                     var displayRequireTestInfo = new DisplayInfo
                     {
                         EmployeeName = String.Format("{0} - {1}", empById.EmployeeName, empById.EmployeeID),
@@ -338,7 +337,7 @@ namespace PersonalSV.Views
                 }
                 else
                 {
-                    this.Background = Brushes.Green;
+                    brDisplay.Background = Brushes.Green;
                     var displayWelcomeInfo = new DisplayInfo
                     {
                         EmployeeName = String.Format("{0} - {1}", empById.EmployeeName, empById.EmployeeID),

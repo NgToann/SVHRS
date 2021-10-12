@@ -68,7 +68,7 @@ namespace PersonalSV.Views
             try
             {
                 employeeList = EmployeeController.GetAvailable();
-                workList = WorkListController.Get();
+                //workList = WorkListController.Get();
             }
             catch (Exception ex)
             {
@@ -90,7 +90,18 @@ namespace PersonalSV.Views
                 var empById = employeeList.FirstOrDefault(f => f.EmployeeCode == scanWhat);
                 if (empById != null)
                 {
-                    var workListToDayByEmpId = workList.Where(w => w.TestDate == toDay && w.EmployeeID.Trim().ToLower().ToString() == empById.EmployeeID.Trim().ToLower().ToString()).ToList();
+                    try
+                    {
+                        workList = WorkListController.GetByEmpId(empById.EmployeeID);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message.ToString());
+                        SetTxtDefault();
+                        return;
+                    }
+
+                    var workListToDayByEmpId = workList.Where(w => w.TestDate == toDay).ToList();
                     if (workListToDayByEmpId.Count == 0)
                     {
                         brDisplay.Background = Brushes.Yellow;

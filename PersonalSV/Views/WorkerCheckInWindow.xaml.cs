@@ -90,7 +90,7 @@ namespace PersonalSV.Views
                 workerF0List = CommonController.GetWorkerF0();
                 employeeList = EmployeeController.GetAvailable();
                 sources = WorkerCheckInController.Get();
-                workList = WorkListController.Get();
+                //workList = WorkListController.Get();
 
                 checkOutList = sources.Where(w => w.CheckInDate == defineModel.StartDateScanWorkerCheckIn && w.CheckType == 1).ToList();
                 foreach (var item in sources)
@@ -126,125 +126,76 @@ namespace PersonalSV.Views
                 var empById = employeeList.FirstOrDefault(f => f.EmployeeCode == scanWhat);
                 if (empById != null)
                 {
+                    try
+                    {
+                        workList = WorkListController.GetByEmpId(empById.EmployeeID);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message.ToString());
+                        SetTxtDefault();
+                        return;
+                    }
                     // Check in worklist
-                    var workListByEmpId = workList.Where(w => w.EmployeeID.Trim().ToLower().ToString() == empById.EmployeeID.Trim().ToLower().ToString()).ToList();
-                    if (workListByEmpId.Count() > 0)
+                    if (workList.Count() > 0)
                     {
                         var workListToday = workList.Where(w => w.TestDate == today).ToList();
-                        // check status today
-                        var workerWithStatus0 = workListToday.Where(w => w.EmployeeID.Trim().ToLower().ToString() == empById.EmployeeID.Trim().ToLower().ToString()).ToList();
-                        if (workerWithStatus0.Count() > 0)
+                        // Check Worker in worklist today
+                        if (workListToday.Count() > 0)
                         {
-                            brDisplay.Background = Brushes.Yellow;
-                            AddRecord(empById);
-                        }
-                        else
-                        {
-                            var workerHasStatusBeforeToday = workList.Where(w => w.TestDate < today && w.EmployeeID.Trim().ToLower().ToString() == empById.EmployeeID.Trim().ToLower().ToString())
-                                                                        .OrderBy(o => o.TestDate).LastOrDefault();
-                            if (workerHasStatusBeforeToday != null)
+                            // Check Status
+                            var workerWithStatusToDay = workListToday.FirstOrDefault();
+                            if (workerWithStatusToDay != null)
                             {
-                                if (workerHasStatusBeforeToday.TestStatus == 2)
+                                if (workerWithStatusToDay.TestStatus == 2)
                                 {
-                                    brDisplay.Background = Brushes.Red;
-                                    var notAllowedAlert = new WorkerCheckInModel
-                                    {
-                                        EmployeeName = empById.EmployeeName,
-                                        EmployeeID = empById.EmployeeID,
-                                        RecordTime = lblNotAllowed
-                                    };
-                                    grDisplay.DataContext = notAllowedAlert;
-                                    SetTxtDefault();
+                                    AlertScan(lblNotAllowed, Brushes.Red, empById);
                                 }
-                                else if (workerHasStatusBeforeToday.TestStatus == 1)
+                                else if (workerWithStatusToDay.TestStatus == 1)
                                 {
                                     brDisplay.Background = Brushes.Green;
                                     AddRecord(empById);
                                 }
-                                else if (workerHasStatusBeforeToday.TestStatus == 0)
+                                else if (workerWithStatusToDay.TestStatus == 0)
                                 {
-                                    brDisplay.Background = Brushes.Red;
-                                    var notExistInWorkList = new WorkerCheckInModel
-                                    {
-                                        EmployeeName = empById.EmployeeName,
-                                        EmployeeID = empById.EmployeeID,
-                                        RecordTime = string.Format("{0} - {1:dd/MM/yyyy}", lblNotExistInTestList, today)
-                                    };
-                                    grDisplay.DataContext = notExistInWorkList;
-                                    SetTxtDefault();
+                                    brDisplay.Background = Brushes.Yellow;
+                                    AddRecord(empById);
                                 }
+                            }
+                        }
+                        // Check History Nearest
+                        else
+                        {
+                            // Check Status
+                            var workerWithStatusHistory = workList.Where(w => w.TestDate < today).OrderBy(o => o.TestDate).LastOrDefault();
+                            if (workerWithStatusHistory != null)
+                            {
+                                if (workerWithStatusHistory.TestStatus == 2)
+                                {
+                                    AlertScan(lblNotAllowed, Brushes.Red, empById);
+                                }
+                                else if (workerWithStatusHistory.TestStatus == 1)
+                                {
+                                    brDisplay.Background = Brushes.Green;
+                                    AddRecord(empById);
+                                }
+                                else if (workerWithStatusHistory.TestStatus == 0)
+                                {
+                                    string msgNotExistInWorkListToday = string.Format("{0} - {1:dd/MM/yyyy}", lblNotExistInTestList, today);
+                                    AlertScan(msgNotExistInWorkListToday, Brushes.Red, empById);
+                                }
+                            }
+                            else
+                            {
+                                string msgNotExistInWorkListToday = string.Format("{0} - {1:dd/MM/yyyy}", lblNotExistInTestList, today);
+                                AlertScan(msgNotExistInWorkListToday, Brushes.Red, empById);
                             }
                         }
                     }
                     else
                     {
-                        brDisplay.Background = Brushes.Red;
-                        var notExistInWorkList = new WorkerCheckInModel
-                        {
-                            EmployeeName = empById.EmployeeName,
-                            EmployeeID = empById.EmployeeID,
-                            RecordTime = lblNotExitsInWorkList
-                        };
-                        grDisplay.DataContext = notExistInWorkList;
-                        SetTxtDefault();
-                    }
-
-                    //// check priority exist
-                    //var priorityById = workerPriorityList.Where(w => w.EmployeeID.Trim().ToLower().ToString() == empById.EmployeeID.Trim().ToLower().ToString()).ToList();
-
-                    //// check is FO
-                    //var isF0 = workerF0List.Where(w => w.EmployeeID.Trim().ToLower().ToString() == empById.EmployeeID.Trim().ToLower().ToString()).ToList();
-
-                    //if (priorityById.Count() == 0)
-                    //{
-                    //    brDisplay.Background = Brushes.Red;
-
-                    //    var notPriority = new WorkerCheckInModel
-                    //    {
-                    //        EmployeeName = empById.EmployeeName,
-                    //        EmployeeID = empById.EmployeeID,
-                    //        RecordTime = lblNotPriorityAlert
-                    //    };
-                    //    grDisplay.DataContext = notPriority;
-
-                    //    SetTxtDefault();
-                    //}
-                    //else if (isF0.Count() > 0)
-                    //{
-                    //    brDisplay.Background = Brushes.Red;
-
-                    //    var isF0Alert = new WorkerCheckInModel
-                    //    {
-                    //        EmployeeName = empById.EmployeeName,
-                    //        EmployeeID = empById.EmployeeID,
-                    //        RecordTime = lblF0Alert
-                    //    };
-                    //    grDisplay.DataContext = isF0Alert;
-
-                    //    SetTxtDefault();
-                    //}
-                    //else
-                    //{
-                    //    // check worker has checked out on the first date.
-                    //    var checkOutById = checkOutList.Where(w => w.EmployeeCode == empById.EmployeeCode).ToList();
-                    //    if (checkOutById.Count() > 0 || defineModel.StartDateScanWorkerCheckIn.Date == DateTime.Now.Date)
-                    //    {
-                    //        AddRecord(empById);
-                    //    }
-                    //    // Alert message
-                    //    else
-                    //    {
-                    //        brDisplay.Background = Brushes.Yellow;
-                    //        var notCheckOut = new WorkerCheckInModel
-                    //        {
-                    //            EmployeeName = empById.EmployeeName,
-                    //            EmployeeID = empById.EmployeeID,
-                    //            RecordTime = String.Format("{0} {1:dd/MM/yyyy}", lblNotYetCheckOut, defineModel.StartDateScanWorkerCheckIn)
-                    //        };
-                    //        grDisplay.DataContext = notCheckOut;
-                    //        SetTxtDefault();
-                    //    }
-                    //}
+                        AlertScan(lblNotExitsInWorkList, Brushes.Red, empById);
+                    }                   
                 }
                 else
                 {
@@ -257,6 +208,18 @@ namespace PersonalSV.Views
                     SetTxtDefault();
                 }
             }
+        }
+        private void AlertScan(string msg, SolidColorBrush color ,EmployeeModel empById)
+        {
+            brDisplay.Background = color;
+            var alert = new WorkerCheckInModel
+            {
+                EmployeeName = empById.EmployeeName,
+                EmployeeID = empById.EmployeeID,
+                RecordTime = msg
+            };
+            grDisplay.DataContext = alert;
+            SetTxtDefault();
         }
         private void AddRecord( EmployeeModel empById)
         {
