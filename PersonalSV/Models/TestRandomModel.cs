@@ -20,5 +20,9 @@ namespace PersonalSV.Models
         public string Status { get; set; }
         public Nullable<DateTime> CreatedTime { get; set; }
         public Nullable<DateTime> UpdatedTime { get; set; }
+
+        public string EmployeeID { get; set; }
+        public string EmployeeName { get; set; }
+        public string DepartmentName { get; set; }
     }
 }

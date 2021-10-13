@@ -74,15 +74,19 @@
             <Viewbox Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Grid x:Name="grDisplay">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="{Binding EmployeeName}" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Row="1" Text="{Binding EmployeeID}" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Row="2" Text="{Binding DepartmentName}" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Row="4" Text="{Binding RecordTime}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding EmployeeDisplay}" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Row="1" Text="{Binding DepartmentName}" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Row="2" Text="{Binding RecordTime}" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Row="3" Text="{Binding NextTestDate}" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Row="4" Text="{Binding TestTime}" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Row="5" Text="{Binding WorkTime}" HorizontalAlignment="Center"/>
                 </Grid>
             </Viewbox>
         </Border>

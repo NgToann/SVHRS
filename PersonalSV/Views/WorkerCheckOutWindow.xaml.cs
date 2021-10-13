@@ -153,7 +153,6 @@ namespace PersonalSV.Views
             try
             {
                 grDisplay.DataContext = record;
-
                 WorkerCheckInController.Insert(record);
                 workerCheckInList = WorkerCheckInController.GetByDate(toDay);
 

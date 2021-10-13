@@ -421,9 +421,7 @@
     <system:String x:Key="reportGridStatus">Status</system:String>
     
     
-    <system:String x:Key="reportExportExcel">Export Excel</system:String>
-    
-    
+    <system:String x:Key="reportExportExcel">Export Excel</system:String>    
     
     <!--Test Random Feature-->
     <system:String x:Key="testRandomWindowTitle">SV-HRS Covid Quick Test Random</system:String>

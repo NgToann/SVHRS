@@ -11,5 +11,6 @@ namespace PersonalSV.Models
         public int NoOfValueDate { get; set; }
         public DateTime StartDateScanWorkerCheckIn { get; set; }
         public int TestRandomRatio { get; set; }
+        public string AfternoonStone { get; set; }
     }
 }

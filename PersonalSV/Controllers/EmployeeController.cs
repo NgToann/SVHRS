@@ -11,7 +11,7 @@ namespace PersonalSV.Controllers
 {
     public class EmployeeController
     {
-        static List<DepartmentModel> departmentList = DepartmentController.GetDepartments();
+        //static List<DepartmentModel> departmentList = DepartmentController.GetDepartments();
 
         public static List<EmployeeModel> GetAll()
         {

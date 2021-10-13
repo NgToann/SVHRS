@@ -30,22 +30,24 @@ namespace PersonalSV.Views
 
         private string lblResourceNotFound = "", lblNotExitsInWorkList = "", lblNotAllowed = "", lblNotExistInTestList = "";
         private string lblInfoTestDate = "", lblInfoTotalWorkList = "", lblInfoScanned = "", lblInfoRatio = "";
-        
 
+        private PrivateDefineModel defModel;
         private List<WorkListModel> workList;
-        private List<WorkListModel> workListStatistics;
+        private List<WorkListModel> workListAll;
         private List<WorkerCheckInModel> workerCheckInList;
 
         private DateTime toDay = DateTime.Now.Date;
+        private string afternoonStone = "";
         public WorkerCheckInWindow()
         {
             bwLoad = new BackgroundWorker();
             bwLoad.DoWork += BwLoad_DoWork;
             bwLoad.RunWorkerCompleted += BwLoad_RunWorkerCompleted;
 
+            defModel = new PrivateDefineModel();
             employeeList = new List<EmployeeModel>();
             workList = new List<WorkListModel>();
-            workListStatistics = new List<WorkListModel>();
+            workListAll = new List<WorkListModel>();
             workerCheckInList = new List<WorkerCheckInModel>();
 
             lblResourceNotFound = LanguageHelper.GetStringFromResource("messageNotFound");
@@ -57,7 +59,6 @@ namespace PersonalSV.Views
             lblInfoTotalWorkList = LanguageHelper.GetStringFromResource("workerCheckInStatisticsTotalWorkList");
             lblInfoScanned = LanguageHelper.GetStringFromResource("workerCheckInStatisticsCurrentScan");
             lblInfoRatio = LanguageHelper.GetStringFromResource("workerCheckInStatisticsRatio");
-
 
             clock = new DispatcherTimer();
             clock.Tick += Clock_Tick;
@@ -74,7 +75,7 @@ namespace PersonalSV.Views
         private void BwLoad_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             this.Cursor = null;
-            DoStatistics(workListStatistics, workerCheckInList);
+            DoStatistics(workListAll, workerCheckInList);
 
             txtCardId.IsEnabled = true;
             SetTxtDefault();
@@ -85,9 +86,11 @@ namespace PersonalSV.Views
             try
             {
                 employeeList = EmployeeController.GetAvailable();
-                
-                workListStatistics = WorkListController.GetByDate(toDay);
+                workListAll = WorkListController.Get();
                 workerCheckInList = WorkerCheckInController.GetByDate(toDay);
+                defModel = CommonController.GetDefineProps();
+
+                afternoonStone = defModel.AfternoonStone;
             }
             catch (Exception ex)
             {
@@ -100,6 +103,7 @@ namespace PersonalSV.Views
 
         private void txtCardId_PreviewKeyUp(object sender, KeyEventArgs e)
         {
+            var currentTime = string.Format("{0:HH:mm}", DateTime.Now);
             grDisplay.DataContext = null;
             this.Background = Brushes.WhiteSmoke; 
             brDisplay.Background = Brushes.WhiteSmoke;
@@ -114,7 +118,6 @@ namespace PersonalSV.Views
                     try
                     {
                         workList = WorkListController.GetByEmpId(empById.EmployeeID);
-                        workListStatistics = WorkListController.GetByDate(toDay);
                     }
                     catch (Exception ex)
                     {
@@ -125,60 +128,127 @@ namespace PersonalSV.Views
                     // Check in worklist
                     if (workList.Count() > 0)
                     {
-                        var workListToday = workList.Where(w => w.TestDate == toDay).ToList();
-                        // Check Worker in worklist today
-                        if (workListToday.Count() > 0)
+                        var testToday = workList.Where(w => w.TestDate == toDay).ToList();
+                        var testNextDay = workList.Where(w => w.TestDate > toDay).ToList();
+                        var testBefore = workList.Where(w => w.TestDate < toDay).ToList();
+
+                        // Morning currenttime <= afternoon
+                        if (String.Compare(currentTime, afternoonStone) < 1)
                         {
-                            // Check Status
-                            var workerWithStatusToDay = workListToday.FirstOrDefault();
-                            if (workerWithStatusToDay != null)
+                            if (testToday.Count() > 0)
                             {
-                                if (workerWithStatusToDay.TestStatus == 2)
-                                {
-                                    AlertScan(lblNotAllowed, Brushes.Red, empById);
-                                }
-                                else if (workerWithStatusToDay.TestStatus == 1)
-                                {
-                                    brDisplay.Background = Brushes.Green;
-                                    AddRecord(empById);
-                                }
-                                else if (workerWithStatusToDay.TestStatus == 0)
+                                var workerTestToday = testToday.FirstOrDefault();
+                                if (workerTestToday.TestStatus == 0)
                                 {
                                     brDisplay.Background = Brushes.Yellow;
-                                    AddRecord(empById);
+                                    AddRecord(empById, workerTestToday, false);
                                 }
-                            }
-                        }
-                        // Check History Nearest
-                        else
-                        {
-                            // Check Status
-                            var workerWithStatusHistory = workList.Where(w => w.TestDate < toDay).OrderBy(o => o.TestDate).LastOrDefault();
-                            if (workerWithStatusHistory != null)
-                            {
-                                if (workerWithStatusHistory.TestStatus == 2)
+                                else if (workerTestToday.TestStatus == 1)
+                                {
+                                    brDisplay.Background = Brushes.Green;
+                                    AddRecord(empById, null, false);
+                                }
+                                else if (workerTestToday.TestStatus == 2)
                                 {
                                     AlertScan(lblNotAllowed, Brushes.Red, empById);
                                 }
-                                else if (workerWithStatusHistory.TestStatus == 1)
+                            }
+                            else if (testBefore.Count() > 0)
+                            {
+                                var workerTestLatest = testBefore.OrderBy(o => o.TestDate).LastOrDefault();
+                                if (workerTestLatest.TestStatus == 0)
+                                {
+                                    brDisplay.Background = Brushes.Yellow;
+                                    AddRecord(empById, workerTestLatest, false);
+                                }
+                                else if (workerTestLatest.TestStatus == 1)
                                 {
                                     brDisplay.Background = Brushes.Green;
-                                    AddRecord(empById);
+                                    AddRecord(empById, null , false);
                                 }
-                                else if (workerWithStatusHistory.TestStatus == 0)
+                                else if (workerTestLatest.TestStatus == 2)
                                 {
-                                    string msgNotExistInWorkListToday = string.Format("{0} - {1:dd/MM/yyyy}", lblNotExistInTestList, toDay);
-                                    AlertScan(msgNotExistInWorkListToday, Brushes.Red, empById);
+                                    AlertScan(lblNotAllowed, Brushes.Red, empById);
                                 }
-                            }
-                            else
-                            {
-                                string msgNotExistInWorkListToday = string.Format("{0} - {1:dd/MM/yyyy}", lblNotExistInTestList, toDay);
-                                AlertScan(msgNotExistInWorkListToday, Brushes.Red, empById);
                             }
                         }
+                        // Afternoon
+                        else
+                        {
+                            var testBeforeOrToday = workList.Where(w => w.TestDate <= toDay).ToList();
+                            if (testNextDay.Count() > 0)
+                            {
+                                var workerTestNextDay = testNextDay.FirstOrDefault();
+                                brDisplay.Background = Brushes.Yellow;
+                                AddRecord(empById, workerTestNextDay, true);
+                            }
+                            else if (testBeforeOrToday.Count() > 0)
+                            {
+                                var workerTestBeforeOrToday = testBeforeOrToday.OrderBy(o => o.TestDate).LastOrDefault();
+                                if (workerTestBeforeOrToday.TestStatus == 1)
+                                {
+                                    brDisplay.Background = Brushes.Green;
+                                    AddRecord(empById, null, false);
+                                }
+                            }
+                        }
+                        #region None
+                        //var workListToday = workList.Where(w => w.TestDate == toDay).ToList();
+                        //// Check Worker in worklist today
+                        //if (workListToday.Count() > 0)
+                        //{
+                        //    // Check Status
+                        //    var workerWithStatusToDay = workListToday.FirstOrDefault();
+                        //    if (workerWithStatusToDay != null)
+                        //    {
+                        //        if (workerWithStatusToDay.TestStatus == 2)
+                        //        {
+                        //            AlertScan(lblNotAllowed, Brushes.Red, empById);
+                        //        }
+                        //        else if (workerWithStatusToDay.TestStatus == 1)
+                        //        {
+                        //            brDisplay.Background = Brushes.Green;
+                        //            AddRecord(empById, workerWithStatusToDay);
+                        //        }
+                        //        else if (workerWithStatusToDay.TestStatus == 0)
+                        //        {
+                        //            brDisplay.Background = Brushes.Yellow;
+                        //            AddRecord(empById, workerWithStatusToDay);
+                        //        }
+                        //    }
+                        //}
+                        //// Check History Nearest
+                        //else
+                        //{
+                        //    // Check Status
+                        //    var workerWithStatusHistory = workList.Where(w => w.TestDate < toDay).OrderBy(o => o.TestDate).LastOrDefault();
+                        //    if (workerWithStatusHistory != null)
+                        //    {
+                        //        if (workerWithStatusHistory.TestStatus == 2)
+                        //        {
+                        //            AlertScan(lblNotAllowed, Brushes.Red, empById);
+                        //        }
+                        //        else if (workerWithStatusHistory.TestStatus == 1)
+                        //        {
+                        //            brDisplay.Background = Brushes.Green;
+                        //            AddRecord(empById, null);
+                        //        }
+                        //        else if (workerWithStatusHistory.TestStatus == 0)
+                        //        {
+                        //            string msgNotExistInWorkListToday = string.Format("{0} - {1:dd/MM/yyyy}", lblNotExistInTestList, toDay);
+                        //            AlertScan(msgNotExistInWorkListToday, Brushes.Red, empById);
+                        //        }
+                        //    }
+                        //    else
+                        //    {
+                        //        string msgNotExistInWorkListToday = string.Format("{0} - {1:dd/MM/yyyy}", lblNotExistInTestList, toDay);
+                        //        AlertScan(msgNotExistInWorkListToday, Brushes.Red, empById);
+                        //    }
+                        //}
 
-                        DoStatistics(workListStatistics, workerCheckInList);
+                        #endregion
+
+                        DoStatistics(workListAll, workerCheckInList);
                     }
                     else
                     {
@@ -200,9 +270,9 @@ namespace PersonalSV.Views
             }
         }
 
-        private void DoStatistics(List<WorkListModel> workListStatistics, List<WorkerCheckInModel> workerCheckInList)
+        private void DoStatistics(List<WorkListModel> workListAll, List<WorkerCheckInModel> workerCheckInList)
         {
-            var totalWorker = workListStatistics.Select(s => s.EmployeeID).Distinct().ToList().Count();
+            var totalWorker = workListAll.Select(s => s.EmployeeID).Distinct().ToList().Count();
             var totalCheckedIn = workerCheckInList.Where(w => !string.IsNullOrEmpty(w.RecordTime) && w.CheckType == 0).Select(s => s.EmployeeCode).Distinct().ToList().Count();
             double percent = 0;
             if (totalWorker != 0)
@@ -235,7 +305,7 @@ namespace PersonalSV.Views
             SetTxtDefault();
         }
         
-        private void AddRecord( EmployeeModel empById)
+        private void AddRecord( EmployeeModel empById, WorkListModel WorkListNextTestById, bool isNextDay)
         {
             var record = new WorkerCheckInModel()
             {
@@ -251,7 +321,22 @@ namespace PersonalSV.Views
 
             try
             {
-                grDisplay.DataContext = record;
+                string workTime = WorkListNextTestById != null ? String.Format("WorkTime: {0}", WorkListNextTestById.WorkTime) : "";
+                string testTime = WorkListNextTestById != null ? String.Format("TestTime: {0}", WorkListNextTestById.TestTime) : "";
+                string nextTestDate = WorkListNextTestById != null ? String.Format("Next Test Date: {0:dd/MM/yyyy}", WorkListNextTestById.TestDate) : "";
+                if (!isNextDay)
+                    nextTestDate = "";
+                var addInfoDisplay = new CheckInInfoDisplay
+                {
+                    EmployeeDisplay = String.Format("{0} - {1}", empById.EmployeeName, empById.EmployeeID),
+                    DepartmentName = empById.DepartmentName,
+                    RecordTime = String.Format("RecordTime: {0}", record.RecordTime),
+                    NextTestDate = nextTestDate,
+                    WorkTime = workTime,
+                    TestTime = testTime,
+                };
+                grDisplay.DataContext = addInfoDisplay;
+
                 WorkerCheckInController.Insert(record);
                 workerCheckInList.Add(record);
 
@@ -298,6 +383,16 @@ namespace PersonalSV.Views
             public string TotalWorkList { get; set; }
             public string Scanned { get; set; }
             public string Ratio { get; set; }
+        }
+        
+        private class CheckInInfoDisplay
+        {
+            public string EmployeeDisplay { get; set; }
+            public string DepartmentName { get; set; }
+            public string RecordTime { get; set; }
+            public string NextTestDate { get; set; }
+            public string WorkTime { get; set; }
+            public string TestTime { get; set; }
         }
     }
 }

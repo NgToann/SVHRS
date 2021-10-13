@@ -266,6 +266,9 @@
     <Compile Include="Views\TestCovidCreateTestTermWindow.xaml.cs">
       <DependentUpon>TestCovidCreateTestTermWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\TestRandomViewEmployeeListWindow.xaml.cs">
+      <DependentUpon>TestRandomViewEmployeeListWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TestRandomWindow.xaml.cs">
       <DependentUpon>TestRandomWindow.xaml</DependentUpon>
     </Compile>
@@ -433,6 +436,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TestCovidCreateTestTermWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TestRandomViewEmployeeListWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

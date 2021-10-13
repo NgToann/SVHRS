@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PersonalSV.Views"
+        xmlns:local="clr-namespace:PersonalSV.Views" Loaded="Window_Loaded"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen" FontSize="15"
         Title="{DynamicResource ResourceKey=createTestTermWindowTitle}" Height="600" Width="1000">
     <Grid Margin="2">
@@ -14,6 +14,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <GroupBox Template="{DynamicResource ResourceKey=GroupBoxTemplate}">
             <GroupBox.Header>
@@ -29,18 +30,22 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <TextBlock Text="{DynamicResource ResourceKey=createTestTestDate}"/>
-                <DatePicker x:Name="dpTestDate" Grid.Row="1" VerticalContentAlignment="Center"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Test Rate 20%"/>
+                </StackPanel>
+                <TextBlock Grid.Row="1" Margin="0,10,0,0" Text="{DynamicResource ResourceKey=createTestTestDate}"/>
+                <DatePicker Grid.Row="2" x:Name="dpTestDate" VerticalContentAlignment="Center"/>
 
-                <TextBlock Grid.Row="1" Grid.Column="1" Margin="10,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                <TextBlock Grid.Row="2" Grid.Column="1" Margin="10,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Bottom">
                     <Hyperlink x:Name="hlViewWorkerList" Click="hlViewWorkerList_Click">
                         <TextBlock Cursor="Hand" Text="{DynamicResource ResourceKey=createTestViewWorkerList}"/>
                     </Hyperlink>
                 </TextBlock>
 
-                <Button x:Name="btnCreate" Grid.Column="2" Grid.RowSpan="2" Margin="5,0,0,0" Template="{DynamicResource ResourceKey=ButtonTemplate}"  Click="btnCreate_Click" Cursor="Hand">
+                <Button x:Name="btnCreate" Grid.Column="2" Grid.RowSpan="3" Margin="5,0,0,0" Template="{DynamicResource ResourceKey=ButtonTemplate}"  Click="btnCreate_Click" Cursor="Hand">
                     <Button.Content>
                         <Grid>
                             <Grid.RowDefinitions>
@@ -79,14 +84,14 @@
                 </Style>
             </DataGrid.ColumnHeaderStyle>
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeCode}" SortMemberPath="EmployeeCode">
+                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeCode}" SortMemberPath="EmployeeCode" ClipboardContentBinding="{Binding EmployeeCode}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding EmployeeCode}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeID}" SortMemberPath="EmployeeID">
+                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeID}" SortMemberPath="EmployeeID" ClipboardContentBinding="{Binding EmployeeID}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding EmployeeID}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -100,35 +105,40 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeDepartment}" SortMemberPath="DepartmentName">
+                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeDepartment}" SortMemberPath="DepartmentName" ClipboardContentBinding="{Binding DepartmentName}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding DepartmentName}" Margin="3" VerticalAlignment="Center"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=testRequestListVaccince1st}" SortMemberPath="VaccineFirstType">
+                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=createTestTestDate}" SortMemberPath="TestDate" ClipboardContentBinding="{Binding TestDate}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding VaccineFirstType}" Margin="3" VerticalAlignment="Center"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=testRequestListVaccince2nd}" SortMemberPath="VaccinceSecondType">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding VaccineSecondType}" Margin="3" VerticalAlignment="Center"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=testRequestListRecordTime}" SortMemberPath="TestRandomTimeIn">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding TestRandomTimeIn}" Margin="3" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding TestDate, StringFormat=dd/MM/yyyy}" Margin="3" VerticalAlignment="Center"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+
+        <Grid Grid.Row="2" Grid.ColumnSpan="2" Margin="0,2,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="btnSave" Grid.Column="1" Template="{DynamicResource ResourceKey=ButtonTemplate}"  Click="btnSave_Click" Cursor="Hand">
+                <Button.Content>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Padding="15,4,15,4" Grid.Row="1" VerticalAlignment="Center" Text="{DynamicResource ResourceKey=commonButtonSave}"/>
+                    </Grid>
+                </Button.Content>
+            </Button>
+        </Grid>
+        
     </Grid>
 </Window>
