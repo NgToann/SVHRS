@@ -148,12 +148,12 @@ namespace PersonalSV.Views
                                 if (workerTestToday.TestStatus == 0)
                                 {
                                     brDisplay.Background = Brushes.Yellow;
-                                    AddRecord(empById, workerTestToday, false);
+                                    AddRecord(empById, workerTestToday, false, true);
                                 }
                                 else if (workerTestToday.TestStatus == 1)
                                 {
                                     brDisplay.Background = Brushes.Green;
-                                    AddRecord(empById, null, false);
+                                    AddRecord(empById, null, false, false);
                                 }
                                 else if (workerTestToday.TestStatus == 2)
                                 {
@@ -166,12 +166,12 @@ namespace PersonalSV.Views
                                 if (workerTestLatest.TestStatus == 0)
                                 {
                                     brDisplay.Background = Brushes.Yellow;
-                                    AddRecord(empById, workerTestLatest, false);
+                                    AddRecord(empById, workerTestLatest, false, true);
                                 }
                                 else if (workerTestLatest.TestStatus == 1)
                                 {
                                     brDisplay.Background = Brushes.Green;
-                                    AddRecord(empById, null , false);
+                                    AddRecord(empById, null , false, false);
                                 }
                                 else if (workerTestLatest.TestStatus == 2)
                                 {
@@ -187,7 +187,7 @@ namespace PersonalSV.Views
                             {
                                 var workerTestNextDay = testNextDay.FirstOrDefault();
                                 brDisplay.Background = Brushes.Yellow;
-                                AddRecord(empById, workerTestNextDay, true);
+                                AddRecord(empById, workerTestNextDay, true, false);
                             }
                             else if (testBeforeOrToday.Count() > 0)
                             {
@@ -195,12 +195,12 @@ namespace PersonalSV.Views
                                 if (workerTestBeforeOrToday.TestStatus == 1)
                                 {
                                     brDisplay.Background = Brushes.Green;
-                                    AddRecord(empById, null, false);
+                                    AddRecord(empById, null, false, false);
                                 }
                                 else if (workerTestBeforeOrToday.TestStatus == 0)
                                 {
                                     brDisplay.Background = Brushes.Yellow;
-                                    AddRecord(empById, null, false);
+                                    AddRecord(empById, null, false, true);
                                 }
                                 else if (workerTestBeforeOrToday.TestStatus == 2)
                                 {
@@ -321,7 +321,7 @@ namespace PersonalSV.Views
             SetTxtDefault();
         }
         
-        private void AddRecord( EmployeeModel empById, WorkListModel WorkListNextTestById, bool isNextDay)
+        private void AddRecord( EmployeeModel empById, WorkListModel WorkListNextTestById, bool isNextDay, bool getInQueue)
         {
             var record = new WorkerCheckInModel()
             {
@@ -362,7 +362,7 @@ namespace PersonalSV.Views
                     nextDayInfoString.Add(nextTestDate);
                 }
 
-                if (testTime == "" && workTime == "" && nextTestDate == "")
+                if (getInQueue && workTime == "" && testTime == "" && nextTestDate == "")
                 {
                     testTime = lblGetInQueue;
                 }
