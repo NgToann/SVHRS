@@ -321,25 +321,40 @@ namespace PersonalSV.Views
 
             try
             {
+                var nextDayInfoString = new List<string>();
                 string workTime = WorkListNextTestById != null ? String.Format("WorkTime: {0}", WorkListNextTestById.WorkTime) : "";
                 string testTime = WorkListNextTestById != null ? String.Format("TestTime: {0}", WorkListNextTestById.TestTime) : "";
-
-                if (string.IsNullOrEmpty(WorkListNextTestById.WorkTime))
-                    workTime = "";
-                if (string.IsNullOrEmpty(WorkListNextTestById.TestTime))
-                    testTime = "";
                 string nextTestDate = WorkListNextTestById != null ? String.Format("Next Test Date: {0:dd/MM/yyyy}", WorkListNextTestById.TestDate) : "";
+                
+                nextDayInfoString.Add(nextTestDate);
+                nextDayInfoString.Add(testTime);
+                nextDayInfoString.Add(workTime);
+
+                if (WorkListNextTestById != null && string.IsNullOrEmpty(WorkListNextTestById.WorkTime))
+                {
+                    workTime = "";
+                    nextDayInfoString.Add(workTime);
+                }
+                if (WorkListNextTestById != null && string.IsNullOrEmpty(WorkListNextTestById.TestTime))
+                {
+                    testTime = "";
+                    nextDayInfoString.Add(testTime);
+                }
                 if (!isNextDay)
+                {
                     nextTestDate = "";
+                    nextDayInfoString.Add(nextTestDate);
+                }
 
                 var addInfoDisplay = new CheckInInfoDisplay
                 {
                     EmployeeDisplay = String.Format("{0} - {1}", empById.EmployeeName, empById.EmployeeID),
                     DepartmentName = empById.DepartmentName,
-                    RecordTime = String.Format("RecordTime: {0}", record.RecordTime),
+                    RecordTime = String.Format("Time: {0}", record.RecordTime),
                     NextTestDate = nextTestDate,
                     WorkTime = workTime,
                     TestTime = testTime,
+                    NextDayInfo = String.Join("\n", nextDayInfoString)
                 };
                 grDisplay.DataContext = addInfoDisplay;
 
@@ -399,6 +414,7 @@ namespace PersonalSV.Views
             public string NextTestDate { get; set; }
             public string WorkTime { get; set; }
             public string TestTime { get; set; }
+            public string NextDayInfo { get; set; }
         }
     }
 }
