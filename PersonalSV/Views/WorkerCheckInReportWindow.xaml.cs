@@ -100,7 +100,7 @@ namespace PersonalSV.Views
             
             List<DisplayDataModel> dataList = new List<DisplayDataModel>();
             var checkInListByDate = workerCheckInList.Where(w => w.CheckInDate == dateSearch).ToList();
-            var empIds = workListAll.Select(s => s.EmployeeID).Distinct().ToList();
+            var empIds = workListAll.Where(w => w.TestDate <= dateSearch).Select(s => s.EmployeeID).Distinct().ToList();
             var workListByDate = workListAll.Where(w => w.TestDate == dateSearch).ToList();
 
             foreach (var empId in empIds)

@@ -257,10 +257,10 @@ namespace PersonalSV.Views
                 }
                 else
                 {
-                    var notFound = new WorkerCheckInModel
+                    var notFound = new CheckInInfoDisplay
                     {
-                        EmployeeName = scanWhat,
-                        RecordTime = lblResourceNotFound
+                        EmployeeDisplay = scanWhat,
+                        NextTestDate = lblResourceNotFound
                     };
                     grDisplay.DataContext = notFound;
                     SetTxtDefault();
@@ -295,11 +295,11 @@ namespace PersonalSV.Views
         private void AlertScan(string msg, SolidColorBrush color ,EmployeeModel empById)
         {
             brDisplay.Background = color;
-            var alert = new WorkerCheckInModel
+            var alert = new CheckInInfoDisplay
             {
-                EmployeeName = empById.EmployeeName,
-                EmployeeID = empById.EmployeeID,
-                RecordTime = msg
+                EmployeeDisplay = String.Format("{0} - {1}", empById.EmployeeName, empById.EmployeeID),
+                //RecordTime = msg
+                TestTime = msg
             };
             grDisplay.DataContext = alert;
             SetTxtDefault();

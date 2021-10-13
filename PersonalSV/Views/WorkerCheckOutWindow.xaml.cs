@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using PersonalSV.Controllers;
+﻿using PersonalSV.Controllers;
 using PersonalSV.Helpers;
 using PersonalSV.Models;
 using PersonalSV.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace PersonalSV.Views
 {
@@ -28,6 +22,7 @@ namespace PersonalSV.Views
         BackgroundWorker bwLoad;
         List<EmployeeModel> employeeList;
         private List<WorkerCheckInModel> workerCheckInList;
+        private List<WorkListModel> workListByIdToDay;
 
         private string lblResourceNotFound = "", lblDoNotCheckIn="";
         private string lblInfoTestDate = "", lblInfoCheckIn = "", lblInfoCheckOut = "";
@@ -42,6 +37,7 @@ namespace PersonalSV.Views
             
             employeeList = new List<EmployeeModel>();
             workerCheckInList = new List<WorkerCheckInModel>();
+            workListByIdToDay = new List<WorkListModel>();
 
             lblResourceNotFound = LanguageHelper.GetStringFromResource("messageNotFound");
             lblDoNotCheckIn = LanguageHelper.GetStringFromResource("workerCheckOutMessageDoNotCheckIn");
@@ -98,16 +94,27 @@ namespace PersonalSV.Views
                 var empById = employeeList.FirstOrDefault(f => f.EmployeeCode == scanWhat);
                 if (empById != null)
                 {
+                    try
+                    {
+                        workListByIdToDay = WorkListController.GetByEmpId(empById.EmployeeID).Where(w => w.TestDate == toDay).ToList();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                        SetTxtDefault();
+                        return;
+                    }
+
                     // Check In or Not
                     var checkInByEmpCode = workerCheckInList.Where(w => w.EmployeeCode == empById.EmployeeCode && !String.IsNullOrEmpty(w.RecordTime) && w.CheckType == 0).ToList();
-                    if (checkInByEmpCode.Count() == 0)
+                    if (checkInByEmpCode.Count() != 0 && workListByIdToDay.Count() > 0)
                     {
-                        string alertDoNotCheckIn = string.Format("{0} {1:dd/MM/yyyy}", lblDoNotCheckIn, toDay);
-                        AlertCheckOut(alertDoNotCheckIn, Brushes.Yellow, empById);
+                        AddRecord(empById);
                     }
                     else
                     {
-                        AddRecord(empById);
+                        string alertDoNotCheckIn = string.Format("{0} {1:dd/MM/yyyy}", lblDoNotCheckIn, toDay);
+                        AlertCheckOut(alertDoNotCheckIn, Brushes.Yellow, empById);
                     }
 
                     DoStatistics(workerCheckInList);
