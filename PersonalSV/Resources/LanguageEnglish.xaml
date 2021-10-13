@@ -403,14 +403,21 @@
     <system:String x:Key="workerCheckOutStatisticsCheckIn">Check In</system:String>
     <system:String x:Key="workerCheckOutStatisticsCheckOut">Check Out</system:String>    
     
-    <system:String x:Key="workerCheckInMessageNotPriority">Not Exist in Work List</system:String>
+    <system:String x:Key="workerCheckInMessageNotPriority">Không có trong danh sách đi làm</system:String>
     <system:String x:Key="workerCheckInMessageExistInF0List">Exist in F0 List</system:String>
     <system:String x:Key="workerCheckInMessageDoTheCovidTest">Do The Covid Test</system:String>
     <system:String x:Key="workerCheckInMessageNotAllowed">Not Allowed</system:String>
-    <system:String x:Key="workerCheckInMessageNotExistInTestList">Not Exist in Test List</system:String>
+    <system:String x:Key="workerCheckInMessageNotExistInTestList">Không có trong danh sách test</system:String>
     
-    <system:String x:Key="workerCheckOutMessageDoNotCheckIn">Do Not Check In</system:String>
-    <system:String x:Key="workerCheckOutMessageDoNotScan">Do Not Scan</system:String>     
+    <system:String x:Key="workerCheckOutMessageDoNotCheckIn">Chưa CheckIn</system:String>
+    <system:String x:Key="workerCheckOutMessageDoNotScan">Chưa Scan</system:String>     
+    
+    <system:String x:Key="workerCheckInLblNextTestDate">Xét nghiệm vào ngày</system:String>     
+    <system:String x:Key="workerCheckInLblTestTime">Giờ xét nghiệm</system:String>     
+    <system:String x:Key="workerCheckInLblWorkTime">Giờ làm</system:String>     
+    <system:String x:Key="workerCheckInLblGetInQueue">Mời xếp hàng lấy mẫu</system:String>     
+    
+    
     
     <system:String x:Key="reportCheckInOutOption">Option</system:String>
     <system:String x:Key="reportRadCheckIn">Check In</system:String>

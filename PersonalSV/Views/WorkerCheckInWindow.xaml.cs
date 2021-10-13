@@ -31,6 +31,8 @@ namespace PersonalSV.Views
         private string lblResourceNotFound = "", lblNotExitsInWorkList = "", lblNotAllowed = "", lblNotExistInTestList = "";
         private string lblInfoTestDate = "", lblInfoTotalWorkList = "", lblInfoScanned = "", lblInfoRatio = "";
 
+        private string lblNextTestDate = "", lblTestTime = "", lblWorkTime = "", lblGetInQueue = "";
+
         private PrivateDefineModel defModel;
         private List<WorkListModel> workList;
         private List<WorkListModel> workListAll;
@@ -59,6 +61,11 @@ namespace PersonalSV.Views
             lblInfoTotalWorkList = LanguageHelper.GetStringFromResource("workerCheckInStatisticsTotalWorkList");
             lblInfoScanned = LanguageHelper.GetStringFromResource("workerCheckInStatisticsCurrentScan");
             lblInfoRatio = LanguageHelper.GetStringFromResource("workerCheckInStatisticsRatio");
+
+            lblNextTestDate = LanguageHelper.GetStringFromResource("workerCheckInLblNextTestDate");
+            lblTestTime = LanguageHelper.GetStringFromResource("workerCheckInLblTestTime");
+            lblWorkTime = LanguageHelper.GetStringFromResource("workerCheckInLblWorkTime");
+            lblGetInQueue = LanguageHelper.GetStringFromResource("workerCheckInLblGetInQueue");
 
             clock = new DispatcherTimer();
             clock.Tick += Clock_Tick;
@@ -331,9 +338,9 @@ namespace PersonalSV.Views
             try
             {
                 var nextDayInfoString = new List<string>();
-                string workTime = WorkListNextTestById != null ? String.Format("WorkTime: {0}", WorkListNextTestById.WorkTime) : "";
-                string testTime = WorkListNextTestById != null ? String.Format("TestTime: {0}", WorkListNextTestById.TestTime) : "";
-                string nextTestDate = WorkListNextTestById != null ? String.Format("Next Test Date: {0:dd/MM/yyyy}", WorkListNextTestById.TestDate) : "";
+                string workTime = WorkListNextTestById != null ? String.Format("{0}: {1}", lblWorkTime ,WorkListNextTestById.WorkTime) : "";
+                string testTime = WorkListNextTestById != null ? String.Format("{0}: {1}", lblTestTime ,WorkListNextTestById.TestTime) : "";
+                string nextTestDate = WorkListNextTestById != null ? String.Format("{0}: {1:dd/MM/yyyy}", lblNextTestDate, WorkListNextTestById.TestDate) : "";
                 
                 nextDayInfoString.Add(nextTestDate);
                 nextDayInfoString.Add(testTime);
@@ -353,6 +360,11 @@ namespace PersonalSV.Views
                 {
                     nextTestDate = "";
                     nextDayInfoString.Add(nextTestDate);
+                }
+
+                if (testTime == "" && workTime == "" && nextTestDate == "")
+                {
+                    testTime = lblGetInQueue;
                 }
 
                 var addInfoDisplay = new CheckInInfoDisplay
