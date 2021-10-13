@@ -190,6 +190,15 @@ namespace PersonalSV.Views
                                     brDisplay.Background = Brushes.Green;
                                     AddRecord(empById, null, false);
                                 }
+                                else if (workerTestBeforeOrToday.TestStatus == 0)
+                                {
+                                    brDisplay.Background = Brushes.Yellow;
+                                    AddRecord(empById, null, false);
+                                }
+                                else if (workerTestBeforeOrToday.TestStatus == 2)
+                                {
+                                    AlertScan(lblNotAllowed, Brushes.Red, empById);
+                                }
                             }
                         }
                         #region None
