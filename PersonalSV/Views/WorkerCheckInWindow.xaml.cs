@@ -323,9 +323,15 @@ namespace PersonalSV.Views
             {
                 string workTime = WorkListNextTestById != null ? String.Format("WorkTime: {0}", WorkListNextTestById.WorkTime) : "";
                 string testTime = WorkListNextTestById != null ? String.Format("TestTime: {0}", WorkListNextTestById.TestTime) : "";
+
+                if (string.IsNullOrEmpty(WorkListNextTestById.WorkTime))
+                    workTime = "";
+                if (string.IsNullOrEmpty(WorkListNextTestById.TestTime))
+                    testTime = "";
                 string nextTestDate = WorkListNextTestById != null ? String.Format("Next Test Date: {0:dd/MM/yyyy}", WorkListNextTestById.TestDate) : "";
                 if (!isNextDay)
                     nextTestDate = "";
+
                 var addInfoDisplay = new CheckInInfoDisplay
                 {
                     EmployeeDisplay = String.Format("{0} - {1}", empById.EmployeeName, empById.EmployeeID),
