@@ -263,8 +263,17 @@
     <Compile Include="Views\Report2020Window.xaml.cs">
       <DependentUpon>Report2020Window.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\TestCovidConfirmResultWindow.xaml.cs">
+      <DependentUpon>TestCovidConfirmResultWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TestCovidCovidTestPlanWindow.xaml.cs">
+      <DependentUpon>TestCovidCovidTestPlanWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TestCovidCreateTestTermWindow.xaml.cs">
       <DependentUpon>TestCovidCreateTestTermWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TestRandomThienLocWindow.xaml.cs">
+      <DependentUpon>TestRandomThienLocWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TestRandomViewEmployeeListWindow.xaml.cs">
       <DependentUpon>TestRandomViewEmployeeListWindow.xaml</DependentUpon>
@@ -435,7 +444,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\TestCovidConfirmResultWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TestCovidCovidTestPlanWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\TestCovidCreateTestTermWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TestRandomThienLocWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -422,6 +422,30 @@
     <system:String x:Key="reportGridStatus">Trạng thái</system:String>
     
     
+    <!--ThienLoc Test Random-->
+    <system:String x:Key="tlTestRandomWindowTitle">ThienLoc Covid Quick Test Random</system:String>
+    <system:String x:Key="tlTestRandomMsgGetInQueue">Mời xếp hàng lấy mẫu</system:String>
+    <system:String x:Key="tlTestRandomMsgDoNotConfirmTestResult">Chưa xác nhận kết quả Test</system:String>
+    <system:String x:Key="tlTestRandomMsgNotAllowed">Not Allowed</system:String>
+    <system:String x:Key="tlTestRandomMsgWelcome">Welcome !</system:String>
+    <system:String x:Key="tlTestRandomNextTestDate">Lịch Test Ngày</system:String>
+    <system:String x:Key="tlTestRandomTestDate">Ngày Test</system:String>
+    <system:String x:Key="tlTestRandomTotalWorkerTest">Danh Sách Test</system:String>
+    <system:String x:Key="tlTestRandomNextCurrentTimeIn">Đã CheckIn</system:String>
+    <system:String x:Key="tlTestRandomTestRate">Tỷ lệ</system:String>
+    
+    <!--Create New Test Term Feature-->
+    <system:String x:Key="createTestTermWindowTitle">SV-HRS Tạo kỳ Test mới</system:String>   
+    <system:String x:Key="createTestTermGroupHeader">Thông tin kỳ Test Nhanh</system:String>   
+    <system:String x:Key="createTestTestDate">Ngày Test</system:String>
+    <system:String x:Key="createTestLblTestRate">Tỷ Lệ</system:String>
+    <system:String x:Key="createTestBtnCreate">Tạo Ngẫu Nhiên</system:String>
+    <system:String x:Key="createTestViewWorkerList">Danh sách Worker</system:String>
+    <system:String x:Key="createTestViewTestPlanList">Kế hoạch Test Covid</system:String>
+    <system:String x:Key="createTestTerm">Kỳ</system:String>
+    <system:String x:Key="createTestRound">Vòng</system:String>
+    
+    
     <!--Test Random Feature-->
     <system:String x:Key="testRandomWindowTitle">SV-HRS Test Nhanh Covid Ngẫu Nhiên</system:String>
     <system:String x:Key="testRandomLblTime">Thời gian</system:String>
@@ -445,5 +469,23 @@
     <system:String x:Key="testRequestListVaccince1st">Vắc Xin Mũi 1</system:String>
     <system:String x:Key="testRequestListVaccince2nd">Vắc Xin Mũi 2</system:String>
     <system:String x:Key="testRequestListRecordTime">Giờ Vào</system:String>
+    
+    <system:String x:Key="CovidTestPlanWindowTitle">Kế hoạch Test Covid</system:String>
+    <system:String x:Key="CovidTestPlanSelectDate">Chọn Ngày</system:String>
+    
+    
+    <!--Confirm Test Result Feature-->
+    <system:String x:Key="confirmTestResultWindowTitle">SV-HRS Xác Nhận Kết Quả Test</system:String>
+    <system:String x:Key="confirmTestResultHeader">XÁC NHẬN KẾT QUẢ TEST COVID</system:String>
+    <system:String x:Key="confirmTestResultFullName">Họ Tên</system:String>
+    <system:String x:Key="confirmTestResultEmployeeCode">Số Thẻ</system:String>
+    <system:String x:Key="confirmTestResultEmployeeId">Mã Worker</system:String>
+    <system:String x:Key="confirmTestResultDepartmentName">Phòng Ban (Chuyền)</system:String>
+    <system:String x:Key="confirmTestResultTestDate">Ngày Test</system:String>
+    <system:String x:Key="confirmTestResultTimeIn">Giờ CheckIn</system:String>
+    <system:String x:Key="confirmTestResultConfirmedTime">Thời gian xác nhận</system:String>
+    <system:String x:Key="confirmTestResultTestResult">Kết Quả Test</system:String>
+    <system:String x:Key="confirmTestResultConfirmedBy">Người xác nhận</system:String>
+    <system:String x:Key="confirmTestResultRemark">Ghi Chú</system:String>
     
 </ResourceDictionary>

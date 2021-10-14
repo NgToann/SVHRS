@@ -451,16 +451,52 @@
     <system:String x:Key="testRequestListHeader">QUICK TEST REQUEST LIST</system:String>
     <system:String x:Key="testRequestListVaccince1st">Vaccince 1</system:String>
     <system:String x:Key="testRequestListVaccince2nd">Vaccince 2</system:String>
-    <system:String x:Key="testRequestListRecordTime">TimeIn</system:String>   
+    <system:String x:Key="testRequestListRecordTime">TimeIn</system:String>
     
+    
+    
+    <!--ThienLoc Test Random-->
+    <system:String x:Key="tlTestRandomWindowTitle">ThienLoc Covid Quick Test Random</system:String>
+    <system:String x:Key="tlTestRandomMsgGetInQueue">Mời xếp hàng lấy mẫu</system:String>
+    <system:String x:Key="tlTestRandomMsgDoNotConfirmTestResult">Chưa xác nhận kết quả Test</system:String>
+    <system:String x:Key="tlTestRandomMsgNotAllowed">Not Allowed</system:String>
+    <system:String x:Key="tlTestRandomMsgWelcome">Welcome !</system:String>
+    <system:String x:Key="tlTestRandomNextTestDate">Lịch Test Ngày</system:String>
+    <system:String x:Key="tlTestRandomTestDate">Ngày Test</system:String>
+    <system:String x:Key="tlTestRandomTotalWorkerTest">Danh Sách Test</system:String>
+    <system:String x:Key="tlTestRandomNextCurrentTimeIn">Đã CheckIn</system:String>
+    <system:String x:Key="tlTestRandomTestRate">Tỷ lệ</system:String>
     
     
     <!--Create New Test Term Feature-->
     <system:String x:Key="createTestTermWindowTitle">SV-HRS Create New Test Term</system:String>   
     <system:String x:Key="createTestTermGroupHeader">Quick Covid Test Info</system:String>   
     <system:String x:Key="createTestTestDate">Test Date</system:String>
+    <system:String x:Key="createTestLblTestRate">Test Rate</system:String>
     <system:String x:Key="createTestBtnCreate">Create Random</system:String>
     <system:String x:Key="createTestViewWorkerList">Worker List</system:String>
+    <system:String x:Key="createTestViewTestPlanList">Covid Test Plan</system:String>
+    <system:String x:Key="createTestTerm">Term</system:String>
+    <system:String x:Key="createTestRound">Round</system:String>
+    
+    <system:String x:Key="CovidTestPlanWindowTitle">Covid Test Plan</system:String>
+    <system:String x:Key="CovidTestPlanSelectDate">Select Date</system:String>
+    
+    
+    <!--Confirm Test Result Feature-->
+    <system:String x:Key="confirmTestResultWindowTitle">SV-HRS Confirm Covid Test Result</system:String>
+    <system:String x:Key="confirmTestResultHeader">CONFIRM COVID TEST RESULT</system:String>
+    <system:String x:Key="confirmTestResultFullName">FullName</system:String>
+    <system:String x:Key="confirmTestResultEmployeeCode">Employee Code</system:String>
+    <system:String x:Key="confirmTestResultEmployeeId">Employee ID</system:String>
+    <system:String x:Key="confirmTestResultDepartmentName">Department (Line)</system:String>
+    <system:String x:Key="confirmTestResultTestDate">Test Date</system:String>
+    <system:String x:Key="confirmTestResultTimeIn">CheckIn</system:String>
+    <system:String x:Key="confirmTestResultConfirmedTime">Confirmed Time</system:String>
+    <system:String x:Key="confirmTestResultTestResult">Test Result</system:String>
+    <system:String x:Key="confirmTestResultConfirmedBy">Confirmed By</system:String>
+    <system:String x:Key="confirmTestResultRemark">Remark</system:String>
+    
     
     
 </ResourceDictionary>

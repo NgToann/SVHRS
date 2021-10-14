@@ -19,7 +19,22 @@ namespace PersonalSV.Controllers
                 return db.ExecuteStoreQuery<TestRandomModel>("EXEC spm_SelectTestRandom").ToList();
             };
         }
-
+        public static List<TestRandomModel> GetByDate(DateTime dateSearch)
+        {
+            var @TestDate = new SqlParameter("@TestDate", dateSearch);
+            using (var db = new PersonalDataEntities())
+            {
+                return db.ExecuteStoreQuery<TestRandomModel>("EXEC spm_SelectTestRandomByDate @TestDate", @TestDate).ToList();
+            };
+        }
+        public static List<TestRandomModel> GetByEmpCode(string empCode)
+        {
+            var @EmployeeCode = new SqlParameter("@EmployeeCode", empCode);
+            using (var db = new PersonalDataEntities())
+            {
+                return db.ExecuteStoreQuery<TestRandomModel>("EXEC spm_SelectTestRandomByEmpCode @EmployeeCode", @EmployeeCode).ToList();
+            };
+        }
         public static bool Insert(TestRandomModel model)
         {
             var @Id = new SqlParameter("@Id", model.Id);
@@ -49,6 +64,7 @@ namespace PersonalSV.Controllers
         /// <param name="model"></param>
         /// <param name="option">1: update TimeIn, 2: update TimeOut, 3: Update Result</param>
         /// <returns></returns>
+        
         public static bool Update(TestRandomModel model, int option)
         {
             var @Id = new SqlParameter("@Id", model.Id);
@@ -58,6 +74,7 @@ namespace PersonalSV.Controllers
             var @TimeIn = new SqlParameter("@TimeIn", model.TimeIn);
             var @TimeOut = new SqlParameter("@TimeOut", model.TimeOut);
             var @Status = new SqlParameter("@Status", model.Status);
+            var @UpdateResultTime = new SqlParameter("@UpdateResultTime", model.UpdateResultTime);
 
             using (var db = new PersonalDataEntities())
             {
@@ -74,14 +91,15 @@ namespace PersonalSV.Controllers
                 }
                 else if (option == 3)
                 {
-                    if (db.ExecuteStoreCommand("EXEC spm_UpdateTestRandomResultById @Id, @Result, @PersonConfirm, @Remark, @Status",
-                                                                                    @Id, @Result, @PersonConfirm, @Remark, @Status) >= 1)
+                    if (db.ExecuteStoreCommand("EXEC spm_UpdateTestRandomResultById @Id, @Result, @PersonConfirm, @Remark, @Status, @UpdateResultTime",
+                                                                                    @Id, @Result, @PersonConfirm, @Remark, @Status, @UpdateResultTime) >= 1)
                         return true;
                 }
                 return false;
 
             }
         }
+        
         public static bool DeleteRecord(TestRandomModel model)
         {
             var @Id = new SqlParameter("@Id", model.Id);
@@ -91,6 +109,20 @@ namespace PersonalSV.Controllers
 
                 if (db.ExecuteStoreCommand("EXEC spm_DeleteTestRandomById @Id",
                                                                           @Id) >= 1)
+                    return true;
+                return false;
+            }
+        }
+        
+        public static bool DeleteByDate(DateTime dateDelete)
+        {
+            var @TestDate = new SqlParameter("@TestDate", dateDelete);
+            using (var db = new PersonalDataEntities())
+            {
+                db.CommandTimeout = 45;
+
+                if (db.ExecuteStoreCommand("EXEC spm_DeleteTestRandomByDate @TestDate",
+                                                                            @TestDate) >= 1)
                     return true;
                 return false;
             }

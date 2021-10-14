@@ -18,6 +18,7 @@ namespace PersonalSV.Models
         public string TimeIn { get; set; }
         public string TimeOut { get; set; }
         public string Status { get; set; }
+        public string UpdateResultTime { get; set; }
         public Nullable<DateTime> CreatedTime { get; set; }
         public Nullable<DateTime> UpdatedTime { get; set; }
 

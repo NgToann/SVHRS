@@ -204,6 +204,7 @@ namespace PersonalSV
             else if(account.Branch.Equals("SAOVIET") || account.Branch.Equals("DAILOC"))
             {
                 miCreateTestTerm.Visibility = Visibility.Collapsed;
+                miTLTestRandom.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -234,6 +235,18 @@ namespace PersonalSV
         private void miCreateTestTerm_Click(object sender, RoutedEventArgs e)
         {
             TestCovidCreateTestTermWindow window = new TestCovidCreateTestTermWindow();
+            window.ShowDialog();
+        }
+
+        private void miTLTestRandom_Click(object sender, RoutedEventArgs e)
+        {
+            TestRandomThienLocWindow window = new TestRandomThienLocWindow();
+            window.ShowDialog();
+        }
+
+        private void miConfirmTestResult_Click(object sender, RoutedEventArgs e)
+        {
+            TestCovidConfirmResultWindow window = new TestCovidConfirmResultWindow();
             window.ShowDialog();
         }
 

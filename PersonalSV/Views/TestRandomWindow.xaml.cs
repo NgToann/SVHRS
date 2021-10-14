@@ -366,6 +366,7 @@ namespace PersonalSV.Views
             window.ShowDialog();
             SetTxtDefault();
         }
+        
         private void SetTxtDefault()
         {
             txtCardId.SelectAll();

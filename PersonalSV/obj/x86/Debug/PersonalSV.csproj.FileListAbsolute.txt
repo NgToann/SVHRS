@@ -1643,3 +1643,9 @@ C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\TestCovidCr
 C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\TestCovidCreateTestTermWindow.baml
 C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\TestRandomViewEmployeeListWindow.g.cs
 C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\TestRandomViewEmployeeListWindow.baml
+C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\TestCovidCovidTestPlanWindow.g.cs
+C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\TestCovidCovidTestPlanWindow.baml
+C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\TestRandomThienLocWindow.g.cs
+C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\TestRandomThienLocWindow.baml
+C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\TestCovidConfirmResultWindow.g.cs
+C:\Users\NgToann\Desktop\SV_WFH\SVHRS\PersonalSV\obj\x86\Debug\Views\TestCovidConfirmResultWindow.baml
