@@ -13,5 +13,6 @@ namespace PersonalSV.Models
         public int TestRandomRatio { get; set; }
         public string AfternoonStone { get; set; }
         public double RemindTestDate { get; set; }
+        public double WaitingMinutes { get; set; }
     }
 }

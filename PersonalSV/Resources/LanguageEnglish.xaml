@@ -388,8 +388,8 @@
     <system:String x:Key="workerCheckOutTitle">CHECK OUT</system:String>
     <system:String x:Key="workerCheckInScanCardId">Scan CardID</system:String>
     <system:String x:Key="workerCheckInLblNotYetCheckOut">Did not complete the Covid test</system:String>
-    <system:String x:Key="menuWorkerCheckIn">1. Worker Check In</system:String>
-    <system:String x:Key="menuWorkerCheckOut">2. Worker Check Out</system:String>
+    <system:String x:Key="menuWorkerCheckIn">Worker Check In</system:String>
+    <system:String x:Key="menuWorkerCheckOut">Worker Check Out</system:String>
     <system:String x:Key="menuReportCheckInOut">Report Scan Time In,Out</system:String>
     <system:String x:Key="reportCheckInOutWindowTitle">SV-HRS Report Scan Time In,Out</system:String>
     
@@ -496,6 +496,11 @@
     <system:String x:Key="confirmTestResultTestResult">Test Result</system:String>
     <system:String x:Key="confirmTestResultConfirmedBy">Confirmed By</system:String>
     <system:String x:Key="confirmTestResultRemark">Remark</system:String>
+    
+    <system:String x:Key="confirmTestResultMsgDoNotCheckIn">Chưa Hoàn Thành Test</system:String>
+    
+    <system:String x:Key="menuCreateNewTestTerm">Create New Test Term</system:String>
+    <system:String x:Key="menuConfirmTestResult">Confirm Covid Test Result</system:String>
     
     
     

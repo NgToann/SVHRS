@@ -195,11 +195,12 @@ namespace PersonalSV
 
             if (account.Branch.Equals("THIENLOC"))
             {
-                miWorkerCheckIn.IsEnabled = false;
-                miWorkerCheckOut.IsEnabled = false;
+                miWorkerCheckIn.Visibility = Visibility.Collapsed;
+                miWorkerCheckOut.Visibility = Visibility.Collapsed;
 
                 //reports
-                miReportScanTimeInOut.IsEnabled = false;
+                miReportScanTimeInOut.Visibility = Visibility.Collapsed;
+                miTestCovidRandom.Visibility = Visibility.Collapsed;
             }
             else if(account.Branch.Equals("SAOVIET") || account.Branch.Equals("DAILOC"))
             {

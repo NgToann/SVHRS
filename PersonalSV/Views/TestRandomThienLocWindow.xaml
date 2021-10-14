@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PersonalSV.Views"
-        mc:Ignorable="d" WindowState="Maximized" FontSize="15"
+        mc:Ignorable="d" WindowState="Maximized" FontSize="15" MinWidth="900"
         WindowStartupLocation="CenterScreen" Background="WhiteSmoke" Loaded="Window_Loaded"
         Title="{DynamicResource ResourceKey=tlTestRandomWindowTitle}" Height="600" Width="1200">
     <Grid Margin="2">

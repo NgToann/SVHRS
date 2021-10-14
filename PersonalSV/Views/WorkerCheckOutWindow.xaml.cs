@@ -23,8 +23,9 @@ namespace PersonalSV.Views
         List<EmployeeModel> employeeList;
         private List<WorkerCheckInModel> workerCheckInList;
         private List<WorkListModel> workListByIdToDay;
+        private List<WorkListModel> workListByDate;
 
-        private string lblResourceNotFound = "", lblDoNotCheckIn="";
+        private string lblResourceNotFound = "", lblDoNotCheckIn = "", lblNotExistInWorkList = "";
         private string lblInfoTestDate = "", lblInfoCheckIn = "", lblInfoCheckOut = "";
 
         private DateTime toDay = DateTime.Now.Date;
@@ -38,12 +39,15 @@ namespace PersonalSV.Views
             employeeList = new List<EmployeeModel>();
             workerCheckInList = new List<WorkerCheckInModel>();
             workListByIdToDay = new List<WorkListModel>();
+            workListByDate = new List<WorkListModel>();
 
             lblResourceNotFound = LanguageHelper.GetStringFromResource("messageNotFound");
             lblDoNotCheckIn = LanguageHelper.GetStringFromResource("workerCheckOutMessageDoNotCheckIn");
             lblInfoTestDate = LanguageHelper.GetStringFromResource("workerCheckOutStatisticsCheckOutDate");
             lblInfoCheckIn = LanguageHelper.GetStringFromResource("workerCheckOutStatisticsCheckIn");
             lblInfoCheckOut = LanguageHelper.GetStringFromResource("workerCheckOutStatisticsCheckOut");
+
+            lblNotExistInWorkList = LanguageHelper.GetStringFromResource("workerCheckInMessageNotExistInTestList");
 
             clock = new DispatcherTimer();
             clock.Tick += Clock_Tick;
@@ -73,6 +77,7 @@ namespace PersonalSV.Views
                 employeeList = EmployeeController.GetAvailable();
                 workerCheckInList = WorkerCheckInController.GetByDate(toDay);
                 //workList = WorkListController.Get();
+                workListByDate = WorkListController.GetByDate(toDay);
             }
             catch (Exception ex)
             {
@@ -113,8 +118,17 @@ namespace PersonalSV.Views
                     }
                     else
                     {
-                        string alertDoNotCheckIn = string.Format("{0} {1:dd/MM/yyyy}", lblDoNotCheckIn, toDay);
-                        AlertCheckOut(alertDoNotCheckIn, Brushes.Yellow, empById);
+                        if (workListByIdToDay.Count() == 0)
+                        {
+                            string notExistInWorklist = string.Format("{0}: {1:dd/MM/yyyy}", lblNotExistInWorkList, toDay);
+                            AlertCheckOut(notExistInWorklist, Brushes.Yellow, empById);
+                        }
+                        else
+                        {
+                            string alertDoNotCheckIn = string.Format("{0}: {1:dd/MM/yyyy}", lblDoNotCheckIn, toDay);
+                            AlertCheckOut(alertDoNotCheckIn, Brushes.Yellow, empById);
+                        }
+
                     }
 
                     DoStatistics(workerCheckInList);
@@ -162,7 +176,7 @@ namespace PersonalSV.Views
                 grDisplay.DataContext = record;
                 WorkerCheckInController.Insert(record);
                 workerCheckInList = WorkerCheckInController.GetByDate(toDay);
-
+                workListByDate = WorkListController.GetByDate(toDay);
                 var workListModelUpdate = new WorkListModel
                 {
                     EmployeeID = record.EmployeeID,
@@ -181,7 +195,11 @@ namespace PersonalSV.Views
 
         private void DoStatistics(List<WorkerCheckInModel> workerCheckInList)
         {
-            var totalCheckedIn = workerCheckInList.Where(w => !string.IsNullOrEmpty(w.RecordTime) && w.CheckType == 0).Select(s => s.EmployeeCode).Distinct().ToList().Count();
+            var workListIdToday = workListByDate.Select(s => s.EmployeeID).Distinct().ToList();
+            var employeeByWorkListToday = employeeList.Where(w => workListIdToday.Contains(w.EmployeeID)).Select(s => s.EmployeeCode).Distinct().ToList();
+            var totalCheckedIn = workerCheckInList.Where(w => !string.IsNullOrEmpty(w.RecordTime) && w.CheckType == 0
+                                                            && employeeByWorkListToday.Contains(w.EmployeeCode)).Select(s => s.EmployeeCode).Distinct().ToList().Count();
+
             var totalCheckedOut = workerCheckInList.Where(w => !string.IsNullOrEmpty(w.RecordTime) && w.CheckType == 1).Select(s => s.EmployeeCode).Distinct().ToList().Count();
 
             var displayModel = new CheckOutStatistics

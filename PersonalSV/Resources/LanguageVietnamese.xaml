@@ -384,8 +384,8 @@
     <system:String x:Key="workerCheckOutTitle">SCAN GIỜ RA</system:String>
     <system:String x:Key="workerCheckInScanCardId">Xin Mời Quẹt Thẻ</system:String>
     <system:String x:Key="workerCheckInLblNotYetCheckOut">Did not complete the Covid test</system:String>
-    <system:String x:Key="menuWorkerCheckIn">1. Scan Giờ Vào</system:String>
-    <system:String x:Key="menuWorkerCheckOut">2. Scan Giờ Ra</system:String>
+    <system:String x:Key="menuWorkerCheckIn">Scan Giờ Vào</system:String>
+    <system:String x:Key="menuWorkerCheckOut">Scan Giờ Ra</system:String>
     <system:String x:Key="menuReportCheckInOut">Báo Cáo Giờ Ra, Vào (Scan Thẻ)</system:String>
     <system:String x:Key="reportCheckInOutWindowTitle">SV-HRS  Báo Cáo Giờ Ra, Vào (Scan Thẻ)</system:String>    
     
@@ -487,5 +487,11 @@
     <system:String x:Key="confirmTestResultTestResult">Kết Quả Test</system:String>
     <system:String x:Key="confirmTestResultConfirmedBy">Người xác nhận</system:String>
     <system:String x:Key="confirmTestResultRemark">Ghi Chú</system:String>
+    
+    
+    <system:String x:Key="confirmTestResultMsgDoNotCheckIn">Chưa Hoàn Thành Test</system:String>
+    
+    <system:String x:Key="menuCreateNewTestTerm">Tạo Kỳ Test Covid Mới</system:String>
+    <system:String x:Key="menuConfirmTestResult">Xác Nhận Kết Quả Test Covid</system:String>
     
 </ResourceDictionary>

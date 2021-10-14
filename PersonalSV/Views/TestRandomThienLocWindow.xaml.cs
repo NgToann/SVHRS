@@ -30,7 +30,7 @@ namespace PersonalSV.Views
         List<TestRandomModel> testRandomListByEmpCode;
         List<TestRandomModel> testRandomListByDate;
         List<EmployeeModel> employeeList;
-        private string lblResourceHeader = "", lblResourceNotFound = "", lblGetInQueue = "", lblDoNotConfirmTestResult = "", lblNotAllowed = "", lblWelcome="", lblNextTestDate = "";
+        private string lblResourceHeader = "", lblResourceNotFound = "", lblGetInQueue = "", lblDoNotConfirmTestResult = "", lblNotAllowed = "", lblWelcome="", lblNextTestDate = "", lblDoNotCheckIn = "";
         private string lblTestDate = "", lblTotalWorker = "", lblCurrentTimeIn = "", lblTestRate = "";
         private DateTime toDay = DateTime.Now.Date;
         public TestRandomThienLocWindow()
@@ -50,12 +50,17 @@ namespace PersonalSV.Views
             lblNotAllowed = LanguageHelper.GetStringFromResource("tlTestRandomMsgNotAllowed");
             lblWelcome = LanguageHelper.GetStringFromResource("tlTestRandomMsgWelcome");
             lblNextTestDate = LanguageHelper.GetStringFromResource("tlTestRandomNextTestDate");
+            lblDoNotCheckIn = LanguageHelper.GetStringFromResource("confirmTestResultMsgDoNotCheckIn");
 
             lblTestDate = LanguageHelper.GetStringFromResource("tlTestRandomTestDate");
             lblTotalWorker = LanguageHelper.GetStringFromResource("tlTestRandomTotalWorkerTest");
             lblCurrentTimeIn = LanguageHelper.GetStringFromResource("tlTestRandomNextCurrentTimeIn");
-            lblTestRate = LanguageHelper.GetStringFromResource("tlTestRandomTestRate");        
+            lblTestRate = LanguageHelper.GetStringFromResource("tlTestRandomTestRate");
 
+            defModel = new PrivateDefineModel();
+            testRandomListByDate = new List<TestRandomModel>();
+            testRandomListByEmpCode = new List<TestRandomModel>();
+            employeeList = new List<EmployeeModel>();
 
             InitializeComponent();
         }
@@ -122,7 +127,8 @@ namespace PersonalSV.Views
                     {
                         var testRdToday = testRandomListToday.FirstOrDefault();
                         // if not yet check in => welcome
-                        if (string.IsNullOrEmpty(testRdToday.TimeIn))
+                        string timeScanCompare = string.Format("{0:HH:mm}", DateTime.Now.AddMinutes(-defModel.WaitingMinutes));
+                        if (string.IsNullOrEmpty(testRdToday.TimeIn) || string.Compare(testRdToday.TimeIn, timeScanCompare) >= 1)
                         {
                             UpdateTimeIn(testRdToday, empByCode, Brushes.Yellow, lblGetInQueue);
                             SetTxtDefault();
@@ -174,6 +180,10 @@ namespace PersonalSV.Views
                                     Alert(empByCode, Brushes.Green, lblWelcome, workerTestLatest.Id);
                                 }
                             }
+                            else
+                            {
+                                Alert(empByCode, Brushes.Yellow, string.Format("{0}: {1:dd/MM/yyyy}", lblDoNotCheckIn, workerTestLatest.TestDate), workerTestLatest.Id);
+                            }
                         }
                         else if (testRandomNextListToday.Count() > 0)
                         {
@@ -214,7 +224,6 @@ namespace PersonalSV.Views
         {
             testRandomUpdateTimeIn.TimeIn = String.Format("{0:HH:mm}", DateTime.Now);
             testRandomUpdateTimeIn.Status = "In";
-
             try
             {
                 TestRandomController.Update(testRandomUpdateTimeIn, 1);
