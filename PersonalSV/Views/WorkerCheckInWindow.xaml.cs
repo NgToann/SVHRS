@@ -148,7 +148,7 @@ namespace PersonalSV.Views
                                 if (workerTestToday.TestStatus == 0)
                                 {
                                     brDisplay.Background = Brushes.Yellow;
-                                    AddRecord(empById, workerTestToday, false, true);
+                                    AddRecord(empById, workerTestToday, false, true);                                    
                                 }
                                 else if (workerTestToday.TestStatus == 1)
                                 {
@@ -166,7 +166,10 @@ namespace PersonalSV.Views
                                 if (workerTestLatest.TestStatus == 0)
                                 {
                                     brDisplay.Background = Brushes.Yellow;
-                                    AddRecord(empById, workerTestLatest, false, true);
+                                    //AddRecord(empById, workerTestLatest, false, true);
+
+                                    string alertNotExistInTestListToDay = string.Format("{0}: {1:dd/MM/yyyy}", lblNotExistInTestList, toDay);
+                                    AlertScan(alertNotExistInTestListToDay, Brushes.Yellow, empById);
                                 }
                                 else if (workerTestLatest.TestStatus == 1)
                                 {
@@ -200,7 +203,9 @@ namespace PersonalSV.Views
                                 else if (workerTestBeforeOrToday.TestStatus == 0)
                                 {
                                     brDisplay.Background = Brushes.Yellow;
-                                    AddRecord(empById, null, false, true);
+                                    //AddRecord(empById, null, false, true);
+                                    string alertNotExistInTestListToDay = string.Format("{0}: {1:dd/MM/yyyy}", lblNotExistInTestList, toDay);
+                                    AlertScan(alertNotExistInTestListToDay, Brushes.Yellow, empById);
                                 }
                                 else if (workerTestBeforeOrToday.TestStatus == 2)
                                 {
@@ -313,7 +318,9 @@ namespace PersonalSV.Views
             brDisplay.Background = color;
             var alert = new CheckInInfoDisplay
             {
-                EmployeeDisplay = String.Format("{0} - {1}", empById.EmployeeName, empById.EmployeeID),
+                //EmployeeDisplay = String.Format("{0} - {1}", empById.EmployeeName, empById.EmployeeID),
+                EmployeeDisplay = empById.EmployeeName,
+                DepartmentName = empById.EmployeeID,
                 //RecordTime = msg
                 TestTime = msg
             };
@@ -337,29 +344,23 @@ namespace PersonalSV.Views
 
             try
             {
-                var nextDayInfoString = new List<string>();
+                
                 string workTime = WorkListNextTestById != null ? String.Format("{0}: {1}", lblWorkTime ,WorkListNextTestById.WorkTime) : "";
                 string testTime = WorkListNextTestById != null ? String.Format("{0}: {1}", lblTestTime ,WorkListNextTestById.TestTime) : "";
                 string nextTestDate = WorkListNextTestById != null ? String.Format("{0}: {1:dd/MM/yyyy}", lblNextTestDate, WorkListNextTestById.TestDate) : "";
                 
-                nextDayInfoString.Add(nextTestDate);
-                nextDayInfoString.Add(testTime);
-                nextDayInfoString.Add(workTime);
 
                 if (WorkListNextTestById != null && string.IsNullOrEmpty(WorkListNextTestById.WorkTime))
                 {
                     workTime = "";
-                    nextDayInfoString.Add(workTime);
                 }
                 if (WorkListNextTestById != null && string.IsNullOrEmpty(WorkListNextTestById.TestTime))
                 {
                     testTime = "";
-                    nextDayInfoString.Add(testTime);
                 }
                 if (!isNextDay)
                 {
                     nextTestDate = "";
-                    nextDayInfoString.Add(nextTestDate);
                 }
 
                 if (getInQueue && workTime == "" && testTime == "" && nextTestDate == "")
@@ -375,10 +376,9 @@ namespace PersonalSV.Views
                     NextTestDate = nextTestDate,
                     WorkTime = workTime,
                     TestTime = testTime,
-                    NextDayInfo = String.Join("\n", nextDayInfoString)
                 };
-                grDisplay.DataContext = addInfoDisplay;
 
+                grDisplay.DataContext = addInfoDisplay;
                 WorkerCheckInController.Insert(record);
                 workerCheckInList.Add(record);
 
