@@ -51,5 +51,38 @@ namespace PersonalSV.Controllers
                 return false;
             }
         }
+
+        public static bool Insert(WorkListModel model)
+        {
+            var @EmployeeCode = new SqlParameter("@EmployeeCode", model.EmployeeCode);
+            var @TestDate = new SqlParameter("@TestDate", model.TestDate);            
+            var @TestTime = new SqlParameter("@TestTime", model.TestTime);
+            var @WorkTime = new SqlParameter("@WorkTime", model.WorkTime);
+
+            using (var db = new PersonalDataEntities())
+            {
+                db.CommandTimeout = 45;
+                if (db.ExecuteStoreCommand("EXEC spm_InsertWorkList @EmployeeCode, @TestDate, @TestTime, @WorkTime",
+                                                                    @EmployeeCode, @TestDate, @TestTime, @WorkTime) >= 1)
+                    return true;
+                return false;
+            }
+        }
+
+        public static bool DeleteWorkListByIdByDate(WorkListModel model)
+        {
+            var @EmployeeID = new SqlParameter("@EmployeeID", model.EmployeeID);
+            var @TestDate   = new SqlParameter("@TestDate", model.TestDate);
+
+            using (var db = new PersonalDataEntities())
+            {
+                db.CommandTimeout = 45;
+
+                if (db.ExecuteStoreCommand("EXEC spm_DeleteWorkListByEmpIdByDate @EmployeeID, @TestDate",
+                                                                                 @EmployeeID, @TestDate) >= 1)
+                    return true;
+                return false;
+            }
+        }
     }
 }

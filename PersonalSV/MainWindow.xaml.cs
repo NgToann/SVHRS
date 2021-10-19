@@ -206,6 +206,10 @@ namespace PersonalSV
             {
                 miCreateTestTerm.Visibility = Visibility.Collapsed;
                 miTLTestRandom.Visibility = Visibility.Collapsed;
+
+                miTestCovidRandom.Visibility = Visibility.Collapsed;
+                miCreateTestTerm.Visibility = Visibility.Collapsed;
+                miConfirmTestResult.Visibility = Visibility.Collapsed;
             }
         }
 

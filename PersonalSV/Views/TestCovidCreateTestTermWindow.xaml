@@ -34,9 +34,20 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{DynamicResource ResourceKey=createTestLblTestRate}"/>
-                    <TextBlock Margin="10,0,0,0" x:Name="lblTestRate" Text="20 %" Foreground="Red" FontWeight="SemiBold"/>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="{DynamicResource ResourceKey=createTestLblTestRate}" VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox x:Name="txtRandomRate" Text="20" FontSize="18" Padding="3" Foreground="Red" Width="80" FontWeight="SemiBold" VerticalContentAlignment="Center"/>
+                        <TextBlock Text=" %" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10,0,10,0">
+                    <TextBlock Text="{DynamicResource ResourceKey=createTestTestTime}"/>
+                    <TextBox x:Name="txtTestTime" Text="08:00" FontSize="18" Padding="3" Foreground="Blue"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Vertical">
+                    <TextBlock Text="{DynamicResource ResourceKey=createTestWorkTime}"/>
+                    <TextBox x:Name="txtWorkTime" Text="08:00" FontSize="18" Padding="3" Foreground="Blue"/>
                 </StackPanel>
                 <TextBlock Grid.Row="1" Margin="0,10,0,0" Text="{DynamicResource ResourceKey=createTestTestDate}"/>
                 <DatePicker Grid.Row="2" x:Name="dpTestDate" VerticalContentAlignment="Center"/>
@@ -53,7 +64,7 @@
                     </Hyperlink>
                 </TextBlock>
 
-                <Button x:Name="btnCreate" Grid.Column="3" Grid.RowSpan="3" Margin="5,0,0,0" Template="{DynamicResource ResourceKey=ButtonTemplate}"  Click="btnCreate_Click" Cursor="Hand">
+                <Button x:Name="btnCreate" Grid.Column="3" Grid.RowSpan="2" Grid.Row="1" Margin="5,0,0,0" Template="{DynamicResource ResourceKey=ButtonTemplate}"  Click="btnCreate_Click" Cursor="Hand">
                     <Button.Content>
                         <Grid>
                             <Grid.RowDefinitions>
@@ -66,6 +77,20 @@
                 </Button>
             </Grid>
         </GroupBox>
+
+        <Grid Grid.Column="1" Margin="0,0,0,6">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="1" Width="200" HorizontalAlignment="Right" x:Name="btnImportExcel" Content="{DynamicResource ResourceKey=menuCreateNewImportExcel}" Padding="10,4,10,4" Margin="0,0,0,10" Cursor="Hand" Foreground="Red" FontWeight="SemiBold" Click="btnImportExcel_Click"/>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock Text="{DynamicResource ResourceKey=menuCreateNewInputWorkerId}" VerticalAlignment="Bottom" Margin="0,0,10,0"/>
+                <TextBox x:Name="txtWorkerId" FontSize="20"  MinWidth="200" Padding="3" Foreground="Blue" Margin="0,0,10,0" PreviewKeyDown="txtWorkerId_PreviewKeyDown"/>
+                <Button x:Name="btnAddWorkerId" Content="{DynamicResource ResourceKey=menuCreateNewAdd}" Padding="10,4,10,4" Cursor="Hand" Foreground="Blue" FontWeight="SemiBold" Click="btnAddWorkerId_Click"/>
+            </StackPanel>
+        </Grid>
 
         <DataGrid Grid.Row="1" Grid.ColumnSpan="2" Margin="0,2,0,0" x:Name="dgRandomList" AutoGenerateColumns="False" AlternationCount="2" AlternatingRowBackground="LightCyan"
                       CanUserAddRows="False" SelectionUnit="FullRow" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
@@ -80,7 +105,12 @@
                     </Style.Triggers>
                 </Style>
             </DataGrid.Resources>
-
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="miRemove" Header="{DynamicResource ResourceKey=commonMenuItemRemove}" Click="miRemove_Click">
+                    </MenuItem>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
             <DataGrid.ColumnHeaderStyle>
                 <Style TargetType="DataGridColumnHeader">
                     <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -92,17 +122,17 @@
                 </Style>
             </DataGrid.ColumnHeaderStyle>
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeCode}" SortMemberPath="EmployeeCode" ClipboardContentBinding="{Binding EmployeeCode}">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding EmployeeCode}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeID}" SortMemberPath="EmployeeID" ClipboardContentBinding="{Binding EmployeeID}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding EmployeeID}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=commonEmployeeCode}" SortMemberPath="EmployeeCode" ClipboardContentBinding="{Binding EmployeeCode}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding EmployeeCode}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -123,18 +153,32 @@
                 <DataGridTemplateColumn Header="{DynamicResource ResourceKey=createTestTestDate}" SortMemberPath="TestDate" ClipboardContentBinding="{Binding TestDate}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding TestDate, StringFormat=dd/MM/yyyy}" Margin="3" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding TestDate, StringFormat=dd/MM/yyyy}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=createTestTerm}" SortMemberPath="Term" ClipboardContentBinding="{Binding Term}">
+                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=createTestTestTime}" SortMemberPath="TestTime" ClipboardContentBinding="{Binding TestTime}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding TestTime}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=createTestWorkTime}" SortMemberPath="WorkTime" ClipboardContentBinding="{Binding WorkTime}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding WorkTime}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=createTestTerm}" SortMemberPath="Term" ClipboardContentBinding="{Binding Term}" Visibility="Collapsed">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Term}" Margin="3" VerticalAlignment="Center"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=createTestRound}" SortMemberPath="Round" ClipboardContentBinding="{Binding Round}">
+                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=createTestRound}" SortMemberPath="Round" ClipboardContentBinding="{Binding Round}" Visibility="Collapsed">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Round}" Margin="3" VerticalAlignment="Center"/>
@@ -148,19 +192,31 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="btnSave" Grid.Column="1" Template="{DynamicResource ResourceKey=ButtonTemplate}" IsEnabled="False" Click="btnSave_Click" Cursor="Hand">
+            <Button x:Name="btnDelete" Grid.Column="1" Margin="0,0,30,0" Template="{DynamicResource ResourceKey=ButtonTemplate}" Click="btnDelete_Click" Cursor="Hand">
                 <Button.Content>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Padding="15,4,15,4" Grid.Row="1" VerticalAlignment="Center" Text="{DynamicResource ResourceKey=commonButtonSave}"/>
+                        <TextBlock Padding="25,4,25,4" Grid.Row="1" VerticalAlignment="Center" Text="{DynamicResource ResourceKey=commonButtonDelete}" Foreground="Red" FontWeight="SemiBold"/>
+                    </Grid>
+                </Button.Content>
+            </Button>
+            <Button x:Name="btnSave" Grid.Column="2" Template="{DynamicResource ResourceKey=ButtonTemplate}" Click="btnSave_Click" Cursor="Hand">
+                <Button.Content>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Padding="25,4,25,4" Grid.Row="1" VerticalAlignment="Center" Text="{DynamicResource ResourceKey=commonButtonSave}"/>
                     </Grid>
                 </Button.Content>
             </Button>
         </Grid>
-        
+
     </Grid>
 </Window>

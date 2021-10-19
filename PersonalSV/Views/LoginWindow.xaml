@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PersonalSV.Views"
-        mc:Ignorable="d" WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded"
         Title="{DynamicResource logInWindowTitle}" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" Closed="Window_Closed">
     <Grid>
         <Border Width="265" Height="297">
@@ -42,7 +42,7 @@
                 </Style>
             </PasswordBox.Style>
         </PasswordBox>
-        <Button x:Name="btnLogin" Margin="29,234,29,29" Background="Transparent" BorderBrush="Transparent" BorderThickness="0,0,0,0" Click="btnLogin_Click" IsDefault="True">
+        <Button x:Name="btnLogin" Cursor="Hand" Margin="29,234,29,29" Background="Transparent" BorderBrush="Transparent" BorderThickness="0,0,0,0" Click="btnLogin_Click" IsDefault="True">
             <Button.Content>
                 <Image Width="210" Height="34" Source="/Images/btnlogin.png" Stretch="Fill"/>
             </Button.Content>
@@ -66,5 +66,6 @@
                 </Style>
             </Button.Style>
         </Button>
+        <CheckBox x:Name="cbLoginBySaoViet" Cursor="Hand" Content="Login By" Foreground="Blue" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="29,275,29,7" Checked="cbLoginBySaoViet_Checked" Unchecked="cbLoginBySaoViet_Unchecked" />
     </Grid>
 </Window>

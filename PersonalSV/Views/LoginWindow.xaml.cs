@@ -16,12 +16,13 @@ namespace PersonalSV.Views
     public partial class LoginWindow : Window
     {
         BackgroundWorker bwLogin;
+        private PrivateDefineModel defModel;
         public LoginWindow()
         {
             bwLogin = new BackgroundWorker();
             bwLogin.DoWork += BwLogin_DoWork;
             bwLogin.RunWorkerCompleted += BwLogin_RunWorkerCompleted;
-
+            defModel = new PrivateDefineModel();
             InitializeComponent();
             txtUserName.Focus();
         }
@@ -73,6 +74,43 @@ namespace PersonalSV.Views
         private void Window_Closed(object sender, EventArgs e)
         {
             App.Current.Shutdown();
+        }
+
+        private void cbLoginBySaoViet_Checked(object sender, RoutedEventArgs e)
+        {
+            if (defModel.Factory.Equals("SAOVIET"))
+            {
+                txtUserName.Text = "saoviet";
+                txtPassword.Password = "sv123";
+            }
+            else if (defModel.Factory.Equals("DAILOC"))
+            {
+                txtUserName.Text = "dailoc";
+                txtPassword.Password = "dl123";
+            }
+            else if (defModel.Factory.Equals("THIENLOC"))
+            {
+                txtUserName.Text = "thienloc";
+                txtPassword.Password = "tl123";
+            }
+        }
+
+        private void cbLoginBySaoViet_Unchecked(object sender, RoutedEventArgs e)
+        {
+            txtUserName.Text = "";
+            txtPassword.Password = "";
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                defModel = CommonController.GetDefineProps();
+                cbLoginBySaoViet.Content = string.Format("Login By {0}", defModel.Factory);
+            }
+            catch
+            {
+            }
         }
     }
 }

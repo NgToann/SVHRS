@@ -22,6 +22,8 @@ namespace PersonalSV.Models
         public Nullable<DateTime> CreatedTime { get; set; }
         public Nullable<DateTime> UpdatedTime { get; set; }
 
+        public string TestTime { get; set; }
+        public string WorkTime { get; set; }
         public string EmployeeID { get; set; }
         public string EmployeeName { get; set; }
         public string DepartmentName { get; set; }

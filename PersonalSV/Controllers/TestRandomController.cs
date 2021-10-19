@@ -113,7 +113,21 @@ namespace PersonalSV.Controllers
                 return false;
             }
         }
-        
+        public static bool DeleteByEmpCodeByDate(TestRandomModel model)
+        {
+            var @EmployeeCode = new SqlParameter("@EmployeeCode", model.EmployeeCode);
+            var @TestDate = new SqlParameter("@TestDate", model.TestDate);
+            using (var db = new PersonalDataEntities())
+            {
+                db.CommandTimeout = 45;
+
+                if (db.ExecuteStoreCommand("EXEC spm_DeleteTestRandomByEmpCodeByDate @EmployeeCode, @TestDate",
+                                                                                     @EmployeeCode, @TestDate) >= 1)
+                    return true;
+                return false;
+            }
+        }
+
         public static bool DeleteByDate(DateTime dateDelete)
         {
             var @TestDate = new SqlParameter("@TestDate", dateDelete);
