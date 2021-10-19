@@ -28,6 +28,13 @@ namespace PersonalSV.Controllers
                 return db.ExecuteStoreQuery<EmployeeModel>("EXEC spm_SelectPersonalAvailabe").ToList();
             };
         }
+        public static List<EmployeeModel> GetForScan()
+        {
+            using (var db = new PersonalDataEntities())
+            {
+                return db.ExecuteStoreQuery<EmployeeModel>("EXEC spm_SelectPersonalAvailabeForScan").ToList();
+            };
+        }
         //
         public static List<EmployeeModel> GetAvailableForTestCovid()
         {

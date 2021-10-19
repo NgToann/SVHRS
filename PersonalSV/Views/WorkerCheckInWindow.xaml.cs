@@ -97,7 +97,7 @@ namespace PersonalSV.Views
         {
             try
             {
-                employeeList = EmployeeController.GetAvailable();
+                employeeList = EmployeeController.GetForScan();
                 workListAll = WorkListController.Get();
                 workerCheckInList = WorkerCheckInController.GetByDate(toDay);
                 defModel = CommonController.GetDefineProps();
@@ -130,6 +130,7 @@ namespace PersonalSV.Views
                     try
                     {
                         workList = WorkListController.GetByEmpId(empById.EmployeeID);
+                        defModel = CommonController.GetDefineProps();
                     }
                     catch (Exception ex)
                     {
@@ -140,9 +141,9 @@ namespace PersonalSV.Views
                     // Check in worklist
                     if (workList.Count() > 0)
                     {
-                        var testToday = workList.Where(w => w.TestDate == toDay).ToList();
+                        var testToday   = workList.Where(w => w.TestDate == toDay).ToList();
                         var testNextDay = workList.Where(w => w.TestDate > toDay).ToList();
-                        var testBefore = workList.Where(w => w.TestDate < toDay).ToList();
+                        var testBefore  = workList.Where(w => w.TestDate < toDay).ToList();
 
                         // Morning
                         if (String.Compare(currentTime, afternoonStone) < 1)
@@ -185,7 +186,7 @@ namespace PersonalSV.Views
                     {
                         AlertScan(lblNotExitsInWorkList, Brushes.Red, empById);
                         playAlarmSound();
-                    }                   
+                    }
                 }
                 else
                 {

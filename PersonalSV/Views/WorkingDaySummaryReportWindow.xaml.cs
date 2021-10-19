@@ -62,7 +62,7 @@ namespace PersonalSV.Views
             try
             {
                 departmentList = DepartmentController.GetDepartments();
-                employeeList = EmployeeController.GetAvailable();
+                employeeList = EmployeeController.GetForScan();
             }
             catch (Exception ex)
             {

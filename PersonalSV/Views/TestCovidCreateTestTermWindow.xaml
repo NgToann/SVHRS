@@ -64,7 +64,7 @@
                     </Hyperlink>
                 </TextBlock>
 
-                <Button x:Name="btnCreate" Grid.Column="3" Grid.RowSpan="2" Grid.Row="1" Margin="5,0,0,0" Template="{DynamicResource ResourceKey=ButtonTemplate}"  Click="btnCreate_Click" Cursor="Hand">
+                <Button x:Name="btnCreate" Grid.Column="3" Grid.RowSpan="2" Grid.Row="1" Margin="5,0,0,0" Template="{DynamicResource ResourceKey=ButtonConner}"  Click="btnCreate_Click" Cursor="Hand">
                     <Button.Content>
                         <Grid>
                             <Grid.RowDefinitions>

@@ -79,7 +79,17 @@
                 <TextBlock Grid.Row="9" VerticalAlignment="Center" Text="{DynamicResource ResourceKey=confirmTestResultConfirmedBy}" Padding="4"/>
                 <TextBlock Grid.Row="10" VerticalAlignment="Center" Text="{DynamicResource ResourceKey=confirmTestResultRemark}" Padding="4"/>
 
-                <TextBlock Grid.Column="1" Text="{Binding Id}" Padding="4"/>
+                <Grid Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{Binding Id}" Padding="4"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <CheckBox x:Name="cbChangeConfirmDate" Cursor="Hand" Content="Change Confirm Date" VerticalAlignment="Center" Foreground="Red" VerticalContentAlignment="Center" IsChecked="False" Checked="cbChangeConfirmDate_Checked" Unchecked="cbChangeConfirmDate_Unchecked"/>
+                        <DatePicker x:Name="dpConfirmDate" VerticalContentAlignment="Center" Margin="10,0,0,0" Visibility="Collapsed" SelectedDateChanged="dpConfirmDate_SelectedDateChanged"/>
+                    </StackPanel>
+                </Grid>
                 <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding EmployeeName}" Padding="4"/>
                 <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding EmployeeCode}" Padding="4"/>
                 <TextBlock Grid.Column="2" Grid.Row="3" Text="{Binding EmployeeID}" Padding="4"/>
@@ -96,7 +106,7 @@
             </Grid>
             </ScrollViewer>
         </Border>
-        <Button x:Name="btnSave" Grid.Row="3" Grid.Column="1" Template="{DynamicResource ResourceKey=ButtonTemplate}" IsEnabled="False" Click="btnSave_Click" Width="200" Margin="0,1,2,0" HorizontalAlignment="Right" Cursor="Hand">
+        <Button x:Name="btnSave" Grid.Row="3" Grid.Column="1" Template="{DynamicResource ResourceKey=ButtonConner}" IsEnabled="False" Click="btnSave_Click" Width="200" Margin="0,1,2,0" HorizontalAlignment="Right" Cursor="Hand">
             <Button.Content>
                 <Grid>
                     <Grid.RowDefinitions>

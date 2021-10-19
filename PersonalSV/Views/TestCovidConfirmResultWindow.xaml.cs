@@ -26,13 +26,15 @@ namespace PersonalSV.Views
     {
         BackgroundWorker bwLoad;
         BackgroundWorker bwSave;
+        BackgroundWorker bwDateChange;
         private string lblResourceHeader = "";
         List<EmployeeModel> employeeList;
-        private DateTime toDay = DateTime.Now.Date;
+        private DateTime dateConfirm = DateTime.Now.Date;
 
-        List<TestRandomModel> testRandomListByEmpCodeToDay;
-        List<TestRandomModel> testRandomListByDate;
-        private string[] results = { "Negative", "Positive" };
+        List<TestRandomModel> testByEmpCodeToDate;
+        List<TestRandomModel> testListByDate;
+
+        private string[] results = { "Negative", "Positive", "F1", "Others" };
         public TestCovidConfirmResultWindow()
         {
             bwLoad = new BackgroundWorker();
@@ -43,12 +45,16 @@ namespace PersonalSV.Views
             bwSave.DoWork += BwSave_DoWork;
             bwSave.RunWorkerCompleted += BwSave_RunWorkerCompleted;
 
+            bwDateChange = new BackgroundWorker();
+            bwDateChange.DoWork += BwDateChange_DoWork;
+            bwDateChange.RunWorkerCompleted += BwDateChange_RunWorkerCompleted;
+
             lblResourceHeader = LanguageHelper.GetStringFromResource("confirmTestResultHeader");
 
             employeeList = new List<EmployeeModel>();
 
-            testRandomListByEmpCodeToDay = new List<TestRandomModel>();
-            testRandomListByDate = new List<TestRandomModel>();
+            testByEmpCodeToDate = new List<TestRandomModel>();
+            testListByDate = new List<TestRandomModel>();
 
             InitializeComponent();
         }
@@ -62,7 +68,7 @@ namespace PersonalSV.Views
             this.Cursor = null;
             SetTxtDefault();
             btnSave.IsEnabled = true;
-            DoCounter(testRandomListByDate);
+            DoCounter(testListByDate);
             ClearUI();
         }
 
@@ -72,7 +78,7 @@ namespace PersonalSV.Views
             try
             {
                 TestRandomController.Update(updateTestResultModel, 3);
-                testRandomListByDate = TestRandomController.GetByDate(toDay);
+                testListByDate = TestRandomController.GetByDate(dateConfirm);
                 e.Result = true;
             }
             catch (Exception ex)
@@ -95,15 +101,16 @@ namespace PersonalSV.Views
             cboResult.ItemsSource = results;
             cboResult.SelectedItem = results[0];
 
-            DoCounter(testRandomListByDate);
+            DoCounter(testListByDate);
+            dpConfirmDate.SelectedDate = dateConfirm;
         }
 
         private void BwLoad_DoWork(object sender, DoWorkEventArgs e)
         {
             try
             {
-                employeeList = EmployeeController.GetAvailableForTestCovid();
-                testRandomListByDate = TestRandomController.GetByDate(toDay);
+                employeeList = EmployeeController.GetForScan();
+                testListByDate = TestRandomController.GetByDate(dateConfirm);
             }
             catch (Exception ex)
             {
@@ -119,29 +126,30 @@ namespace PersonalSV.Views
             if (e.Key == Key.Enter)
             {
                 ClearUI();
-                string findWhat = txtCardId.Text.Trim().ToLower().ToString();
-                var empByCode = employeeList.FirstOrDefault(f => f.EmployeeCode == findWhat);
+                string findWhat = txtCardId.Text.Trim().ToUpper().ToString();
+                var empByCode = employeeList.FirstOrDefault(f => f.EmployeeCode.Trim().ToUpper() == findWhat
+                                                            || f.EmployeeID.Trim().ToUpper() == findWhat);
                 if (empByCode != null)
                 {
                     try
                     {
-                        testRandomListByEmpCodeToDay = TestRandomController.GetByEmpCode(empByCode.EmployeeCode).Where(w => w.TestDate == toDay).ToList();
+                        testByEmpCodeToDate = TestRandomController.GetByEmpCode(empByCode.EmployeeCode).Where(w => w.TestDate == dateConfirm).ToList();
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.InnerException.Message.ToString());
                         return;   
                     }
-                    if (testRandomListByEmpCodeToDay.Count() == 0)
+                    if (testByEmpCodeToDate.Count() == 0)
                     {
-                        MessageBox.Show(string.Format("Worker Not Exist In Covid Test List day: {0:dd/MM/yyyy} !", toDay), this.Title, MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show(string.Format("Worker Not Exist In Covid Test List day: {0:dd/MM/yyyy} !\nKhông có tên trong danh sách", dateConfirm), this.Title, MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     else
                     {
-                        var workerTestToday = testRandomListByEmpCodeToDay.FirstOrDefault();
+                        var workerTestToday = testByEmpCodeToDate.FirstOrDefault();
                         if (string.IsNullOrEmpty(workerTestToday.TimeIn))
                         {
-                            MessageBox.Show(string.Format("Worker Does Not CheckIn day: {0:dd/MM/yyyy} !", toDay), this.Title, MessageBoxButton.OK, MessageBoxImage.Information);
+                            MessageBox.Show(string.Format("Worker Does Not CheckIn day: {0:dd/MM/yyyy} !\nKhông Check In ngày", dateConfirm), this.Title, MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                         else
                         {
@@ -178,9 +186,10 @@ namespace PersonalSV.Views
             txtConfirmBy.Text = "";
             txtRemark.Text = "";
         }
+        
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            var updateTestResultModel = testRandomListByEmpCodeToDay.FirstOrDefault();
+            var updateTestResultModel = testByEmpCodeToDate.FirstOrDefault();
             if (bwSave.IsBusy == false && updateTestResultModel != null)
             {
                 updateTestResultModel.Result = cboResult.SelectedItem.ToString();
@@ -204,11 +213,12 @@ namespace PersonalSV.Views
         {
             if (bwLoad.IsBusy == false)
             {
-                lblHeader.Text = string.Format("{0}: {1:dd/MM/yyyy}", lblResourceHeader, toDay);
+                lblHeader.Text = string.Format("{0}: {1:dd/MM/yyyy}", lblResourceHeader, dateConfirm);
                 this.Cursor = Cursors.Wait;
                 bwLoad.RunWorkerAsync();
             }
         }
+        
         private void SetTxtDefault()
         {
             txtCardId.SelectAll();
@@ -238,6 +248,52 @@ namespace PersonalSV.Views
             public string TestDate { get; set; }
             public string TimeIn { get; set; }
             public string UpdateResultTime { get; set; }
+        }
+
+        private void dpConfirmDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (bwDateChange.IsBusy == false && this.IsLoaded)
+            {
+                dateConfirm = dpConfirmDate.SelectedDate.Value.Date;
+                if (dateConfirm > DateTime.Now.Date)
+                    return;
+
+                dpConfirmDate.IsEnabled = false;
+                lblHeader.Text = string.Format("{0}: {1:dd/MM/yyyy}", lblResourceHeader, dateConfirm);
+                this.Cursor = Cursors.Wait;
+                bwDateChange.RunWorkerAsync();
+            }
+        }
+        private void BwDateChange_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            this.Cursor = null;
+            dpConfirmDate.IsEnabled = true;
+            cbChangeConfirmDate.IsChecked = false;
+        }
+
+        private void BwDateChange_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                employeeList = EmployeeController.GetForScan();
+                testListByDate = TestRandomController.GetByDate(dateConfirm);
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    MessageBox.Show(ex.InnerException.Message.ToString());
+                }));
+            }
+        }
+        private void cbChangeConfirmDate_Checked(object sender, RoutedEventArgs e)
+        {
+            dpConfirmDate.Visibility = Visibility.Visible;
+        }
+
+        private void cbChangeConfirmDate_Unchecked(object sender, RoutedEventArgs e)
+        {
+            dpConfirmDate.Visibility = Visibility.Collapsed;
         }
     }
 }

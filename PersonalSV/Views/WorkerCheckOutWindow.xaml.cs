@@ -74,7 +74,7 @@ namespace PersonalSV.Views
         {
             try
             {
-                employeeList = EmployeeController.GetAvailable();
+                employeeList = EmployeeController.GetForScan();
                 workerCheckInList = WorkerCheckInController.GetByDate(toDay);
                 //workList = WorkListController.Get();
                 workListByDate = WorkListController.GetByDate(toDay);
