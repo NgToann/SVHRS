@@ -223,8 +223,10 @@ namespace PersonalSV.Views
                 {
                     if (string.Compare(alarmStone, workerTestToday.TestTime) < 0)
                     {
-                        lblTestMessage = lblNotInTestTime;
+                        lblTestMessage = string.Format("{0} ({1})", lblNotInTestTime, workerTestToday.TestTime);
                         playAlarmSound();
+                        AlertScan(lblTestMessage, Brushes.Yellow, empById);
+                        return;
                     }
                 }
 
