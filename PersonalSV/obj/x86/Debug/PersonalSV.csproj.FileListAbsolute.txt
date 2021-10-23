@@ -1766,3 +1766,4 @@ F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\PersonalSV\obj\x86\Debug\Pe
 F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\PersonalSV\obj\x86\Debug\PersonalSV.csproj.CopyComplete
 F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\PersonalSV\obj\x86\Debug\PersonalSV.exe
 F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\PersonalSV\obj\x86\Debug\PersonalSV.pdb
+F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\PersonalSV\obj\x86\Debug\PersonalSV.csprojAssemblyReference.cache

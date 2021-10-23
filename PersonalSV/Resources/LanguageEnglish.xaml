@@ -409,6 +409,7 @@
     <system:String x:Key="workerCheckInMessageNotAllowed">Not Allowed</system:String>
     <system:String x:Key="workerCheckInMessageNotExistInTestList">Không có trong danh sách test</system:String>
     <system:String x:Key="workerCheckInMessageNotYetCompleteCovidTest">Chưa hoàn thành test</system:String>
+    <system:String x:Key="workerCheckInMessageNotInTestTime">CHƯA ĐẾN GIỜ XÉT NGHIỆM</system:String>
     
     <system:String x:Key="workerCheckOutMessageDoNotCheckIn">Chưa CheckIn</system:String>
     <system:String x:Key="workerCheckOutMessageDoNotScan">Chưa Scan</system:String>     

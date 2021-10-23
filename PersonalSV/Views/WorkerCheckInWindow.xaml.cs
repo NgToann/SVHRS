@@ -25,7 +25,7 @@ namespace PersonalSV.Views
 
         private string lblResourceNotFound = "", lblNotExitsInWorkList = "", lblNotAllowed = "", lblNotExistInTestList = "";
         private string lblInfoTestDate = "", lblInfoTotalWorkList = "", lblInfoScanned = "", lblInfoRatio = "";
-        private string lblNextTestDate = "", lblTestTime = "", lblWorkTime = "", lblGetInQueue = "", lblDidNotCompleted = "";
+        private string lblNextTestDate = "", lblTestTime = "", lblWorkTime = "", lblGetInQueue = "", lblDidNotCompleted = "", lblNotInTestTime = "", lblTestMessage = "";
 
         private PrivateDefineModel defModel;
         private List<WorkListModel> workList;
@@ -64,6 +64,7 @@ namespace PersonalSV.Views
             lblWorkTime             = LanguageHelper.GetStringFromResource("workerCheckInLblWorkTime");
             lblGetInQueue           = LanguageHelper.GetStringFromResource("workerCheckInLblGetInQueue");
             lblDidNotCompleted      = LanguageHelper.GetStringFromResource("workerCheckInMessageNotYetCompleteCovidTest");
+            lblNotInTestTime        = LanguageHelper.GetStringFromResource("workerCheckInMessageNotInTestTime");
 
             greenYellowColor        = (LinearGradientBrush)TryFindResource("AlertGreenYellow");
 
@@ -110,6 +111,7 @@ namespace PersonalSV.Views
         
         private void txtCardId_PreviewKeyUp(object sender, KeyEventArgs e)
         {
+            lblTestMessage = lblGetInQueue;
             var currentTime = string.Format("{0:HH:mm}", DateTime.Now);
             grDisplay.DataContext = null;
             this.Background = Brushes.WhiteSmoke;
@@ -215,6 +217,17 @@ namespace PersonalSV.Views
                     brDisplay.Background = greenYellowColor;
                 }
 
+                // Do Alarm Sound
+                var alarmStone = string.Format("{0:HH:mm}", DateTime.Now.AddMinutes(defModel.AlarmMinutes));
+                if (!string.IsNullOrEmpty(workerTestToday.TestTime))
+                {
+                    if (string.Compare(alarmStone, workerTestToday.TestTime) < 0)
+                    {
+                        lblTestMessage = lblNotInTestTime;
+                        playAlarmSound();
+                    }
+                }
+
                 var testTime = String.Format("{0}: {1}", lblTestTime, workerTestToday.TestTime);
                 AddRecord(empById, workerTestToday, "", true, false, testTime, workTime);
             }
@@ -269,7 +282,7 @@ namespace PersonalSV.Views
             {   
                 if (getInQueue && !string.IsNullOrEmpty(testTime))
                 {
-                    nextTestDay = lblGetInQueue;
+                    nextTestDay = lblTestMessage;
                 }
 
                 var addInfoDisplay = new CheckInInfoDisplay

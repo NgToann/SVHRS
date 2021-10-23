@@ -412,6 +412,7 @@
     <system:String x:Key="workerCheckInMessageNotAllowed">Không Cho Phép</system:String>
     <system:String x:Key="workerCheckOutMessageDoNotScan">Chưa Scan</system:String>
     <system:String x:Key="workerCheckInMessageNotExistInTestList">Không Có Trong Danh Sách Test</system:String>
+    <system:String x:Key="workerCheckInMessageNotInTestTime">CHƯA ĐẾN GIỜ XÉT NGHIỆM</system:String>
     
     <system:String x:Key="reportCheckInOutOption">Tùy Chọn</system:String>
     <system:String x:Key="reportRadCheckIn">Giờ Vào</system:String>

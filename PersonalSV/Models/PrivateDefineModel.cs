@@ -15,5 +15,6 @@ namespace PersonalSV.Models
         public double RemindTestDate { get; set; }
         public double WaitingMinutes { get; set; }
         public string Factory { get; set; }
+        public double AlarmMinutes { get; set; }
     }
 }
