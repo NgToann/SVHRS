@@ -8,8 +8,10 @@ namespace PersonalSV.Views
     /// </summary>
     public partial class AboutMeWindow : Window
     {
-        public AboutMeWindow()
+        public string version;
+        public AboutMeWindow(string version)
         {
+            this.version = version;
             InitializeComponent();
         }
 
@@ -30,7 +32,7 @@ namespace PersonalSV.Views
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
+            lblVersion.Text = version;
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e)

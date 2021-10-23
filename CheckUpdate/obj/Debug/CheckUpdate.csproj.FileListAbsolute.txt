@@ -1,0 +1,14 @@
+F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\CheckUpdate\bin\Debug\CheckUpdate.exe.config
+F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\CheckUpdate\bin\Debug\CheckUpdate.exe
+F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\CheckUpdate\bin\Debug\CheckUpdate.pdb
+F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\CheckUpdate\obj\Debug\MainWindow.g.cs
+F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\CheckUpdate\obj\Debug\App.g.cs
+F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\CheckUpdate\obj\Debug\CheckUpdate_MarkupCompile.cache
+F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\CheckUpdate\obj\Debug\CheckUpdate_MarkupCompile.lref
+F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\CheckUpdate\obj\Debug\MainWindow.baml
+F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\CheckUpdate\obj\Debug\CheckUpdate.g.resources
+F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\CheckUpdate\obj\Debug\CheckUpdate.Properties.Resources.resources
+F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\CheckUpdate\obj\Debug\CheckUpdate.csproj.GenerateResource.cache
+F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\CheckUpdate\obj\Debug\CheckUpdate.csproj.CoreCompileInputs.cache
+F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\CheckUpdate\obj\Debug\CheckUpdate.exe
+F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\CheckUpdate\obj\Debug\CheckUpdate.pdb

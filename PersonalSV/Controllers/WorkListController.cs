@@ -54,10 +54,10 @@ namespace PersonalSV.Controllers
 
         public static bool Insert(WorkListModel model)
         {
-            var @EmployeeCode = new SqlParameter("@EmployeeCode", model.EmployeeCode);
-            var @TestDate = new SqlParameter("@TestDate", model.TestDate);            
-            var @TestTime = new SqlParameter("@TestTime", model.TestTime);
-            var @WorkTime = new SqlParameter("@WorkTime", model.WorkTime);
+            var @EmployeeCode   = new SqlParameter("@EmployeeCode", model.EmployeeCode);
+            var @TestDate       = new SqlParameter("@TestDate", model.TestDate);            
+            var @TestTime       = new SqlParameter("@TestTime", model.TestTime);
+            var @WorkTime       = new SqlParameter("@WorkTime", model.WorkTime);
 
             using (var db = new PersonalDataEntities())
             {

@@ -81,13 +81,13 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="{Binding EmployeeDisplay}" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Row="1" Text="{Binding DepartmentName}" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Row="2" Text="{Binding RecordTime}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding EmployeeDisplay}" HorizontalAlignment="Center" Foreground="{Binding Foreground}" FontWeight="SemiBold" />
+                    <TextBlock Grid.Row="1" Text="{Binding DepartmentName}" HorizontalAlignment="Center" Foreground="{Binding Foreground}" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Row="2" Text="{Binding RecordTime}" HorizontalAlignment="Center" Foreground="{Binding Foreground}" FontWeight="SemiBold"/>
                     <!--<TextBlock Grid.Row="3" Text="{Binding NextDayInfo}" HorizontalAlignment="Center"/>-->
-                    <TextBlock Grid.Row="3" Text="{Binding NextTestDate}" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Row="4" Text="{Binding TestTime}" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Row="5" Text="{Binding WorkTime}" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Row="3" Text="{Binding NextTestDate}" HorizontalAlignment="Center" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Row="4" Text="{Binding TestTime}" HorizontalAlignment="Center" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Row="5" Text="{Binding WorkTime}" HorizontalAlignment="Center" Foreground="{Binding Foreground}" FontWeight="SemiBold"/>
                 </Grid>
             </Viewbox>
         </Border>

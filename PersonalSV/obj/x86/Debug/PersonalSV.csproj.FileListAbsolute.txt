@@ -1663,7 +1663,6 @@ F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\PersonalSV\bin\Debug\LiveCh
 F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\PersonalSV\bin\Debug\LiveCharts.Wpf.pdb
 F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\PersonalSV\bin\Debug\LiveCharts.Wpf.xml
 F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\PersonalSV\bin\Debug\Microsoft.ReportViewer.WinForms.xml
-F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\PersonalSV\obj\x86\Debug\PersonalSV.csprojAssemblyReference.cache
 F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\PersonalSV\obj\x86\Debug\MainWindow.baml
 F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\PersonalSV\obj\x86\Debug\Resources\ControlTemplate.baml
 F:\SV PROJECT\HRS\Original_12 Flash Test Covid\SVHRS\PersonalSV\obj\x86\Debug\Resources\LanguageEnglish.baml

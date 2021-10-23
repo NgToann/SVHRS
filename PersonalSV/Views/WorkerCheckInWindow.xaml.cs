@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using PersonalSV.Controllers;
+﻿using PersonalSV.Controllers;
 using PersonalSV.Helpers;
 using PersonalSV.Models;
 using PersonalSV.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace PersonalSV.Views
 {
@@ -111,13 +106,13 @@ namespace PersonalSV.Views
                     MessageBox.Show(ex.Message.ToString());
                 }));
             }
-        }
-
+        }    
+        
         private void txtCardId_PreviewKeyUp(object sender, KeyEventArgs e)
         {
             var currentTime = string.Format("{0:HH:mm}", DateTime.Now);
             grDisplay.DataContext = null;
-            this.Background = Brushes.WhiteSmoke; 
+            this.Background = Brushes.WhiteSmoke;
             brDisplay.Background = Brushes.WhiteSmoke;
 
             if (e.Key == Key.Enter)
@@ -150,7 +145,7 @@ namespace PersonalSV.Views
                         {
                             if (testToday.Count() > 0)
                             {
-                                CheckWorkerTestToday(testToday, empById);
+                                CheckWorkerTestToday(testToday, empById, testBefore);
                             }
                             else if (testBefore.Count() > 0)
                             {
@@ -162,16 +157,19 @@ namespace PersonalSV.Views
                         {
                             if (testToday.Count() > 0)
                             {
-                                CheckWorkerTestToday(testToday, empById);
+                                CheckWorkerTestToday(testToday, empById, testBefore);
                             }
                             else if (testNextDay.Count() > 0)
                             {
                                 var workerTestNextDay = testNextDay.FirstOrDefault();
-                                brDisplay.Background = Brushes.Yellow;
+                                if (string.Compare(workerTestNextDay.TestTime, "12:00") < 1)
+                                    brDisplay.Background = Brushes.Yellow;
+                                else
+                                    brDisplay.Background = greenYellowColor;
 
                                 string nextTestDay = string.Format("{0}: {1:dd/MM/yyyy}", lblNextTestDate, workerTestNextDay.TestDate);
                                 var testTime = String.Format("{0}: {1}", lblTestTime, workerTestNextDay.TestTime);
-                                var workTime = String.Format("{0}: {1}", lblWorkTime, workerTestNextDay.WorkTime);
+                                var workTime = string.IsNullOrEmpty(workerTestNextDay.WorkTime) == false ? String.Format("{0}: {1}", lblWorkTime, workerTestNextDay.WorkTime) : "";
                                 AddRecord(empById, workerTestNextDay, nextTestDay, false, false, testTime, workTime);
                             }
                             else if (testBefore.Count() > 0)
@@ -200,19 +198,25 @@ namespace PersonalSV.Views
                 }
             }
         }
-
-        private void CheckWorkerTestToday(List<WorkListModel> testToday, EmployeeModel empById)
+        
+        private void CheckWorkerTestToday(List<WorkListModel> testToday, EmployeeModel empById, List<WorkListModel> testBeforeToday)
         {
             var workerTestToday = testToday.FirstOrDefault();
             if (workerTestToday.TestStatus == 0)
             {
-                if (string.Compare(workerTestToday.TestTime, "12:00") < 1)
+                string workTime = "";
+                if (testBeforeToday.Count() == 0)
+                    brDisplay.Background = Brushes.Yellow;
+                else if (string.Compare(workerTestToday.TestTime, "12:00") < 1)
                     brDisplay.Background = Brushes.Yellow;
                 else
+                {
+                    workTime = string.IsNullOrEmpty(workerTestToday.WorkTime) == false ? String.Format("{0}: {1}", lblWorkTime, workerTestToday.WorkTime) : "";
                     brDisplay.Background = greenYellowColor;
+                }
 
                 var testTime = String.Format("{0}: {1}", lblTestTime, workerTestToday.TestTime);
-                AddRecord(empById, workerTestToday, "", true, false, testTime, "");
+                AddRecord(empById, workerTestToday, "", true, false, testTime, workTime);
             }
             else if (workerTestToday.TestStatus == 1)
             {
@@ -223,20 +227,6 @@ namespace PersonalSV.Views
             {
                 AlertScan(lblNotAllowed, Brushes.Red, empById);
                 playAlarmSound();
-            }
-        }
-
-        private void playAlarmSound()
-        {
-            try
-            {
-                mediaAlarm = new MediaPlayer();
-                mediaAlarm.Open(new Uri(@"Reports/alarm.mp3", UriKind.Relative));
-                if (mediaAlarm.Source != null)
-                    mediaAlarm.Play();
-            }
-            catch
-            {
             }
         }
 
@@ -259,44 +249,6 @@ namespace PersonalSV.Views
                 AlertScan(lblNotAllowed, Brushes.Red, empById);
                 playAlarmSound();
             }
-        }
-        
-        private void DoStatistics(List<WorkListModel> workListAll, List<WorkerCheckInModel> workerCheckInList)
-        {
-            var totalWorker = workListAll.Select(s => s.EmployeeID).Distinct().ToList().Count();
-            var totalCheckedIn = workerCheckInList.Where(w => !string.IsNullOrEmpty(w.RecordTime) && w.CheckType == 0).Select(s => s.EmployeeCode).Distinct().ToList().Count();
-            double percent = 0;
-            if (totalWorker != 0)
-            {
-                percent = Math.Round(((double)totalCheckedIn / (double)totalWorker * 100), 1);
-            }
-
-            var displayModel = new CheckInStatistics
-            {
-                TestDate = string.Format("{0}: {1:dd/MM/yyyy}", lblInfoTestDate, toDay),
-                TotalWorkList = string.Format("{0}: {1}", lblInfoTotalWorkList, totalWorker),
-                Scanned = string.Format("{0}: {1} / {2}", lblInfoScanned, totalCheckedIn, totalWorker),
-                Ratio = string.Format("{0}: {1} %", lblInfoRatio, percent)
-            };
-
-            grStatistics.DataContext = null;
-            grStatistics.DataContext = displayModel;
-        }
-
-        private void AlertScan(string msg, SolidColorBrush color ,EmployeeModel empById)
-        {
-            brDisplay.Background = color;
-            var alert = new CheckInInfoDisplay
-            {
-                //EmployeeDisplay = String.Format("{0} - {1}", empById.EmployeeName, empById.EmployeeID),
-                EmployeeDisplay = empById.EmployeeName,
-                DepartmentName = empById.EmployeeID,
-                RecordTime = empById.DepartmentName,
-                //RecordTime = msg
-                WorkTime = msg
-            };
-            grDisplay.DataContext = alert;
-            SetTxtDefault();
         }
         
         private void AddRecord( EmployeeModel empById, WorkListModel WorkListNextTestById, string nextTestDay, bool getInQueue, bool welcome, string testTime, string workTime)
@@ -352,11 +304,64 @@ namespace PersonalSV.Views
                 SetTxtDefault();
             }
         }
+        
+        private void DoStatistics(List<WorkListModel> workListAll, List<WorkerCheckInModel> workerCheckInList)
+        {
+            var totalWorker = workListAll.Select(s => s.EmployeeID).Distinct().ToList().Count();
+            var totalCheckedIn = workerCheckInList.Where(w => !string.IsNullOrEmpty(w.RecordTime) && w.CheckType == 0).Select(s => s.EmployeeCode).Distinct().ToList().Count();
+            double percent = 0;
+            if (totalWorker != 0)
+            {
+                percent = Math.Round(((double)totalCheckedIn / (double)totalWorker * 100), 1);
+            }
+
+            var displayModel = new CheckInStatistics
+            {
+                TestDate = string.Format("{0}: {1:dd/MM/yyyy}", lblInfoTestDate, toDay),
+                TotalWorkList = string.Format("{0}: {1}", lblInfoTotalWorkList, totalWorker),
+                Scanned = string.Format("{0}: {1} / {2}", lblInfoScanned, totalCheckedIn, totalWorker),
+                Ratio = string.Format("{0}: {1} %", lblInfoRatio, percent)
+            };
+
+            grStatistics.DataContext = null;
+            grStatistics.DataContext = displayModel;
+        }
+
+        private void AlertScan(string msg, SolidColorBrush color ,EmployeeModel empById)
+        {
+            brDisplay.Background = color;
+            var alert = new CheckInInfoDisplay
+            {
+                //EmployeeDisplay = String.Format("{0} - {1}", empById.EmployeeName, empById.EmployeeID),
+                EmployeeDisplay = empById.EmployeeName,
+                DepartmentName = empById.EmployeeID,
+                RecordTime = empById.DepartmentName,
+                //RecordTime = msg
+                WorkTime = msg,
+                Foreground = Brushes.Black,
+            };
+            grDisplay.DataContext = alert;
+            SetTxtDefault();
+        }
 
         private void SetTxtDefault()
         {
             txtCardId.SelectAll();
             txtCardId.Focus();
+        }
+
+        private void playAlarmSound()
+        {
+            try
+            {
+                mediaAlarm = new MediaPlayer();
+                mediaAlarm.Open(new Uri(@"Reports/alarm.mp3", UriKind.Relative));
+                if (mediaAlarm.Source != null)
+                    mediaAlarm.Play();
+            }
+            catch
+            {
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -398,6 +403,8 @@ namespace PersonalSV.Views
             public string WorkTime { get; set; }
             public string TestTime { get; set; }
             public string NextDayInfo { get; set; }
+
+            public SolidColorBrush Foreground { get; set; } = Brushes.Black;
         }
     }
 }

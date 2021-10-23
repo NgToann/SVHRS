@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Threading;
+using System.Diagnostics;
 
 using PersonalSV.Helpers;
 using PersonalSV.Views;
@@ -15,6 +16,7 @@ namespace PersonalSV
     {
         DispatcherTimer clock;
         AccountModel account;
+        private string version = "";
         public MainWindow(AccountModel account)
         {
             this.account = account;
@@ -24,6 +26,51 @@ namespace PersonalSV
 
             InitializeComponent();
             lblUserName.Text = string.Format("User: {0}", account.FullName);
+        }
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            string filePath = @"PersonalSV.exe";
+            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(filePath);
+            string currentTitle = this.Title;
+            version = fvi.FileVersion;
+            this.Title = string.Format("{0} - {1}", currentTitle, version);
+            if (account.IsCovidTest)
+            {
+                miCovidTest.IsEnabled = true;
+                miManager.IsEnabled = false;
+                miSalary.IsEnabled = false;
+
+                miDailyReport.IsEnabled = false;
+                miSalarySummaryReport.IsEnabled = false;
+                miReport2020.IsEnabled = false;
+                miReportMissingRecordTime.IsEnabled = false;
+            }
+            if (account.IsPersonel)
+            {
+                miCovidTest.IsEnabled = true;
+                miManager.IsEnabled = true;
+                miSalary.IsEnabled = true;
+                miReports.IsEnabled = true;
+            }
+
+            if (account.Branch.Equals("THIENLOC"))
+            {
+                miWorkerCheckIn.Visibility = Visibility.Collapsed;
+                miWorkerCheckOut.Visibility = Visibility.Collapsed;
+
+                //reports
+                miReportScanTimeInOut.Visibility = Visibility.Collapsed;
+                miTestCovidRandom.Visibility = Visibility.Collapsed;
+            }
+            else if (account.Branch.Equals("SAOVIET") || account.Branch.Equals("DAILOC"))
+            {
+                miCreateTestTerm.Visibility = Visibility.Collapsed;
+                miTLTestRandom.Visibility = Visibility.Collapsed;
+
+                miTestCovidRandom.Visibility = Visibility.Collapsed;
+                miCreateTestTerm.Visibility = Visibility.Collapsed;
+                miConfirmTestResult.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void Clock_Tick(object sender, EventArgs e)
@@ -132,7 +179,7 @@ namespace PersonalSV
 
         private void miAboutMe_Click(object sender, RoutedEventArgs e)
         {
-            AboutMeWindow window = new AboutMeWindow();
+            AboutMeWindow window = new AboutMeWindow(version);
             window.Show();
         }
 
@@ -170,47 +217,6 @@ namespace PersonalSV
         {
             ImportRemarksWorkerWindow window = new ImportRemarksWorkerWindow();
             window.Show();
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (account.IsCovidTest)
-            {
-                miCovidTest.IsEnabled = true;
-                miManager.IsEnabled = false;
-                miSalary.IsEnabled = false;
-
-                miDailyReport.IsEnabled = false;
-                miSalarySummaryReport.IsEnabled = false;
-                miReport2020.IsEnabled = false;
-                miReportMissingRecordTime.IsEnabled = false;
-            }
-            if (account.IsPersonel)
-            {
-                miCovidTest.IsEnabled = true;
-                miManager.IsEnabled = true;
-                miSalary.IsEnabled = true;
-                miReports.IsEnabled = true;
-            }
-
-            if (account.Branch.Equals("THIENLOC"))
-            {
-                miWorkerCheckIn.Visibility = Visibility.Collapsed;
-                miWorkerCheckOut.Visibility = Visibility.Collapsed;
-
-                //reports
-                miReportScanTimeInOut.Visibility = Visibility.Collapsed;
-                miTestCovidRandom.Visibility = Visibility.Collapsed;
-            }
-            else if(account.Branch.Equals("SAOVIET") || account.Branch.Equals("DAILOC"))
-            {
-                miCreateTestTerm.Visibility = Visibility.Collapsed;
-                miTLTestRandom.Visibility = Visibility.Collapsed;
-
-                miTestCovidRandom.Visibility = Visibility.Collapsed;
-                miCreateTestTerm.Visibility = Visibility.Collapsed;
-                miConfirmTestResult.Visibility = Visibility.Collapsed;
-            }
         }
 
         private void miWorkerCheckIn_Click(object sender, RoutedEventArgs e)

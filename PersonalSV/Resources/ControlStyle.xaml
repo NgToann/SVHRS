@@ -40,8 +40,8 @@
     <LinearGradientBrush x:Key="AlertGreenYellow" StartPoint="0,0" EndPoint="0,1">
         <GradientBrush.GradientStops>
             <GradientStopCollection>
-                <GradientStop Color="Green" Offset="0.5"/>
-                <GradientStop Color="Yellow" Offset="0.54"/>
+                <GradientStop Color="Green" Offset="0.40"/>
+                <GradientStop Color="Yellow" Offset="0.60"/>
             </GradientStopCollection>
         </GradientBrush.GradientStops>
     </LinearGradientBrush>
