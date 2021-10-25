@@ -19,7 +19,6 @@ namespace PersonalSV.Views
     /// </summary>
     public partial class WorkerCheckInWindow : Window
     {
-        DispatcherTimer clock;
         BackgroundWorker bwLoad;
         List<EmployeeModel> employeeList;
 
@@ -68,17 +67,7 @@ namespace PersonalSV.Views
 
             greenYellowColor        = (LinearGradientBrush)TryFindResource("AlertGreenYellow");
 
-            clock = new DispatcherTimer();
-            clock.Tick += Clock_Tick;
-            clock.Start();
-
             InitializeComponent();
-        }
-        private void Clock_Tick(object sender, EventArgs e)
-        {
-            Dispatcher.Invoke(new Action(() => {
-                lblClock.Text = string.Format("{0:dd/MM/yyyy HH:mm:ss}", DateTime.Now);
-            }));
         }
         private void BwLoad_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {

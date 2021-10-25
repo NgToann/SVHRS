@@ -18,7 +18,6 @@ namespace PersonalSV.Views
     /// </summary>
     public partial class WorkerCheckOutWindow : Window
     {
-        DispatcherTimer clock;
         BackgroundWorker bwLoad;
         List<EmployeeModel> employeeList;
         private List<WorkerCheckInModel> workerCheckInList;
@@ -49,18 +48,9 @@ namespace PersonalSV.Views
 
             lblNotExistInWorkList = LanguageHelper.GetStringFromResource("workerCheckInMessageNotExistInTestList");
 
-            clock = new DispatcherTimer();
-            clock.Tick += Clock_Tick;
-            clock.Start();
-
             InitializeComponent();
         }
-        private void Clock_Tick(object sender, EventArgs e)
-        {
-            Dispatcher.Invoke(new Action(() => {
-                lblClock.Text = string.Format("{0:dd/MM/yyyy HH:mm:ss}", DateTime.Now);
-            }));
-        }
+
         private void BwLoad_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             this.Cursor = null;
