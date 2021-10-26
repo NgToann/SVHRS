@@ -34,6 +34,7 @@ namespace PersonalSV.Views
         private LinearGradientBrush greenYellowColor = new LinearGradientBrush();
 
         private DateTime toDay = DateTime.Now.Date;
+        private DateTime dtDefault = new DateTime(2000, 1, 1);
         private string afternoonStone = "";
         private MediaPlayer mediaAlarm;
         public WorkerCheckInWindow()
@@ -105,7 +106,8 @@ namespace PersonalSV.Views
             grDisplay.DataContext = null;
             this.Background = Brushes.WhiteSmoke;
             brDisplay.Background = Brushes.WhiteSmoke;
-
+            var timeInSourceList = new List<SourceModel>();
+            var todayBeforeMonth = toDay.AddMonths(-1);
             if (e.Key == Key.Enter)
             {
                 // get worker by cardid
@@ -115,6 +117,7 @@ namespace PersonalSV.Views
                 {
                     try
                     {
+                        timeInSourceList = SourceController.SelectSourceByEmpCodeFromTo(empById.EmployeeCode, todayBeforeMonth, toDay).OrderByDescending(o => o.SourceDate).ToList();
                         workList = WorkListController.GetByEmpId(empById.EmployeeID);
                         defModel = CommonController.GetDefineProps();
                     }
@@ -130,6 +133,15 @@ namespace PersonalSV.Views
                         var testToday   = workList.Where(w => w.TestDate == toDay).ToList();
                         var testNextDay = workList.Where(w => w.TestDate > toDay).ToList();
                         var testBefore  = workList.Where(w => w.TestDate < toDay).ToList();
+
+                        // Check Absent
+                        var dateAbsent = new DateTime(2000, 1, 1);
+                        for (DateTime date = toDay.AddDays(-1); date >= todayBeforeMonth; date=date.AddDays(-1))
+                        {
+                            if (date.DayOfWeek == DayOfWeek.Sunday)
+                                continue;
+                            var timeInSourceByDate = timeInSourceList.Where(w => w.SourceDate == date).ToList();
+                        }
 
                         // Morning
                         if (String.Compare(currentTime, afternoonStone) < 1)

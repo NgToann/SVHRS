@@ -59,6 +59,19 @@ namespace PersonalSV.Controllers
             }
         }
 
+        //
+        public static List<SourceModel> SelectSourceByEmpCodeFromTo(string employeeCode, DateTime dateSearchFrom, DateTime dateSearchTo)
+        {
+            var @EmployeeCode   = new SqlParameter("@EmployeeCode", employeeCode);
+            var @DateSearchFrom = new SqlParameter("@DateSearchFrom", dateSearchFrom);
+            var @DateSearchTo   = new SqlParameter("@DateSearchTo", dateSearchTo);
+            using (var db = new PersonalDataEntities())
+            {
+                return db.ExecuteStoreQuery<SourceModel>("EXEC spm_SelectSourceByIdFromTo   @EmployeeCode, @DateSearchFrom, @DateSearchTo",
+                                                                                            @EmployeeCode, @DateSearchFrom, @DateSearchTo).ToList();
+            }
+        }
+
         public static List<SourceModel> SelectSourceByEmployeeCodeAndDate(string employeeCode, DateTime dateSearch)
         {
             var @EmployeeCode = new SqlParameter("@EmployeeCode", employeeCode);
