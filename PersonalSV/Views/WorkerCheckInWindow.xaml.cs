@@ -107,7 +107,7 @@ namespace PersonalSV.Views
             this.Background = Brushes.WhiteSmoke;
             brDisplay.Background = Brushes.WhiteSmoke;
             var timeInSourceList = new List<SourceModel>();
-            var todayBeforeMonth = toDay.AddMonths(-1);
+            var todayBeforeWeek = toDay.AddDays(-7);
             if (e.Key == Key.Enter)
             {
                 // get worker by cardid
@@ -117,7 +117,7 @@ namespace PersonalSV.Views
                 {
                     try
                     {
-                        timeInSourceList = SourceController.SelectSourceByEmpCodeFromTo(empById.EmployeeCode, todayBeforeMonth, toDay).OrderByDescending(o => o.SourceDate).ToList();
+                        timeInSourceList = SourceController.SelectSourceByEmpCodeFromTo(empById.EmployeeCode, todayBeforeWeek, toDay.AddDays(-1)).OrderByDescending(o => o.SourceDate).ToList();
                         workList = WorkListController.GetByEmpId(empById.EmployeeID);
                         defModel = CommonController.GetDefineProps();
                     }
@@ -130,17 +130,17 @@ namespace PersonalSV.Views
                     // Check in worklist
                     if (workList.Count() > 0)
                     {
-                        var testToday   = workList.Where(w => w.TestDate == toDay).ToList();
+                        var testToday   = workList.Where(w => w.TestDate == toDay && string.IsNullOrEmpty(w.Remarks)).ToList();
                         var testNextDay = workList.Where(w => w.TestDate > toDay).ToList();
                         var testBefore  = workList.Where(w => w.TestDate < toDay).ToList();
 
-                        // Check Absent
-                        var dateAbsent = new DateTime(2000, 1, 1);
-                        for (DateTime date = toDay.AddDays(-1); date >= todayBeforeMonth; date=date.AddDays(-1))
+                        // Check Absent Yesterday
+                        var yesterday = toDay.AddDays(-1);
+                        var timeInYesterDay = timeInSourceList.Where(w => w.SourceDate == yesterday).ToList();
+                        if (timeInYesterDay.Count() == 0 && yesterday.DayOfWeek == DayOfWeek.Sunday)
                         {
-                            if (date.DayOfWeek == DayOfWeek.Sunday)
-                                continue;
-                            var timeInSourceByDate = timeInSourceList.Where(w => w.SourceDate == date).ToList();
+                            yesterday = toDay.AddDays(-1);
+                            timeInYesterDay = timeInSourceList.Where(w => w.SourceDate == yesterday).ToList();
                         }
 
                         // Morning
@@ -149,6 +149,10 @@ namespace PersonalSV.Views
                             if (testToday.Count() > 0)
                             {
                                 CheckWorkerTestToday(testToday, empById, testBefore);
+                            }
+                            else if (timeInSourceList.Count() > 0 && timeInYesterDay.Count == 0)
+                            {
+                                CheckWorkerAbsentYesterday(empById, timeInSourceList);
                             }
                             else if (testBefore.Count() > 0)
                             {
@@ -162,6 +166,10 @@ namespace PersonalSV.Views
                             {
                                 CheckWorkerTestToday(testToday, empById, testBefore);
                             }
+                            else if (timeInSourceList.Count() > 0 && timeInYesterDay.Count == 0)
+                            {
+                                CheckWorkerAbsentYesterday(empById, timeInSourceList);
+                            }
                             else if (testNextDay.Count() > 0)
                             {
                                 var workerTestNextDay = testNextDay.FirstOrDefault();
@@ -173,7 +181,7 @@ namespace PersonalSV.Views
                                 string nextTestDay = string.Format("{0}: {1:dd/MM/yyyy}", lblNextTestDate, workerTestNextDay.TestDate);
                                 var testTime = String.Format("{0}: {1}", lblTestTime, workerTestNextDay.TestTime);
                                 var workTime = string.IsNullOrEmpty(workerTestNextDay.WorkTime) == false ? String.Format("{0}: {1}", lblWorkTime, workerTestNextDay.WorkTime) : "";
-                                AddRecord(empById, workerTestNextDay, nextTestDay, false, false, testTime, workTime);
+                                AddRecord(empById, workerTestNextDay, nextTestDay, false, false, testTime, workTime, false);
                             }
                             else if (testBefore.Count() > 0)
                             {
@@ -201,7 +209,37 @@ namespace PersonalSV.Views
                 }
             }
         }
-        
+
+        private void CheckWorkerAbsentYesterday(EmployeeModel empById, List<SourceModel> timeInList)
+        {
+            var workDayNearest = timeInList.Max(m => m.SourceDate);
+            var absentDay = workDayNearest.AddDays(1);
+            if (absentDay.DayOfWeek == DayOfWeek.Sunday)
+                absentDay = workDayNearest.AddDays(1);
+
+            var insertItem = new WorkListModel
+            {
+                EmployeeID = empById.EmployeeID,
+                TestDate = toDay,
+                TestStatus = 0,
+                TestTime = "",
+                WorkTime = "",
+                Remarks = string.Format("absent {0:dd/MM/yyyy}", absentDay)
+            };
+            // Add to Worklist
+            try
+            {
+                WorkListController.Insert(insertItem);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.InnerException.Message.ToString());
+                SetTxtDefault();
+            }
+            string testTime = string.Format("KHÔNG ĐI LÀM NGÀY: {0:dd/MM/yyyy}", absentDay);
+            string nextTestDate = String.Format("{0}",lblTestMessage);
+            AddRecord(empById, null, nextTestDate, false, false, "", testTime, true);
+        }
         private void CheckWorkerTestToday(List<WorkListModel> testToday, EmployeeModel empById, List<WorkListModel> testBeforeToday)
         {
             var workerTestToday = testToday.FirstOrDefault();
@@ -232,12 +270,12 @@ namespace PersonalSV.Views
                 }
 
                 var testTime = String.Format("{0}: {1}", lblTestTime, workerTestToday.TestTime);
-                AddRecord(empById, workerTestToday, "", true, false, testTime, workTime);
+                AddRecord(empById, workerTestToday, "", true, false, testTime, workTime, false);
             }
             else if (workerTestToday.TestStatus == 1)
             {
                 brDisplay.Background = Brushes.Green;
-                AddRecord(empById, null, "", false, true, "", "");
+                AddRecord(empById, null, "", false, true, "", "", false);
             }
             else if (workerTestToday.TestStatus >= 2)
             {
@@ -258,7 +296,7 @@ namespace PersonalSV.Views
             else if (workerTestLatest.TestStatus == 1)
             {
                 brDisplay.Background = Brushes.Green;
-                AddRecord(empById, null, "", false, true, "", "");
+                AddRecord(empById, null, "", false, true, "", "", false);
             }
             else if (workerTestLatest.TestStatus >= 2)
             {
@@ -267,7 +305,7 @@ namespace PersonalSV.Views
             }
         }
         
-        private void AddRecord( EmployeeModel empById, WorkListModel WorkListNextTestById, string nextTestDay, bool getInQueue, bool welcome, string testTime, string workTime)
+        private void AddRecord(EmployeeModel empById, WorkListModel WorkListNextTestById, string nextTestDay, bool getInQueue, bool welcome, string testTime, string workTime, bool absentYesterday)
         {
             var record = new WorkerCheckInModel()
             {
@@ -308,6 +346,15 @@ namespace PersonalSV.Views
                         TestTime = String.Format("Time: {0}", record.RecordTime),
                     };
                 }
+
+                if (absentYesterday)
+                {
+                    brDisplay.Background = Brushes.Red;
+                    addInfoDisplay.Foreground = Brushes.Yellow;
+                    addInfoDisplay.TestTime = workTime;
+                    addInfoDisplay.WorkTime = "YÊU CẦU TEST THÊM";
+                }
+
                 grDisplay.DataContext = addInfoDisplay;
                 WorkerCheckInController.Insert(record);
                 workerCheckInList.Add(record);

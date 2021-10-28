@@ -12,6 +12,7 @@ namespace PersonalSV.Models
         public DateTime TestDate { get; set; }
         public string WorkTime { get; set; }
         public string TestTime { get; set; }
+        public string Remarks { get; set; }
 
         public string EmployeeCode { get; set; }
         public string EmployeeName { get; set; }
