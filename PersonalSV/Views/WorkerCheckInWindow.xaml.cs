@@ -26,6 +26,8 @@ namespace PersonalSV.Views
         private string lblInfoTestDate = "", lblInfoTotalWorkList = "", lblInfoScanned = "", lblInfoRatio = "";
         private string lblNextTestDate = "", lblTestTime = "", lblWorkTime = "", lblGetInQueue = "", lblDidNotCompleted = "", lblNotInTestTime = "", lblTestMessage = "";
 
+        //
+        string lblMainHeader;
         private PrivateDefineModel defModel;
         private List<WorkListModel> workList;
         private List<WorkListModel> workListAll;
@@ -68,6 +70,8 @@ namespace PersonalSV.Views
 
             greenYellowColor        = (LinearGradientBrush)TryFindResource("AlertGreenYellow");
 
+            lblMainHeader        = LanguageHelper.GetStringFromResource("workerCheckInTitle");
+
             InitializeComponent();
         }
         private void BwLoad_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -106,6 +110,9 @@ namespace PersonalSV.Views
             grDisplay.DataContext = null;
             this.Background = Brushes.WhiteSmoke;
             brDisplay.Background = Brushes.WhiteSmoke;
+            toDay = DateTime.Now.Date;
+            tblTitle.Text = string.Format("{0}: {1:dd/MM/yyyy}", lblMainHeader, toDay);
+
             var timeInSourceList = new List<SourceModel>();
             var todayBeforeWeek = toDay.AddDays(-7);
             if (e.Key == Key.Enter)
@@ -130,9 +137,10 @@ namespace PersonalSV.Views
                     // Check in worklist
                     if (workList.Count() > 0)
                     {
-                        var testToday   = workList.Where(w => w.TestDate == toDay && string.IsNullOrEmpty(w.Remarks)).ToList();
-                        var testNextDay = workList.Where(w => w.TestDate > toDay).ToList();
-                        var testBefore  = workList.Where(w => w.TestDate < toDay).ToList();
+                        var testToday           = workList.Where(w => w.TestDate == toDay && string.IsNullOrEmpty(w.Remarks)).ToList();
+                        var testTodayHasRemarks = workList.Where(w => w.TestDate == toDay && !string.IsNullOrEmpty(w.Remarks)).ToList();
+                        var testNextDay         = workList.Where(w => w.TestDate > toDay).ToList();
+                        var testBefore          = workList.Where(w => w.TestDate < toDay).ToList();
 
                         // Check Absent Yesterday
                         var yesterday = toDay.AddDays(-1);
@@ -152,7 +160,10 @@ namespace PersonalSV.Views
                             }
                             else if (timeInSourceList.Count() > 0 && timeInYesterDay.Count == 0)
                             {
-                                CheckWorkerAbsentYesterday(empById, timeInSourceList);
+                                if (testTodayHasRemarks.Where(w => w.TestStatus == 1).Count() > 0)
+                                    CheckWorkerTestToday(testTodayHasRemarks, empById, testBefore);
+                                else
+                                    CheckWorkerAbsentYesterday(empById, timeInSourceList);
                             }
                             else if (testBefore.Count() > 0)
                             {
@@ -168,7 +179,10 @@ namespace PersonalSV.Views
                             }
                             else if (timeInSourceList.Count() > 0 && timeInYesterDay.Count == 0)
                             {
-                                CheckWorkerAbsentYesterday(empById, timeInSourceList);
+                                if (testTodayHasRemarks.Where(w => w.TestStatus == 1).Count() > 0)
+                                    CheckWorkerTestToday(testTodayHasRemarks, empById, testBefore);
+                                else
+                                    CheckWorkerAbsentYesterday(empById, timeInSourceList);
                             }
                             else if (testNextDay.Count() > 0)
                             {
@@ -240,6 +254,7 @@ namespace PersonalSV.Views
             string nextTestDate = String.Format("{0}",lblTestMessage);
             AddRecord(empById, null, nextTestDate, false, false, "", testTime, true);
         }
+        
         private void CheckWorkerTestToday(List<WorkListModel> testToday, EmployeeModel empById, List<WorkListModel> testBeforeToday)
         {
             var workerTestToday = testToday.FirstOrDefault();
@@ -352,7 +367,7 @@ namespace PersonalSV.Views
                     brDisplay.Background = Brushes.Red;
                     addInfoDisplay.Foreground = Brushes.Yellow;
                     addInfoDisplay.TestTime = workTime;
-                    addInfoDisplay.WorkTime = "YÊU CẦU TEST THÊM";
+                    addInfoDisplay.WorkTime = "VUI LÒNG XÉT NGHIỆM LẠI !";
                 }
 
                 grDisplay.DataContext = addInfoDisplay;
@@ -429,9 +444,7 @@ namespace PersonalSV.Views
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //
-            string lblResourceTitle = LanguageHelper.GetStringFromResource("workerCheckInTitle");
-            tblTitle.Text = string.Format("{0}: {1:dd/MM/yyyy}", lblResourceTitle, DateTime.Now);
+            tblTitle.Text = string.Format("{0}: {1:dd/MM/yyyy}", lblMainHeader, toDay);
             if (bwLoad.IsBusy == false)
             {
                 this.Cursor = Cursors.Wait;

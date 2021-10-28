@@ -27,6 +27,8 @@ namespace PersonalSV.Views
         private string lblResourceNotFound = "", lblDoNotCheckIn = "", lblNotExistInWorkList = "";
         private string lblInfoTestDate = "", lblInfoCheckIn = "", lblInfoCheckOut = "";
 
+        string lblMainHeader = "";
+
         private DateTime toDay = DateTime.Now.Date;
         
         public WorkerCheckOutWindow()
@@ -39,6 +41,8 @@ namespace PersonalSV.Views
             workerCheckInList = new List<WorkerCheckInModel>();
             workListByIdToDay = new List<WorkListModel>();
             workListByDate = new List<WorkListModel>();
+
+            lblMainHeader = LanguageHelper.GetStringFromResource("workerCheckOutTitle");
 
             lblResourceNotFound = LanguageHelper.GetStringFromResource("messageNotFound");
             lblDoNotCheckIn = LanguageHelper.GetStringFromResource("workerCheckOutMessageDoNotCheckIn");
@@ -82,6 +86,10 @@ namespace PersonalSV.Views
         {
             grDisplay.DataContext = null;
             brDisplay.Background = Brushes.WhiteSmoke;
+            toDay = DateTime.Now.Date;
+            // Refresh Main Header
+            tblTitle.Text = string.Format("{0}: {1:dd/MM/yyyy}", lblMainHeader, toDay);
+
             if (e.Key == Key.Enter)
             {
                 // get worker by cardid
@@ -211,9 +219,7 @@ namespace PersonalSV.Views
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //
-            string lblResourceTitle = LanguageHelper.GetStringFromResource("workerCheckOutTitle");
-            tblTitle.Text = string.Format("{0}: {1:dd/MM/yyyy}", lblResourceTitle, DateTime.Now);
+            tblTitle.Text = string.Format("{0}: {1:dd/MM/yyyy}", lblMainHeader, toDay);
             if (bwLoad.IsBusy == false)
             {
                 this.Cursor = Cursors.Wait;

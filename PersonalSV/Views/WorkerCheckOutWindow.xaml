@@ -82,10 +82,10 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="{Binding EmployeeName}" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Row="1" Text="{Binding EmployeeID}" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Row="2" Text="{Binding DepartmentName}" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Row="4" Text="{Binding RecordTime}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding EmployeeName}" HorizontalAlignment="Center" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Row="1" Text="{Binding EmployeeID}" HorizontalAlignment="Center" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Row="2" Text="{Binding DepartmentName}" HorizontalAlignment="Center" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Row="4" Text="{Binding RecordTime}" HorizontalAlignment="Center" FontWeight="SemiBold"/>
                 </Grid>
             </Viewbox>
         </Border>
