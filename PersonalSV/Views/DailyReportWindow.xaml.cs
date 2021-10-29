@@ -29,6 +29,7 @@ namespace PersonalSV.Views
         List<EmployeeModel> employeeList;
         List<EmployeeModel> employeeByDepartmentList;
         List<WorkerRemarkModel> workerRemarkList;
+        List<WorkerLeaveDetailModel> workerLeaveDetailList;
 
         List<DailyReportModel> dailyReportFilterList;
         //List<EmployeeModel> employeeListFromSourceByDate;
@@ -63,6 +64,8 @@ namespace PersonalSV.Views
 
             workerRemarkList = new List<WorkerRemarkModel>();
             sourceList = new List<SourceModel>();
+            workerLeaveDetailList = new List<WorkerLeaveDetailModel>();
+
             InitializeComponent();
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -112,6 +115,8 @@ namespace PersonalSV.Views
         string employeeSearchWhat = "";
         private void btnPreview_Click(object sender, RoutedEventArgs e)
         {
+            colConfirmAbsent.Visibility = Visibility.Collapsed;
+            colReason.Visibility = Visibility.Collapsed;
             dateFilter = dpFilterDate.SelectedDate.Value;
             dateFilterTo = dpFilterDateTo.SelectedDate.Value;
             if (bwFilter.IsBusy == false)
@@ -120,6 +125,11 @@ namespace PersonalSV.Views
                 this.Cursor = Cursors.Wait;
                 btnPreview.IsEnabled = false;
                 btnPreview.IsDefault = false;
+                if (filterMode == FilterMode.Absent)
+                {
+                    colConfirmAbsent.Visibility = Visibility.Visible;
+                    colReason.Visibility = Visibility.Visible;
+                }
                 bwFilter.RunWorkerAsync();
             }
         }
@@ -131,6 +141,7 @@ namespace PersonalSV.Views
                 sourceList = SourceController.SelectSourceByDateFromTo(dateFilter, dateFilterTo);
                 //workerRemarkList = WorkerRemarksController.GetFromTo(dateFilter, dateFilterTo);
                 workerRemarkList = WorkerRemarksController.GetAll();
+                workerLeaveDetailList = WorkerLeaveDetailController.GetFromTo(dateFilter, dateFilterTo);
             }
             catch (Exception ex)
             {
@@ -165,15 +176,17 @@ namespace PersonalSV.Views
                     if (employee.JoinDate.Date <= date.Date)
                     {
                         var remark = workerRemarkList.Where(w => w.EmployeeID == employee.EmployeeID).OrderBy(o => o.Date).LastOrDefault();
-
+                        var reason = workerLeaveDetailList.Where(w => w.EmployeeID == employee.EmployeeID && w.LeaveDate == date && string.IsNullOrEmpty(w.TimeInUpdate)).FirstOrDefault();
                         var reportModel = new DailyReportModel();
                         reportModel.DateSearch = date;
                         reportModel.EmployeeName = employee.EmployeeName;
                         reportModel.EmployeeID = employee.EmployeeID;
+                        reportModel.EmployeeCode = employee.EmployeeCode;
                         reportModel.DepartmentName = employee.DepartmentName;
                         reportModel.TimeIn = "";
                         reportModel.TimeInView = "";
                         reportModel.Remarks = remark != null ? remark.Remarks : "";
+                        reportModel.Reason = reason != null ? reason.Reason : "";
                         //var reportHasTimeIn = sourceListByEmployee.Where(w => w.EmployeeCode == employee.EmployeeCode).ToList();
                         var reportHasTimeIn = sourceListByEmployeeList.Where(w => w.EmployeeCode == employee.EmployeeCode && w.SourceDate == date).ToList();
                         if (reportHasTimeIn.Count() > 0)
@@ -557,6 +570,35 @@ namespace PersonalSV.Views
             if (this.IsLoaded)
             {
                 groupChart.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void chkConfirmAbsent_Checked(object sender, RoutedEventArgs e)
+        {
+            var currentRow = dgResult.SelectedItem as DailyReportModel;
+            if (currentRow == null)
+                return;
+
+            var absentReasonInsert = new WorkerLeaveDetailModel
+            {
+                EmployeeID = currentRow.EmployeeID,
+                EmployeeCode = currentRow.EmployeeCode,
+                LeaveDate = currentRow.DateSearch,
+                Reason = "Absent",
+                Remark = "",
+                DateDisplay = string.Format("{0:dd/MM/yyyy}", currentRow.DateSearch)
+            };
+
+            try
+            {
+                WorkerLeaveDetailController.AddRecord(absentReasonInsert);
+                currentRow.Reason = absentReasonInsert.Reason;
+                dgResult.Items.Refresh();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.InnerException.Message.ToString(), this.Title, MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
         }
 

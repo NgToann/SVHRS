@@ -18,7 +18,7 @@ namespace PersonalSV.Views
     /// </summary>
     public partial class WorkerCheckInReportWindow : Window
     {
-        List<WorkerCheckInModel> checkInListByDate;
+        List<WorkerCheckInModel> checkInList;
         List<EmployeeModel> employeeList;
         BackgroundWorker bwLoad;
         BackgroundWorker bwExportExcel;
@@ -33,7 +33,7 @@ namespace PersonalSV.Views
             bwExportExcel.DoWork += BwExportExcel_DoWork;
             bwExportExcel.RunWorkerCompleted += BwExportExcel_RunWorkerCompleted;
 
-            checkInListByDate = new List<WorkerCheckInModel>();
+            checkInList = new List<WorkerCheckInModel>();
             employeeList = new List<EmployeeModel>();
             workListAll = new List<WorkListModel>();
 
@@ -70,11 +70,29 @@ namespace PersonalSV.Views
         {
             try
             {
+                var findWhat = txtFindWhat.Text.Trim().ToUpper().ToString();
                 var dateSearch = dpFilterDate.SelectedDate.Value;
-                checkInListByDate = WorkerCheckInController.GetByDate(dateSearch);
-                workListAll = WorkListController.Get();
-
-                FilterData(dateSearch);
+                if (!string.IsNullOrEmpty(findWhat))
+                {
+                    var empByFindWhat = employeeList.Where(w => w.EmployeeCode.Trim().ToUpper() == findWhat || w.EmployeeID.Trim().ToUpper().ToString() == findWhat).FirstOrDefault();
+                    if (empByFindWhat != null)
+                    {
+                        workListAll = WorkListController.GetByEmpId(empByFindWhat.EmployeeID);
+                        checkInList = WorkerCheckInController.GetByEmpCode(empByFindWhat.EmployeeCode);
+                        FilterData(dateSearch, true);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Not Found !", this.Title, MessageBoxButton.OK, MessageBoxImage.Information);
+                        return;
+                    }
+                }
+                else
+                {
+                    workListAll = WorkListController.Get();
+                    checkInList = WorkerCheckInController.GetByDate(dateSearch);
+                    FilterData(dateSearch, false);
+                }
             }
             catch (Exception ex)
             {
@@ -92,105 +110,102 @@ namespace PersonalSV.Views
             dpFilterDate.SelectedDate = DateTime.Now.Date;
         }
 
-        private void FilterData(DateTime dateSearch)
-        {
-            var findWhat = txtFindWhat.Text.Trim().ToUpper().ToString();
-            
+        private void FilterData(DateTime dateSearch, bool isSearched)
+        {            
             List<DisplayDataModel> dataList = new List<DisplayDataModel>();
 
-            var empCodeByCheckInListByDate = checkInListByDate.Select(s => s.EmployeeCode).Distinct().ToList();
-            var empIdsFromWorkerCheckInByDate = employeeList.Where(w => empCodeByCheckInListByDate.Contains(w.EmployeeCode)).Select(s => s.EmployeeID).Distinct().ToList();
-
-            var workListByDate = workListAll.Where(w => w.TestDate == dateSearch).ToList();
-
-            var empIdsFromWorkListByDate = workListByDate.Select(s => s.EmployeeID).Distinct().ToList();
-
-            var workerIdList = new List<string>();
-            workerIdList.AddRange(empIdsFromWorkerCheckInByDate);
-            workerIdList.AddRange(empIdsFromWorkListByDate);
-            workerIdList = workerIdList.Select(s => s).Distinct().ToList();
-
-            foreach (var workerId in workerIdList)
+            if (!isSearched)
             {
-                var empById = employeeList.FirstOrDefault(f => f.EmployeeID.Trim().ToLower().ToString() == workerId.Trim().ToLower().ToString());
-                if (empById != null)
+
+                var empCodeByCheckInListByDate = checkInList.Select(s => s.EmployeeCode).Distinct().ToList();
+                var empIdsFromWorkerCheckInByDate = employeeList.Where(w => empCodeByCheckInListByDate.Contains(w.EmployeeCode)).Select(s => s.EmployeeID).Distinct().ToList();
+
+                var workListByDate = workListAll.Where(w => w.TestDate == dateSearch).ToList();
+
+                var empIdsFromWorkListByDate = workListByDate.Select(s => s.EmployeeID).Distinct().ToList();
+
+                var workerIdList = new List<string>();
+                workerIdList.AddRange(empIdsFromWorkerCheckInByDate);
+                workerIdList.AddRange(empIdsFromWorkListByDate);
+                workerIdList = workerIdList.Select(s => s).Distinct().ToList();
+
+                foreach (var workerId in workerIdList)
                 {
-                    //var checkInByEmpCode = checkInListByDate.Where(w => w.EmployeeCode == empById.EmployeeCode).ToList();
-                    //var timeInRecords = checkInByEmpCode.Where(w => w.CheckType == 0).ToList();
-                    //var timeOutRecords = checkInByEmpCode.Where(w => w.CheckType == 1).ToList();
-                    //string timeIn = timeInRecords.Count() > 0 ? timeInRecords.Max(m => m.RecordTime) : "";
-                    //string timeOut = timeOutRecords.Count() > 0 ? timeOutRecords.Max(m => m.RecordTime) : "";
-
-                    //var workListByEmpId = workListAll.Where(w => w.EmployeeID == empId).ToList();
-                    //// if worker in worklist today
-                    //if (workListByEmpId.Count() > 0)
-                    //{
-                    //    var workerTestStatus = workListByEmpId.Where(w => w.TestDate == dateSearch).FirstOrDefault();
-                    //    // get worker in worklist latest
-                    //    var latestDate = workListByEmpId.Where(w => w.TestDate < dateSearch).Max(m => m.TestDate);
-                    //    workerTestStatus = workListByEmpId.Where(w => w.TestDate == latestDate).FirstOrDefault();
-                    //}
-
-                    var workListByWorkerIdByDateLatestList = workListAll.Where(w => w.EmployeeID == workerId && w.TestDate <= dateSearch).ToList();
-                    var workerTestStatus = new WorkListModel();
-                    if (workListByWorkerIdByDateLatestList.Count() > 0)
+                    var empById = employeeList.FirstOrDefault(f => f.EmployeeID.Trim().ToLower().ToString() == workerId.Trim().ToLower().ToString());
+                    if (empById != null)
                     {
-                        workerTestStatus = workListByWorkerIdByDateLatestList.OrderBy(o => o.TestDate).LastOrDefault();
+                        var workListByWorkerIdByDateLatestList = workListAll.Where(w => w.EmployeeID == workerId && w.TestDate <= dateSearch).ToList();
+                        var workerTestStatus = new WorkListModel();
+                        if (workListByWorkerIdByDateLatestList.Count() > 0)
+                        {
+                            workerTestStatus = workListByWorkerIdByDateLatestList.OrderBy(o => o.TestDate).LastOrDefault();
+                        }
+
+                        string timeIn = "", timeOut = "";
+                        var checkInListByWorkerIdByDate = checkInList.Where(w => w.EmployeeCode == empById.EmployeeCode).ToList();
+                        if (checkInListByWorkerIdByDate.Count() > 0)
+                        {
+                            timeIn = checkInListByWorkerIdByDate.Where(w => w.CheckType == 0).Min(m => m.RecordTime);
+                            timeOut = checkInListByWorkerIdByDate.Where(w => w.CheckType == 1).Max(m => m.RecordTime);
+                        }
+
+                        var displayModel = new DisplayDataModel
+                        {
+                            EmployeeID = empById.EmployeeID,
+                            EmployeeCode = empById.EmployeeCode,
+                            EmployeeName = empById.EmployeeName,
+                            DepartmentName = empById.DepartmentName,
+                            TestDate = dateSearch,
+                            TestStatus = workerTestStatus != null ? workerTestStatus.TestStatus : 0,
+                            TimeIn = timeIn,
+                            TimeOut = timeOut
+                        };
+                        dataList.Add(displayModel);
                     }
-
-                    string timeIn = "", timeOut = "";
-                    var checkInListByWorkerIdByDate = checkInListByDate.Where(w => w.EmployeeCode == empById.EmployeeCode).ToList();
-                    if (checkInListByWorkerIdByDate.Count() > 0)
-                    {
-                        timeIn = checkInListByWorkerIdByDate.Where(w => w.CheckType == 0).Max(m => m.RecordTime);
-                        timeOut = checkInListByWorkerIdByDate.Where(w => w.CheckType == 1).Max(m => m.RecordTime);
-                    }
-
-                    var displayModel = new DisplayDataModel
-                    {
-                        EmployeeID = empById.EmployeeID,
-                        EmployeeCode = empById.EmployeeCode,
-                        EmployeeName = empById.EmployeeName,
-                        DepartmentName = empById.DepartmentName,
-                        TestDate = dateSearch,
-                        TestStatus = workerTestStatus != null ? workerTestStatus.TestStatus : 0,
-                        TimeIn = timeIn,
-                        TimeOut = timeOut
-                    };
-                    dataList.Add(displayModel);
                 }
-                //else
-                //{
-                //    var workerNotInPersonal = new DisplayDataModel
-                //    {
-                //        EmployeeCode = empId,
-                //        EmployeeID = empId,
-                //        TestDate = dateSearch
-                //    };
-                //    dataList.Add(workerNotInPersonal);
-                //}
+            }
+            else
+            {
+                var dateList = workListAll.Select(s => s.TestDate).Distinct().OrderBy(o => o).ToList();
+                foreach (var date in dateList)
+                {
+                    var workListByDate = workListAll.FirstOrDefault(f => f.TestDate == date);
+                    var empByWorkerId = employeeList.FirstOrDefault(f => f.EmployeeID == workListByDate.EmployeeID);
+                    if (empByWorkerId != null)
+                    {
+                        string timeIn = "", timeOut = "";
+                        var checkInListByWorkerIdByDate = checkInList.Where(w => w.EmployeeCode == empByWorkerId.EmployeeCode && w.CheckInDate == date).ToList();
+                        if (checkInListByWorkerIdByDate.Count() > 0)
+                        {
+                            timeIn = checkInListByWorkerIdByDate.Where(w => w.CheckType == 0).Min(m => m.RecordTime);
+                            timeOut = checkInListByWorkerIdByDate.Where(w => w.CheckType == 1).Max(m => m.RecordTime);
+                        }
+
+                        var displayModel = new DisplayDataModel
+                        {
+                            EmployeeID = empByWorkerId.EmployeeID,
+                            EmployeeCode = empByWorkerId.EmployeeCode,
+                            EmployeeName = empByWorkerId.EmployeeName,
+                            DepartmentName = empByWorkerId.DepartmentName,
+                            TestDate = date,
+                            TestStatus = workListByDate.TestStatus,
+                            TimeIn = timeIn,
+                            TimeOut = timeOut
+                        };
+                        dataList.Add(displayModel);
+                    }
+                }
             }
             
             dataList = dataList.OrderBy(o => o.TestDate).ThenBy(th => th.DepartmentName).ThenBy(th => th.EmployeeID).ToList();
 
-            
-
-            if (!string.IsNullOrEmpty(findWhat))
-            {
-                dataList = dataList.Where(w => w.EmployeeCode == findWhat || w.EmployeeID.Trim().ToUpper() == findWhat).ToList();
-                
-            }
             dgReport.ItemsSource = dataList;
             dgReport.Items.Refresh();
         }
         
         private void txtFindWhat_PreviewKeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
-            {
-                var dateSearch = dpFilterDate.SelectedDate.Value;
-                FilterData(dateSearch);
-            }
+            btnPreview.IsDefault = true;
         }
         
         private class DisplayDataModel

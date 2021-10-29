@@ -291,6 +291,8 @@
     <system:String x:Key="commonTime">Record Time</system:String>
     <system:String x:Key="commonCheckType">Check Type</system:String>
     <system:String x:Key="commonDatePickerRemarks">Remarks</system:String>
+    <system:String x:Key="commonReason">Reason</system:String>
+    <system:String x:Key="commonChbConfirmAbsent">Confirm Absent</system:String>
     
     <!--Common TextBlock-->
     <system:String x:Key="commonTextBlockFrom">Total</system:String>

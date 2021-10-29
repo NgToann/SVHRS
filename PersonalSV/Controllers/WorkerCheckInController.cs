@@ -17,6 +17,14 @@ namespace PersonalSV.Controllers
                 return db.ExecuteStoreQuery<WorkerCheckInModel>("EXEC spm_SelectWorkerCheckIn").ToList();
             };
         }
+        public static List<WorkerCheckInModel> GetByEmpCode(string empCode)
+        {
+            var @EmployeeCode = new SqlParameter("@EmployeeCode", empCode);
+            using (var db = new PersonalDataEntities())
+            {
+                return db.ExecuteStoreQuery<WorkerCheckInModel>("EXEC spm_SelectWorkerCheckInByEmpCode @EmployeeCode", @EmployeeCode).ToList();
+            };
+        }
         //
         public static List<WorkerCheckInModel> GetByDate(DateTime date)
         {

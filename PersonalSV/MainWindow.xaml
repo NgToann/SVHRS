@@ -69,7 +69,7 @@
                 <!--<MenuItem x:Name="miLine" Header="Line" Click="miLine_Click"/>-->
                 <MenuItem x:Name="miCheckOut" Header="Check Out" Click="miCheckOut_Click" Visibility="Collapsed"/>
 
-                <MenuItem x:Name="miImportRemarksWorker" Header="{DynamicResource ResourceKey=mainWindowMenuManagerImportRemarksWorker}" Click="miImportRemarksWorker_Click"/>
+                <MenuItem x:Name="miImportRemarksWorker" Header="{DynamicResource ResourceKey=mainWindowMenuManagerImportRemarksWorker}" Click="miImportRemarksWorker_Click" Visibility="Collapsed"/>
 
                 <!--<MenuItem x:Name="miLeaveWithReason" Header="Absentees Reason" Click="miLeaveWithReason_Click"/>-->
 
@@ -119,9 +119,9 @@
                 <MenuItem x:Name="miWorkerCheckIn" Header="{DynamicResource ResourceKey=menuWorkerCheckIn}" Click="miWorkerCheckIn_Click"/>
                 <MenuItem x:Name="miWorkerCheckOut" Header="{DynamicResource ResourceKey=menuWorkerCheckOut}" Click="miWorkerCheckOut_Click"/>
                 <MenuItem x:Name="miTestCovidRandom" Header="Test Random" Click="miTestCovidRandom_Click"/>
-                <MenuItem x:Name="miTLTestRandom" Header="ThienLoc Test Random" Click="miTLTestRandom_Click"/>
+                <MenuItem x:Name="miTLTestRandom" Header="ThienLoc Test Random" Click="miTLTestRandom_Click" Visibility="Collapsed"/>
                 <MenuItem x:Name="miCreateTestTerm" Header="{DynamicResource ResourceKey=menuCreateNewTestTerm}" Click="miCreateTestTerm_Click"/>
-                <MenuItem x:Name="miConfirmTestResult" Header="{DynamicResource ResourceKey=menuConfirmTestResult}" Click="miConfirmTestResult_Click"/>
+                <MenuItem x:Name="miConfirmTestResult" Header="{DynamicResource ResourceKey=menuConfirmTestResult}" Click="miConfirmTestResult_Click" Visibility="Collapsed"/>
             </MenuItem>
             <MenuItem Padding="0,2,10,2">
                 <MenuItem.Header>

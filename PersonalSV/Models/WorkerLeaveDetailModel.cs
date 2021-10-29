@@ -13,5 +13,6 @@ namespace PersonalSV.Models
         public string Reason { get; set; }
         public string Remark { get; set; }
         public string DateDisplay { get; set; }
+        public string TimeInUpdate { get; set; }
     }
 }

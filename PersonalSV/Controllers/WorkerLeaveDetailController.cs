@@ -17,7 +17,24 @@ namespace PersonalSV.Controllers
                 return db.ExecuteStoreQuery<WorkerLeaveDetailModel>("EXEC spm_SelectWorkerLeaveDetail").ToList();
             };
         }
-        //spm_InsertWorkerLeaveDetail
+        public static List<WorkerLeaveDetailModel> GetByEmpId(string empId)
+        {
+            var @EmployeeId = new SqlParameter("@EmployeeId", empId);
+            using (var db = new PersonalDataEntities())
+            {
+                return db.ExecuteStoreQuery<WorkerLeaveDetailModel>("EXEC spm_SelectWorkerLeaveDetailByEmpId @EmployeeId", @EmployeeId).ToList();
+            };
+        }
+        public static List<WorkerLeaveDetailModel> GetFromTo(DateTime dateFrom, DateTime dateTo)
+        {
+            var @DateFrom= new SqlParameter("@DateFrom", dateFrom);
+            var @DateTo= new SqlParameter("@DateTo", dateTo);
+            using (var db = new PersonalDataEntities())
+            {
+                return db.ExecuteStoreQuery<WorkerLeaveDetailModel>("EXEC spm_SelectWorkerLeaveDetailFromTo @DateFrom, @DateTo", @DateFrom, @DateTo).ToList();
+            };
+        }
+        //
         public static bool AddRecord(WorkerLeaveDetailModel model)
         {
             var @EmployeeId = new SqlParameter("@EmployeeId", model.EmployeeID);
@@ -25,14 +42,13 @@ namespace PersonalSV.Controllers
             var @LeaveDate = new SqlParameter("@LeaveDate", model.LeaveDate);
             var @Reason = new SqlParameter("@Reason", model.Reason);
             var @Remark = new SqlParameter("@Remark", model.Remark);
-            var @DateDisplay = new SqlParameter("@DateDisplay", model.DateDisplay);
 
             using (var db = new PersonalDataEntities())
             {
                 db.CommandTimeout = 120;
 
-                if (db.ExecuteStoreCommand("EXEC spm_InsertWorkerLeaveDetail @EmployeeId, @EmployeeCode, @LeaveDate, @Reason, @Remark, @DateDisplay",
-                                                                             @EmployeeId, @EmployeeCode, @LeaveDate, @Reason, @Remark, @DateDisplay) >= 1)
+                if (db.ExecuteStoreCommand("EXEC spm_InsertWorkerLeaveDetail_1 @EmployeeId, @EmployeeCode, @LeaveDate, @Reason, @Remark",
+                                                                               @EmployeeId, @EmployeeCode, @LeaveDate, @Reason, @Remark) >= 1)
                     return true;
                 else
                     return false;

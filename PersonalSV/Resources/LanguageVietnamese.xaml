@@ -310,6 +310,8 @@
     <system:String x:Key="commonDatePickerTimeOutLimit">Giờ Ra Giới Hạn</system:String>
     <system:String x:Key="commonTime">Giờ Quẹt Thẻ</system:String>
     <system:String x:Key="commonDatePickerRemarks">Ghi Chú</system:String>
+    <system:String x:Key="commonReason">Lý Do</system:String>
+    <system:String x:Key="commonChbConfirmAbsent">Xác Nhận Vắng</system:String>
 
     <!--SettingLanguage Window-->
     <system:String x:Key="settingLanguageTxtChooseLanguage">Chọn Một Ngôn Ngữ:</system:String>

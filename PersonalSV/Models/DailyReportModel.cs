@@ -10,6 +10,7 @@ namespace PersonalSV.Models
         public DateTime DateSearch { get; set; }
         public string EmployeeName { get; set; }
         public string EmployeeID { get; set; }
+        public string EmployeeCode { get; set; }
         public string DepartmentName { get; set; }
         public string TimeIn { get; set; }
         public string TimeInView { get; set; }
@@ -19,5 +20,6 @@ namespace PersonalSV.Models
         public string LV2 { get; set; }
         public string LV3 { get; set; }
         public string Remarks { get; set; }
+        public string Reason { get; set; }
     }
 }

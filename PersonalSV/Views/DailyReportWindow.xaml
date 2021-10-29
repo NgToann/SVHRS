@@ -150,10 +150,11 @@
                 <ColumnDefinition Width="0"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <DataGrid x:Name="dgResult" AutoGenerateColumns="False" AlternationCount="2" ClipboardCopyMode="IncludeHeader"
-                      CanUserAddRows="False" SelectionUnit="Cell" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
+            <DataGrid x:Name="dgResult" AutoGenerateColumns="False" AlternationCount="2" ClipboardCopyMode="IncludeHeader" VirtualizingStackPanel.VirtualizationMode="Standard"
+                      VirtualizingStackPanel.IsVirtualizing="True" SelectionUnit="FullRow"
+                      CanUserAddRows="False" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
                       RowHeaderWidth="NaN" LoadingRow="DgResult_LoadingRow"
-                      IsReadOnly="True" FontFamily="Times New Roman" FontSize="14">
+                      IsReadOnly="False" FontFamily="Times New Roman" FontSize="14">
                 <DataGrid.ColumnHeaderStyle>
                     <Style TargetType="DataGridColumnHeader">
                         <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -211,6 +212,20 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Remarks}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn x:Name="colReason" Visibility="Collapsed" Header="{DynamicResource ResourceKey=commonReason}" SortMemberPath="Reason" ClipboardContentBinding="{Binding Reason}">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Reason}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn x:Name="colConfirmAbsent" Header="{DynamicResource ResourceKey=commonChbConfirmAbsent}" Visibility="Collapsed">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox x:Name="chkConfirmAbsent" Checked="chkConfirmAbsent_Checked" VerticalContentAlignment="Center" HorizontalAlignment="Center" Cursor="Hand"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
