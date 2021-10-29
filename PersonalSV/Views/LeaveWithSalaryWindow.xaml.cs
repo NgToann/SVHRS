@@ -26,7 +26,8 @@ namespace PersonalSV.Views
         List<EmployeeModel> employeeList;
         List<DepartmentModel> departmentList;
         bool needToProcess = false;
-        string[] reasons = new string[] { "Maternity", "Personal Transaction", "Sick", "F1", "F2", "F3", "Blocked Area", "Unknown" };
+
+        string[] reasons = new string[] { "Absent" ,"Maternity", "Personal Transaction", "Sick", "F1", "F2", "F3", "Blocked Area", "Unknown" };
         public LeaveWithSalaryWindow()
         {
             bwLoad = new BackgroundWorker();
@@ -215,6 +216,9 @@ namespace PersonalSV.Views
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
+            if (dgEmployeePerDepartment.ItemsSource == null)
+                return;
+
             double salaryRate = 0;
             if (leaveMode == LeaveMode.Special)
             {
@@ -285,7 +289,7 @@ namespace PersonalSV.Views
             if (leaveMode == LeaveMode.Special)
             {
                 var leaveWithSalaryList = e.Argument as List<LeaveWithReasonModel>;
-                bool result = true; ;
+                bool result = true;
                 foreach (var insert in leaveWithSalaryList)
                 {
                     try
@@ -367,6 +371,9 @@ namespace PersonalSV.Views
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
+            if (dgEmployeePerDepartment.ItemsSource == null)
+                return;
+
             string msgConfirmDelete = LanguageHelper.GetStringFromResource("messageConfirmDelete");
             if (MessageBox.Show(msgConfirmDelete, this.Title, MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
             {
@@ -413,9 +420,9 @@ namespace PersonalSV.Views
                     btnDelete.IsEnabled = false;
                     bwDelete.RunWorkerAsync(workerLeaveDetailList);
                 }
-                
             }
         }
+        
         private void bwDelete_DoWork(object sender, DoWorkEventArgs e)
         {
             if (leaveMode == LeaveMode.Special)

@@ -114,7 +114,7 @@ namespace PersonalSV.Views
             tblTitle.Text = string.Format("{0}: {1:dd/MM/yyyy}", lblMainHeader, toDay);
 
             var timeInSourceList = new List<SourceModel>();
-            var todayBeforeWeek = toDay.AddDays(-7);
+            var todayForAMonth = toDay.AddMonths(-1);
             if (e.Key == Key.Enter)
             {
                 // get worker by cardid
@@ -124,7 +124,7 @@ namespace PersonalSV.Views
                 {
                     try
                     {
-                        timeInSourceList = SourceController.SelectSourceByEmpCodeFromTo(empById.EmployeeCode, todayBeforeWeek, toDay.AddDays(-1)).OrderByDescending(o => o.SourceDate).ToList();
+                        timeInSourceList = SourceController.SelectSourceByEmpCodeFromTo(empById.EmployeeCode, todayForAMonth, toDay.AddDays(-1)).OrderByDescending(o => o.SourceDate).ToList();
                         workList = WorkListController.GetByEmpId(empById.EmployeeID);
                         defModel = CommonController.GetDefineProps();
                     }
@@ -158,7 +158,7 @@ namespace PersonalSV.Views
                             {
                                 CheckWorkerTestToday(testToday, empById, testBefore);
                             }
-                            else if (timeInSourceList.Count() > 0 && timeInYesterDay.Count == 0)
+                            else if (timeInSourceList.Count() > 0 && timeInYesterDay.Count == 0 && !empById.DepartmentName.Equals("CHECK IN"))
                             {
                                 if (testTodayHasRemarks.Where(w => w.TestStatus == 1).Count() > 0)
                                     CheckWorkerTestToday(testTodayHasRemarks, empById, testBefore);
