@@ -17,6 +17,13 @@ namespace PersonalSV.Controllers
                 return db.ExecuteStoreQuery<WorkListModel>("EXEC spm_SelectWorkList").ToList();
             };
         }
+        public static List<string> GetTotalWorker()
+        {
+            using (var db = new PersonalDataEntities())
+            {
+                return db.ExecuteStoreQuery<string>("EXEC spm_SelectWorkListGetWorker").ToList();
+            };
+        }
         //
         public static List<WorkListModel> GetByDate(DateTime date)
         {

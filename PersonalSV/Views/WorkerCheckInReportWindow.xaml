@@ -27,6 +27,7 @@
                     <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
@@ -36,6 +37,17 @@
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
                     <TextBlock Text="{DynamicResource ResourceKey=commonDatePickerDate}" VerticalAlignment="Bottom"/>
                     <DatePicker x:Name="dpFilterDate" Margin="5,5,0,0" VerticalContentAlignment="Center" Width="150"/>
+                </StackPanel>
+
+                <StackPanel x:Name="stkRadio" Orientation="Horizontal" Grid.Row="2" Margin="0,5,0,0" Visibility="Collapsed">
+                    <RadioButton Content="1" VerticalContentAlignment="Center"/>
+                    <RadioButton Content="1" VerticalContentAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="0,5,0,0" Visibility="Collapsed">
+                    <TextBlock Text="TimeIn >" VerticalAlignment="Center" Foreground="Red"/>
+                    <TextBox x:Name="txtTimeIn" Width="60" FontSize="18" Margin="4,0,0,0" Padding="2" TextChanged="txtTimeIn_TextChanged" BorderBrush="Blue"/>
+                    <TextBlock Text="TimeOut >" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="Red"/>
+                    <TextBox x:Name="txtTimeOut" Width="60" FontSize="18" Margin="4,0,0,0" Padding="2" TextChanged="txtTimeOut_TextChanged" BorderBrush="Blue"/>
                 </StackPanel>
                 <Button x:Name="btnPreview" Margin="5,0,0,0" Template="{DynamicResource ResourceKey=ButtonTemplate}" Grid.Column="3" Grid.RowSpan="5" Click="btnPreview_Click" IsEnabled="False">
                     <Button.Content>
@@ -129,6 +141,13 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding TestStatus}" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Remarks" SortMemberPath="Remarks" ClipboardContentBinding="{Binding Remarks}">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Remarks}" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

@@ -592,8 +592,33 @@ namespace PersonalSV.Views
             try
             {
                 WorkerLeaveDetailController.AddRecord(absentReasonInsert);
-                currentRow.Reason = absentReasonInsert.Reason;
-                dgResult.Items.Refresh();
+                MessageBox.Show("Saved absent !\nĐã thêm !", this.Title, MessageBoxButton.OK, MessageBoxImage.Information);
+                currentRow.Reason = "Absent";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.InnerException.Message.ToString(), this.Title, MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+        }
+
+        private void chkConfirmAbsent_Unchecked(object sender, RoutedEventArgs e)
+        {
+            var currentRow = dgResult.SelectedItem as DailyReportModel;
+            if (currentRow == null)
+                return;
+
+            var removeItem = new WorkerLeaveDetailModel
+            {
+                EmployeeID = currentRow.EmployeeID,
+                LeaveDate = currentRow.DateSearch,
+            };
+
+            try
+            {
+                WorkerLeaveDetailController.Delete(removeItem);
+                MessageBox.Show("Deleted !\nĐã Xóa !", this.Title, MessageBoxButton.OK, MessageBoxImage.Information);
+                currentRow.Reason = "";
             }
             catch (Exception ex)
             {

@@ -102,7 +102,7 @@ namespace PersonalSV.Views
             var empListInPlanNow = testRandomList.Where(w => dateListTotal.Contains(w.TestDate)).Select(s => s.EmployeeCode).Distinct().ToList();
             var empsListReadyToPlan = employeeList.Where(w => !empListInPlanNow.Contains(w.EmployeeCode)).ToList();
 
-            List<EmployeeModel> employeeCreatePlanList = new List<EmployeeModel>();
+            var employeeCreatePlanList = new List<EmployeeModel>();
 
             if (empsListReadyToPlan.Count() >= requestNumber)
             {
@@ -186,6 +186,8 @@ namespace PersonalSV.Views
                         TestDate = item.TestDate,
                         TestTime = item.TestTime,
                         WorkTime = item.WorkTime,
+                        TestStatus = 0,
+                        Remarks = "Random batch"
                     };
 
                     //TestRandomController.Insert(item);
@@ -360,7 +362,7 @@ namespace PersonalSV.Views
                     var workerId = (excelRange.Cells[i, 1] as Excel.Range).Value2;
                     if (workerId != null)
                     {
-                        var empByWorkerId = employeeList.FirstOrDefault(f => f.EmployeeID == workerId.ToString());
+                        var empByWorkerId = employeeOriginList.FirstOrDefault(f => f.EmployeeID == workerId.ToString());
                         
                         if (empByWorkerId == null)
                             continue;
@@ -425,17 +427,18 @@ namespace PersonalSV.Views
         }
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
-        {
+        {            
             if (dgRandomList.Items == null)
                 return;
-            if (MessageBox.Show(string.Format("Confirm Delete?"),
+
+            var dateDelete = dpTestDate.SelectedDate.Value.Date;
+            if (MessageBox.Show(string.Format("Confirm Delete Covid Test Plan on: {0:dd/MM/yyyy}?\nXác nhận xóa TestPlan ngày", dateDelete),
                                        this.Title, MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
             {
                 return;
             }
 
             var deleteItems = dgRandomList.ItemsSource.OfType<TestRandomModel>().ToList();
-
             try
             {
                 foreach (var item in deleteItems)

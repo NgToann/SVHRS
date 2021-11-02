@@ -30,7 +30,7 @@ namespace PersonalSV.Views
         string lblMainHeader;
         private PrivateDefineModel defModel;
         private List<WorkListModel> workList;
-        private List<WorkListModel> workListAll;
+        private List<string> workListAll;
         private List<WorkerCheckInModel> workerCheckInList;
 
         private LinearGradientBrush greenYellowColor = new LinearGradientBrush();
@@ -48,7 +48,7 @@ namespace PersonalSV.Views
             defModel = new PrivateDefineModel();
             employeeList = new List<EmployeeModel>();
             workList = new List<WorkListModel>();
-            workListAll = new List<WorkListModel>();
+            workListAll = new List<string>();
             workerCheckInList = new List<WorkerCheckInModel>();
 
             lblResourceNotFound     = LanguageHelper.GetStringFromResource("messageNotFound");
@@ -88,7 +88,7 @@ namespace PersonalSV.Views
             try
             {
                 employeeList = EmployeeController.GetForScan();
-                workListAll = WorkListController.Get();
+                workListAll = WorkListController.GetTotalWorker();
                 workerCheckInList = WorkerCheckInController.GetByDate(toDay);
                 defModel = CommonController.GetDefineProps();
 
@@ -113,7 +113,8 @@ namespace PersonalSV.Views
             toDay = DateTime.Now.Date;
             tblTitle.Text = string.Format("{0}: {1:dd/MM/yyyy}", lblMainHeader, toDay);
 
-            var timeInSourceList = new List<SourceModel>();
+            //var timeInSourceList = new List<SourceModel>();
+            var workerLeaveDetailList = new List<WorkerLeaveDetailModel>();
             var todayForAMonth = toDay.AddMonths(-1);
             if (e.Key == Key.Enter)
             {
@@ -124,9 +125,10 @@ namespace PersonalSV.Views
                 {
                     try
                     {
-                        timeInSourceList = SourceController.SelectSourceByEmpCodeFromTo(empById.EmployeeCode, todayForAMonth, toDay.AddDays(-1)).OrderByDescending(o => o.SourceDate).ToList();
+                        //timeInSourceList = SourceController.SelectSourceByEmpCodeFromTo(empById.EmployeeCode, todayForAMonth, toDay.AddDays(-1)).OrderByDescending(o => o.SourceDate).ToList();
                         workList = WorkListController.GetByEmpId(empById.EmployeeID);
                         defModel = CommonController.GetDefineProps();
+                        workerLeaveDetailList = WorkerLeaveDetailController.GetByEmpId(empById.EmployeeID).ToList();
                     }
                     catch (Exception ex)
                     {
@@ -144,12 +146,11 @@ namespace PersonalSV.Views
 
                         // Check Absent Yesterday
                         var yesterday = toDay.AddDays(-1);
-                        var timeInYesterDay = timeInSourceList.Where(w => w.SourceDate == yesterday).ToList();
-                        if (timeInYesterDay.Count() == 0 && yesterday.DayOfWeek == DayOfWeek.Sunday)
+                        if (yesterday.DayOfWeek == DayOfWeek.Sunday)
                         {
-                            yesterday = toDay.AddDays(-1);
-                            timeInYesterDay = timeInSourceList.Where(w => w.SourceDate == yesterday).ToList();
+                            yesterday = yesterday.AddDays(-1);
                         }
+                        var absentYesterday = workerLeaveDetailList.FirstOrDefault(f => f.LeaveDate == yesterday);
 
                         // Morning
                         if (String.Compare(currentTime, afternoonStone) < 1)
@@ -158,12 +159,12 @@ namespace PersonalSV.Views
                             {
                                 CheckWorkerTestToday(testToday, empById, testBefore);
                             }
-                            else if (timeInSourceList.Count() > 0 && timeInYesterDay.Count == 0 && !empById.DepartmentName.Equals("CHECK IN"))
+                            else if (absentYesterday != null && string.IsNullOrEmpty(absentYesterday.TimeInUpdate) && !empById.DepartmentName.Equals("CHECK IN"))
                             {
                                 if (testTodayHasRemarks.Where(w => w.TestStatus == 1).Count() > 0)
                                     CheckWorkerTestToday(testTodayHasRemarks, empById, testBefore);
                                 else
-                                    CheckWorkerAbsentYesterday(empById, timeInSourceList);
+                                    CheckWorkerAbsentYesterday(empById, absentYesterday);
                             }
                             else if (testBefore.Count() > 0)
                             {
@@ -177,12 +178,12 @@ namespace PersonalSV.Views
                             {
                                 CheckWorkerTestToday(testToday, empById, testBefore);
                             }
-                            else if (timeInSourceList.Count() > 0 && timeInYesterDay.Count == 0)
+                            else if (absentYesterday != null && string.IsNullOrEmpty(absentYesterday.TimeInUpdate) && !empById.DepartmentName.Equals("CHECK IN"))
                             {
                                 if (testTodayHasRemarks.Where(w => w.TestStatus == 1).Count() > 0)
                                     CheckWorkerTestToday(testTodayHasRemarks, empById, testBefore);
                                 else
-                                    CheckWorkerAbsentYesterday(empById, timeInSourceList);
+                                    CheckWorkerAbsentYesterday(empById, absentYesterday);
                             }
                             else if (testNextDay.Count() > 0)
                             {
@@ -224,13 +225,8 @@ namespace PersonalSV.Views
             }
         }
 
-        private void CheckWorkerAbsentYesterday(EmployeeModel empById, List<SourceModel> timeInList)
+        private void CheckWorkerAbsentYesterday(EmployeeModel empById, WorkerLeaveDetailModel absentYesterday)
         {
-            var workDayNearest = timeInList.Max(m => m.SourceDate);
-            var absentDay = workDayNearest.AddDays(1);
-            if (absentDay.DayOfWeek == DayOfWeek.Sunday)
-                absentDay = workDayNearest.AddDays(1);
-
             var insertItem = new WorkListModel
             {
                 EmployeeID = empById.EmployeeID,
@@ -238,7 +234,7 @@ namespace PersonalSV.Views
                 TestStatus = 0,
                 TestTime = "",
                 WorkTime = "",
-                Remarks = string.Format("absent {0:dd/MM/yyyy}", absentDay)
+                Remarks = string.Format("absent {0:dd/MM/yyyy}", absentYesterday.LeaveDate)
             };
             // Add to Worklist
             try
@@ -250,7 +246,7 @@ namespace PersonalSV.Views
                 MessageBox.Show(ex.InnerException.Message.ToString());
                 SetTxtDefault();
             }
-            string testTime = string.Format("KHÔNG ĐI LÀM NGÀY: {0:dd/MM/yyyy}", absentDay);
+            string testTime = string.Format("KHÔNG ĐI LÀM NGÀY: {0:dd/MM/yyyy}", absentYesterday.LeaveDate);
             string nextTestDate = String.Format("{0}",lblTestMessage);
             AddRecord(empById, null, nextTestDate, false, false, "", testTime, true);
         }
@@ -383,9 +379,9 @@ namespace PersonalSV.Views
             }
         }
         
-        private void DoStatistics(List<WorkListModel> workListAll, List<WorkerCheckInModel> workerCheckInList)
+        private void DoStatistics(List<string> workListAll, List<WorkerCheckInModel> workerCheckInList)
         {
-            var totalWorker = workListAll.Select(s => s.EmployeeID).Distinct().ToList().Count();
+            var totalWorker = workListAll.Select(s => s).Distinct().ToList().Count();
             var totalCheckedIn = workerCheckInList.Where(w => !string.IsNullOrEmpty(w.RecordTime) && w.CheckType == 0).Select(s => s.EmployeeCode).Distinct().ToList().Count();
             double percent = 0;
             if (totalWorker != 0)

@@ -52,8 +52,8 @@ namespace PersonalSV.Controllers
             using (var db = new PersonalDataEntities())
             {
                 db.CommandTimeout = 45;
-                if (db.ExecuteStoreCommand("EXEC spm_InsertTestRandom @Id, @EmployeeCode, @TestDate, @Term, @Round, @Result, @PersonConfirm, @Remark, @TimeIn, @TimeOut, @Status",
-                                                                      @Id, @EmployeeCode, @TestDate, @Term, @Round, @Result, @PersonConfirm, @Remark, @TimeIn, @TimeOut, @Status) >= 1)
+                if (db.ExecuteStoreCommand("EXEC spm_InsertTestRandom_1 @Id, @EmployeeCode, @TestDate, @Term, @Round, @Result, @PersonConfirm, @Remark, @TimeIn, @TimeOut, @Status",
+                                                                        @Id, @EmployeeCode, @TestDate, @Term, @Round, @Result, @PersonConfirm, @Remark, @TimeIn, @TimeOut, @Status) >= 1)
                     return true;
                 return false;
             }

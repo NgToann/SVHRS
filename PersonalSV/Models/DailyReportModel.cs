@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using PersonalSV.ViewModels;
+using System.ComponentModel;
 
 namespace PersonalSV.Models
 {
-    public class DailyReportModel
+    public class DailyReportModel : BaseViewModel
     {
         public DateTime DateSearch { get; set; }
         public string EmployeeName { get; set; }
@@ -20,6 +22,16 @@ namespace PersonalSV.Models
         public string LV2 { get; set; }
         public string LV3 { get; set; }
         public string Remarks { get; set; }
-        public string Reason { get; set; }
+        
+        private string _Reason;
+        public string Reason
+        {
+            get { return _Reason; }
+            set
+            {
+                _Reason = value;
+                OnPropertyChanged(new PropertyChangedEventArgs("Reason"));
+            }
+        }
     }
 }
