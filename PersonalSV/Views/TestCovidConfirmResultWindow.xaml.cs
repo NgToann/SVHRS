@@ -31,10 +31,10 @@ namespace PersonalSV.Views
         List<EmployeeModel> employeeList;
         private DateTime dateConfirm = DateTime.Now.Date;
 
-        List<TestRandomModel> testByEmpCodeToDate;
-        List<TestRandomModel> testListByDate;
-
-        private string[] results = { "Negative", "Positive", "F1", "Others" };
+        WorkListModel workerTestToday;
+        List<WorkListModel> testListByDate;
+        private PrivateDefineModel def;
+        List<string> results;
         public TestCovidConfirmResultWindow()
         {
             bwLoad = new BackgroundWorker();
@@ -53,12 +53,69 @@ namespace PersonalSV.Views
 
             employeeList = new List<EmployeeModel>();
 
-            testByEmpCodeToDate = new List<TestRandomModel>();
-            testListByDate = new List<TestRandomModel>();
+            workerTestToday = new WorkListModel();
+            testListByDate = new List<WorkListModel>();
+            def = new PrivateDefineModel();
+            results = new List<string>();
 
             InitializeComponent();
         }
 
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+            var ui = brDisplay.DataContext as ConfirmResultInfo;
+            if (ui == null)
+                return;
+
+            var updateWorkerTestToDay = workerTestToday;
+            if (bwSave.IsBusy == false && updateWorkerTestToDay != null)
+            {
+                workerTestToday.TestStatus = cboResult.SelectedIndex;
+
+                this.Cursor = Cursors.Wait;
+                btnSave.IsEnabled = false;
+                bwSave.RunWorkerAsync(updateWorkerTestToDay);
+            }
+        }
+        
+        private void BwSave_DoWork(object sender, DoWorkEventArgs e)
+        {
+            var workerTestUpdateModel = e.Argument as WorkListModel;
+            try
+            {
+                WorkListController.Insert_2(workerTestUpdateModel);
+                // F1 Case
+                if (workerTestUpdateModel.TestStatus == 3)
+                {
+                    // Create TestSchedule for next 3 days
+                    var f1NextTestDate = dateConfirm.AddDays(def.F1Round);
+                    for (double r = 1; r <= def.F1Schedule; r++)
+                    {
+                        f1NextTestDate = f1NextTestDate.AddDays(1);
+                        if (f1NextTestDate.DayOfWeek == DayOfWeek.Sunday)
+                            f1NextTestDate= f1NextTestDate.AddDays(1);
+
+                        workerTestUpdateModel.TestDate = f1NextTestDate;
+                        workerTestUpdateModel.Remarks = "F1 Schedule";
+                        workerTestUpdateModel.TestTime = "07:30";
+                        workerTestUpdateModel.TestStatus = 0;
+
+                        WorkListController.Insert_2(workerTestUpdateModel);
+                    }
+                }
+                testListByDate = WorkListController.GetByDate(dateConfirm);
+                e.Result = true;
+            }
+            catch (Exception ex)
+            {
+                e.Result = false;
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    MessageBox.Show(ex.InnerException.Message.ToString());
+                }));
+            }
+        }
+        
         private void BwSave_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if ((bool)e.Result)
@@ -71,26 +128,7 @@ namespace PersonalSV.Views
             DoCounter(testListByDate);
             ClearUI();
         }
-
-        private void BwSave_DoWork(object sender, DoWorkEventArgs e)
-        {
-            var updateTestResultModel = e.Argument as TestRandomModel;
-            try
-            {
-                TestRandomController.Update(updateTestResultModel, 3);
-                testListByDate = TestRandomController.GetByDate(dateConfirm);
-                e.Result = true;
-            }
-            catch (Exception ex)
-            {
-                e.Result = false;
-                Dispatcher.Invoke(new Action(() =>
-                {
-                    MessageBox.Show(ex.InnerException.Message.ToString());
-                }));
-            }
-        }
-
+        
         private void BwLoad_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             this.Cursor = null;
@@ -98,6 +136,13 @@ namespace PersonalSV.Views
 
             SetTxtDefault();
             btnSave.IsEnabled = true;
+            if (def.Results.Contains(","))
+            {
+                foreach (var x in def.Results.Split(','))
+                {
+                    results.Add(x.Trim());
+                }
+            }
             cboResult.ItemsSource = results;
             cboResult.SelectedItem = results[0];
 
@@ -110,7 +155,8 @@ namespace PersonalSV.Views
             try
             {
                 employeeList = EmployeeController.GetForScan();
-                testListByDate = TestRandomController.GetByDate(dateConfirm);
+                def = CommonController.GetDefineProps();
+                testListByDate = WorkListController.GetByDate(dateConfirm);
             }
             catch (Exception ex)
             {
@@ -133,43 +179,54 @@ namespace PersonalSV.Views
                 {
                     try
                     {
-                        testByEmpCodeToDate = TestRandomController.GetByEmpCode(empByCode.EmployeeCode).Where(w => w.TestDate == dateConfirm).ToList();
+                        workerTestToday = WorkListController.GetByEmpId(empByCode.EmployeeID).Where(w => w.TestDate == dateConfirm).FirstOrDefault();
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.InnerException.Message.ToString());
-                        return;   
+                        return;
                     }
-                    if (testByEmpCodeToDate.Count() == 0)
+
+                    var testDate = dateConfirm;
+                    if (workerTestToday != null)
                     {
-                        MessageBox.Show(string.Format("Worker Not Exist In Covid Test List day: {0:dd/MM/yyyy} !\nKhông có tên trong danh sách", dateConfirm), this.Title, MessageBoxButton.OK, MessageBoxImage.Information);
+                        testDate = workerTestToday.TestDate;
+                        if (workerTestToday.TestStatus == 0)
+                            cboResult.SelectedItem = results[0];
+                        else if (workerTestToday.TestStatus == 1)
+                            cboResult.SelectedItem = results[1];
+                        else if (workerTestToday.TestStatus == 2)
+                            cboResult.SelectedItem = results[2];
+                        else if (workerTestToday.TestStatus == 3)
+                            cboResult.SelectedItem = results[3];
+                        else
+                            cboResult.SelectedItem = results[4];
                     }
                     else
                     {
-                        var workerTestToday = testByEmpCodeToDate.FirstOrDefault();
-                        if (string.IsNullOrEmpty(workerTestToday.TimeIn))
+                        workerTestToday = new WorkListModel
                         {
-                            MessageBox.Show(string.Format("Worker Does Not CheckIn day: {0:dd/MM/yyyy} !\nKhông Check In ngày", dateConfirm), this.Title, MessageBoxButton.OK, MessageBoxImage.Information);
-                        }
-                        else
-                        {
-                            var confirmResultInfo = new ConfirmResultInfo
-                            {
-                                Id = workerTestToday.Id,
-                                EmployeeName = empByCode.EmployeeName,
-                                EmployeeCode = empByCode.EmployeeCode,
-                                EmployeeID = empByCode.EmployeeID,
-                                DepartmentName = empByCode.DepartmentName,
-                                TestDate = string.Format("{0:dd/MM/yyyy}", workerTestToday.TestDate),
-                                TimeIn = workerTestToday.TimeIn,
-                                UpdateResultTime = workerTestToday.UpdateResultTime
-                            };
-                            brDisplay.DataContext = confirmResultInfo;
-                            cboResult.SelectedItem = string.IsNullOrEmpty(workerTestToday.Result) == false ? workerTestToday.Result.Equals("Negative") ? results[0] : results[1] : results[0];
-                            txtConfirmBy.Text = workerTestToday.PersonConfirm;
-                            txtRemark.Text = workerTestToday.Remark;
-                        }
+                            EmployeeID = empByCode.EmployeeID,
+                            TestDate = dateConfirm,
+                            TestStatus = 0,
+                            TestTime = "",
+                            WorkTime = "",
+                            Remarks = "",
+                        };
                     }
+
+                    var confirmResultInfo = new ConfirmResultInfo
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        EmployeeName = empByCode.EmployeeName,
+                        EmployeeCode = empByCode.EmployeeCode,
+                        EmployeeID = empByCode.EmployeeID,
+                        DepartmentName = empByCode.DepartmentName,
+                        TestDate = string.Format("{0:dd/MM/yyyy}", testDate),
+                        TestTime = workerTestToday.TestTime,
+                        Remarks =  workerTestToday.Remarks
+                    };
+                    brDisplay.DataContext = confirmResultInfo;
                 }
                 else
                 {
@@ -181,29 +238,15 @@ namespace PersonalSV.Views
         private void ClearUI()
         {
             brDisplay.DataContext = null;
+            brDisplay.Background = Brushes.WhiteSmoke;
+
             cboResult.ItemsSource = results;
             cboResult.SelectedItem = results[0];
             txtConfirmBy.Text = "";
             txtRemark.Text = "";
+            txtCardId.Focus();
         }
         
-        private void btnSave_Click(object sender, RoutedEventArgs e)
-        {
-            var updateTestResultModel = testByEmpCodeToDate.FirstOrDefault();
-            if (bwSave.IsBusy == false && updateTestResultModel != null)
-            {
-                updateTestResultModel.Result = cboResult.SelectedItem.ToString();
-                updateTestResultModel.UpdateResultTime = string.Format("{0:HH:mm}", DateTime.Now);
-                updateTestResultModel.Status = "ConfirmedResult";
-                updateTestResultModel.Remark = txtRemark.Text.Trim().ToString();
-                updateTestResultModel.PersonConfirm = txtConfirmBy.Text.Trim().ToString();
-
-                this.Cursor = Cursors.Wait;
-                btnSave.IsEnabled = false;
-                bwSave.RunWorkerAsync(updateTestResultModel);
-            }
-        }
-
         private void txtCardId_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             txtCardId.SelectAll();
@@ -225,17 +268,14 @@ namespace PersonalSV.Views
             txtCardId.Focus();
         }
         
-        private void DoCounter(List<TestRandomModel> testRandomListByDate)
+        private void DoCounter(List<WorkListModel> testListToDay)
         {
             lblConfirmed.Text = "";
             lblTotalCheckIn.Text = "";
 
-            int totalCheckIn = testRandomListByDate.Where(w => !string.IsNullOrEmpty(w.TimeIn)).ToList().Count();
-            int confirmed = testRandomListByDate.Where(w => !string.IsNullOrEmpty(w.Result)).ToList().Count();
-
-            lblConfirmed.Text = string.Format("Total CheckIn: {0}", totalCheckIn);
+            int confirmed = testListToDay.Where(w => w.TestStatus != 0).ToList().Count();
+            lblConfirmed.Text = string.Format("Total: {0}", testListToDay.Count());
             lblTotalCheckIn.Text = string.Format("Confirmed: {0}", confirmed);
-
         }
 
         private class ConfirmResultInfo
@@ -246,8 +286,8 @@ namespace PersonalSV.Views
             public string EmployeeID { get; set; }
             public string DepartmentName { get; set; }
             public string TestDate { get; set; }
-            public string TimeIn { get; set; }
-            public string UpdateResultTime { get; set; }
+            public string TestTime { get; set; }
+            public string Remarks { get; set; }
         }
 
         private void dpConfirmDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
@@ -269,6 +309,7 @@ namespace PersonalSV.Views
             this.Cursor = null;
             dpConfirmDate.IsEnabled = true;
             cbChangeConfirmDate.IsChecked = false;
+            ClearUI();
         }
 
         private void BwDateChange_DoWork(object sender, DoWorkEventArgs e)
@@ -276,7 +317,7 @@ namespace PersonalSV.Views
             try
             {
                 employeeList = EmployeeController.GetForScan();
-                testListByDate = TestRandomController.GetByDate(dateConfirm);
+                testListByDate = WorkListController.GetByDate(dateConfirm);
             }
             catch (Exception ex)
             {
@@ -294,6 +335,20 @@ namespace PersonalSV.Views
         private void cbChangeConfirmDate_Unchecked(object sender, RoutedEventArgs e)
         {
             dpConfirmDate.Visibility = Visibility.Collapsed;
+        }
+
+        private void cboResult_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            brDisplay.Background = Brushes.WhiteSmoke;
+            var x = cboResult.SelectedIndex;
+            if (x == 1)
+            {
+                brDisplay.Background = Brushes.Green;
+            }
+            if (x == 2 || x == 3)
+            {
+                brDisplay.Background = Brushes.Red;
+            }
         }
     }
 }

@@ -70,7 +70,7 @@ namespace PersonalSV.Views
 
             greenYellowColor        = (LinearGradientBrush)TryFindResource("AlertGreenYellow");
 
-            lblMainHeader        = LanguageHelper.GetStringFromResource("workerCheckInTitle");
+            lblMainHeader           = LanguageHelper.GetStringFromResource("workerCheckInTitle");
 
             InitializeComponent();
         }
@@ -125,7 +125,6 @@ namespace PersonalSV.Views
                 {
                     try
                     {
-                        //timeInSourceList = SourceController.SelectSourceByEmpCodeFromTo(empById.EmployeeCode, todayForAMonth, toDay.AddDays(-1)).OrderByDescending(o => o.SourceDate).ToList();
                         workList = WorkListController.GetByEmpId(empById.EmployeeID);
                         defModel = CommonController.GetDefineProps();
                         workerLeaveDetailList = WorkerLeaveDetailController.GetByEmpId(empById.EmployeeID).ToList();
@@ -311,8 +310,47 @@ namespace PersonalSV.Views
             }
             else if (workerTestLatest.TestStatus >= 2)
             {
-                AlertScan(lblNotAllowed, Brushes.Red, empById);
-                playAlarmSound();
+                // F1 Case
+                if (workerTestLatest.TestStatus == 3)
+                {
+                    if ((toDay - workerTestLatest.TestDate).TotalDays > defModel.F1Round)
+                    {
+                        // Create TestSchedule for next 3 days
+                        var f1NextTestDate = toDay;
+                        var f1NextPlanList = new List<WorkListModel>();
+                        for (double r = 0; r < defModel.F1Schedule; r++)
+                        {
+                            f1NextTestDate = toDay.AddDays(r);
+
+                            if (f1NextTestDate.DayOfWeek == DayOfWeek.Sunday)
+                                f1NextTestDate = f1NextTestDate.AddDays(1);
+                            var f1Plan = new WorkListModel
+                            {
+                                EmployeeID = workerTestLatest.EmployeeID,
+                                TestDate = f1NextTestDate,
+                                Remarks = String.Format("F1 Schedule"),
+                                TestStatus = 0,
+                                TestTime = "07:30",
+                                WorkTime = "",
+                            };
+                            WorkListController.Insert_2(f1Plan);
+                            f1NextPlanList.Add(f1Plan);
+                        }
+                        brDisplay.Background = Brushes.Yellow;
+                        var testTime = String.Format("{0}: {1}", lblTestTime, f1NextPlanList.FirstOrDefault().TestTime);
+                        AddRecord(empById, f1NextPlanList.FirstOrDefault(), "", true, false, testTime, "", false);
+                    }
+                    else
+                    {
+                        AlertScan(lblNotAllowed, Brushes.Red, empById);
+                        playAlarmSound();
+                    }
+                }
+                else
+                {
+                    AlertScan(lblNotAllowed, Brushes.Red, empById);
+                    playAlarmSound();
+                }
             }
         }
         
