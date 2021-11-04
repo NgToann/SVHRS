@@ -171,6 +171,13 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{DynamicResource ResourceKey=createTestRemark}" SortMemberPath="Remark" ClipboardContentBinding="{Binding Remark}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Remark}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="{DynamicResource ResourceKey=createTestTerm}" SortMemberPath="Term" ClipboardContentBinding="{Binding Term}" Visibility="Collapsed">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

@@ -13,5 +13,6 @@ namespace PersonalSV.Models
         public bool IsPersonel { get; set; }
         public bool IsCovidTest { get; set; }
         public string Branch { get; set; }
+        public bool IsCovidFull { get; set; }
     }
 }

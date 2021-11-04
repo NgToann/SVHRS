@@ -187,7 +187,7 @@ namespace PersonalSV.Views
                         TestTime = item.TestTime,
                         WorkTime = item.WorkTime,
                         TestStatus = 0,
-                        Remarks = "Random batch"
+                        Remarks = item.Remark
                     };
 
                     //TestRandomController.Insert(item);
@@ -391,10 +391,12 @@ namespace PersonalSV.Views
 
                         var testTime = (excelRange.Cells[i, 6] as Excel.Range).Value2;
                         var workTime = (excelRange.Cells[i, 7] as Excel.Range).Value2;
+                        var remark = (excelRange.Cells[i, 8] as Excel.Range).Value2;
 
                         testModel.TestDate = testDate;
                         testModel.TestTime = testTime;
                         testModel.WorkTime = workTime;
+                        testModel.Remark = remark;
 
                         testRandomFromExcelList.Add(testModel);
                     }

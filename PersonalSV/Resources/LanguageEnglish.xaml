@@ -510,6 +510,4 @@
     <system:String x:Key="menuCreateNewTestTerm">Create New Test Term</system:String>
     <system:String x:Key="menuConfirmTestResult">Confirm Covid Test Result</system:String>
     
-    
-    
 </ResourceDictionary>

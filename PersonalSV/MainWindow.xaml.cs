@@ -70,6 +70,11 @@ namespace PersonalSV
                 miTestCovidRandom.Visibility = Visibility.Collapsed;
                 miCreateTestTerm.Visibility = Visibility.Collapsed;
                 miConfirmTestResult.Visibility = Visibility.Collapsed;
+                if (account.IsCovidFull)
+                {
+                    miCreateTestTerm.Visibility = Visibility.Visible;
+                    miConfirmTestResult.Visibility = Visibility.Visible;
+                }
             }
         }
 

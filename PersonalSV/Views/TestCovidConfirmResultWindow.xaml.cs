@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using PersonalSV.Controllers;
+﻿using PersonalSV.Controllers;
 using PersonalSV.Helpers;
 using PersonalSV.Models;
 using PersonalSV.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace PersonalSV.Views
 {
@@ -97,7 +92,7 @@ namespace PersonalSV.Views
 
                         workerTestUpdateModel.TestDate = f1NextTestDate;
                         workerTestUpdateModel.Remarks = "F1 Schedule";
-                        workerTestUpdateModel.TestTime = "07:30";
+                        workerTestUpdateModel.TestTime = "07:30F1";
                         workerTestUpdateModel.TestStatus = 0;
 
                         WorkListController.Insert_2(workerTestUpdateModel);
@@ -232,6 +227,7 @@ namespace PersonalSV.Views
                 {
                     MessageBox.Show("Worker Not Found !", this.Title, MessageBoxButton.OK, MessageBoxImage.Information);
                 }
+                SetTxtDefault();
             }
         }
 
@@ -273,8 +269,8 @@ namespace PersonalSV.Views
             lblConfirmed.Text = "";
             lblTotalCheckIn.Text = "";
 
-            int confirmed = testListToDay.Where(w => w.TestStatus != 0).ToList().Count();
-            lblConfirmed.Text = string.Format("Total: {0}", testListToDay.Count());
+            int confirmed = testListToDay.Where(w => w.TestStatus != 0).Select(s => s.EmployeeID).Distinct().ToList().Count();
+            lblConfirmed.Text = string.Format("Total: {0}", testListToDay.Select(s => s.EmployeeID).Distinct().ToList().Count());
             lblTotalCheckIn.Text = string.Format("Confirmed: {0}", confirmed);
         }
 
@@ -292,6 +288,13 @@ namespace PersonalSV.Views
 
         private void dpConfirmDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
+            dateConfirm = dpConfirmDate.SelectedDate.Value.Date;
+            if (dateConfirm > DateTime.Now.Date)
+            {
+                MessageBox.Show("Can not select a date grather than today. Please try again !\nKhông chọn được ngày lớn hơn ngày hôm nay !", this.Title, MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            
             if (bwDateChange.IsBusy == false && this.IsLoaded)
             {
                 dateConfirm = dpConfirmDate.SelectedDate.Value.Date;

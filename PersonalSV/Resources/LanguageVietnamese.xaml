@@ -497,4 +497,13 @@
     <system:String x:Key="menuCreateNewTestTerm">Tạo Kỳ Test Covid Mới</system:String>
     <system:String x:Key="menuConfirmTestResult">Xác Nhận Kết Quả Test Covid</system:String>
     
+    <system:String x:Key="createTestTestTime">Giờ Test</system:String>
+    <system:String x:Key="createTestWorkTime">Giờ Làm</system:String>
+    <system:String x:Key="createTestRemark">Ghi Chú</system:String>
+    <system:String x:Key="menuCreateNewImportExcel">Chọn File Excel</system:String>
+    <system:String x:Key="menuCreateNewInputWorkerId">Nhập Mã Worker</system:String>
+    <system:String x:Key="menuCreateNewAdd">Thêm</system:String>
+    
+    <system:String x:Key="workerCheckInMessageNotYetCompleteCovidTest">Chưa hoàn thành test</system:String>
+    
 </ResourceDictionary>

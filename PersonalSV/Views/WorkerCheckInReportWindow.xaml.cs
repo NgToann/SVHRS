@@ -79,7 +79,7 @@ namespace PersonalSV.Views
                                                             w.EmployeeID.Trim().ToUpper().ToString() == findWhat).FirstOrDefault();
                     if (empByFindWhat != null)
                     {
-                        workList = WorkListController.GetByEmpId(empByFindWhat.EmployeeID);
+                        workList = WorkListController.GetByEmpIdFull(empByFindWhat.EmployeeID);
                         checkInList = WorkerCheckInController.GetByEmpCode(empByFindWhat.EmployeeCode);
                         FilterData(dateSearch, true);
                     }

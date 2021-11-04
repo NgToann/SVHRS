@@ -42,6 +42,15 @@ namespace PersonalSV.Controllers
                 return db.ExecuteStoreQuery<WorkListModel>("EXEC spm_SelectWorkListByEmpId @EmployeeID", @EmployeeID).ToList();
             };
         }
+        public static List<WorkListModel> GetByEmpIdFull(string empId)
+        {
+            var @EmployeeID = new SqlParameter("@EmployeeID", empId);
+            using (var db = new PersonalDataEntities())
+            {
+                return db.ExecuteStoreQuery<WorkListModel>("EXEC spm_SelectWorkListByEmpIdFull @EmployeeID", @EmployeeID).ToList();
+            };
+        }
+        
 
         public static bool UpdateTestStatus(WorkListModel model)
         {

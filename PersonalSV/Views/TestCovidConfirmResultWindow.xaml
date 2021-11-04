@@ -75,7 +75,7 @@
                     <TextBlock Grid.Row="6" Text="{DynamicResource ResourceKey=createTestTestTime}" Padding="4"/>
                     <TextBlock Grid.Row="7" Text="{DynamicResource ResourceKey=commonEmployeeRemark}" Padding="4"/>
 
-                    <TextBlock Grid.Row="8" Margin="0,10,0,0" Text="{DynamicResource ResourceKey=confirmTestResultTestResult}" Foreground="Red" FontWeight="SemiBold" Padding="4"/>
+                    <TextBlock Grid.Row="8" Margin="0,10,0,0" Text="{DynamicResource ResourceKey=confirmTestResultTestResult}" FontWeight="SemiBold" Padding="4"/>
                     <TextBlock Grid.Row="9" VerticalAlignment="Center" Text="{DynamicResource ResourceKey=confirmTestResultConfirmedBy}" Padding="4"/>
                     <TextBlock Grid.Row="10" VerticalAlignment="Center" Text="{DynamicResource ResourceKey=confirmTestResultRemark}" Padding="4"/>
 
@@ -86,7 +86,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{Binding Id}" Padding="4" Visibility="Collapsed"/>
                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                            <CheckBox x:Name="cbChangeConfirmDate" Cursor="Hand" Content="Change Confirm Date" VerticalAlignment="Center" Foreground="Red" VerticalContentAlignment="Center" IsChecked="False" Checked="cbChangeConfirmDate_Checked" Unchecked="cbChangeConfirmDate_Unchecked"/>
+                            <CheckBox x:Name="cbChangeConfirmDate" Cursor="Hand" Content="Change Confirm Date" VerticalAlignment="Center" VerticalContentAlignment="Center" IsChecked="False" Checked="cbChangeConfirmDate_Checked" Unchecked="cbChangeConfirmDate_Unchecked"/>
                             <DatePicker x:Name="dpConfirmDate" VerticalContentAlignment="Center" Margin="10,0,0,0" Visibility="Collapsed" SelectedDateChanged="dpConfirmDate_SelectedDateChanged"/>
                         </StackPanel>
                     </Grid>

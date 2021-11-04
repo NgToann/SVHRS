@@ -151,6 +151,7 @@ namespace PersonalSV.Views
                         }
                         var absentYesterday = workerLeaveDetailList.FirstOrDefault(f => f.LeaveDate == yesterday);
 
+                        var testLatest = testBefore.OrderBy(o => o.TestDate).LastOrDefault();
                         // Morning
                         if (String.Compare(currentTime, afternoonStone) < 1)
                         {
@@ -158,7 +159,8 @@ namespace PersonalSV.Views
                             {
                                 CheckWorkerTestToday(testToday, empById, testBefore);
                             }
-                            else if (absentYesterday != null && string.IsNullOrEmpty(absentYesterday.TimeInUpdate) && !empById.DepartmentName.Equals("CHECK IN"))
+                            else if (absentYesterday != null && string.IsNullOrEmpty(absentYesterday.TimeInUpdate) && !empById.DepartmentName.Equals("CHECK IN")
+                                && testLatest != null && testLatest.TestStatus < 2 )
                             {
                                 if (testTodayHasRemarks.Where(w => w.TestStatus == 1).Count() > 0)
                                     CheckWorkerTestToday(testTodayHasRemarks, empById, testBefore);
@@ -177,7 +179,8 @@ namespace PersonalSV.Views
                             {
                                 CheckWorkerTestToday(testToday, empById, testBefore);
                             }
-                            else if (absentYesterday != null && string.IsNullOrEmpty(absentYesterday.TimeInUpdate) && !empById.DepartmentName.Equals("CHECK IN"))
+                            else if (absentYesterday != null && string.IsNullOrEmpty(absentYesterday.TimeInUpdate) && !empById.DepartmentName.Equals("CHECK IN")
+                                && testLatest != null && testLatest.TestStatus < 2)
                             {
                                 if (testTodayHasRemarks.Where(w => w.TestStatus == 1).Count() > 0)
                                     CheckWorkerTestToday(testTodayHasRemarks, empById, testBefore);
@@ -330,13 +333,12 @@ namespace PersonalSV.Views
                                 TestDate = f1NextTestDate,
                                 Remarks = String.Format("F1 Schedule"),
                                 TestStatus = 0,
-                                TestTime = "07:30",
+                                TestTime = "07:30F1",
                                 WorkTime = "",
                             };
                             WorkListController.Insert_2(f1Plan);
                             f1NextPlanList.Add(f1Plan);
                         }
-                        brDisplay.Background = Brushes.Yellow;
                         var testTime = String.Format("{0}: {1}", lblTestTime, f1NextPlanList.FirstOrDefault().TestTime);
                         AddRecord(empById, f1NextPlanList.FirstOrDefault(), "", true, false, testTime, "", false);
                     }
@@ -369,10 +371,19 @@ namespace PersonalSV.Views
             };
 
             try
-            {   
+            {
+                var foreColor = Brushes.Black;
                 if (getInQueue && !string.IsNullOrEmpty(testTime))
                 {
                     nextTestDay = lblTestMessage;
+                }
+
+                if (!string.IsNullOrEmpty(testTime) && testTime.Contains("F1"))
+                {
+                    brDisplay.Background = Brushes.Red;
+                    //testTime = testTime.Replace("F1", "");
+                    foreColor = Brushes.Yellow;
+                    playAlarmSound();
                 }
 
                 var addInfoDisplay = new CheckInInfoDisplay
@@ -383,6 +394,7 @@ namespace PersonalSV.Views
                     NextTestDate = nextTestDay,
                     WorkTime = workTime,
                     TestTime = testTime,
+                    Foreground = foreColor
                 };
 
                 if(welcome)
