@@ -363,7 +363,7 @@ namespace PersonalSV.Views
                     if (workerId != null)
                     {
                         var empByWorkerId = employeeOriginList.FirstOrDefault(f => f.EmployeeID == workerId.ToString());
-                        
+
                         if (empByWorkerId == null)
                             continue;
                         var testModel = new TestRandomModel
@@ -394,9 +394,9 @@ namespace PersonalSV.Views
                         var remark = (excelRange.Cells[i, 8] as Excel.Range).Value2;
 
                         testModel.TestDate = testDate;
-                        testModel.TestTime = testTime;
-                        testModel.WorkTime = workTime;
-                        testModel.Remark = remark;
+                        testModel.TestTime = testTime != null ? testTime.ToString() : "";
+                        testModel.WorkTime = workTime != null ? workTime.ToString() : "";
+                        testModel.Remark = remark != null ? remark.ToString() : "";
 
                         testRandomFromExcelList.Add(testModel);
                     }

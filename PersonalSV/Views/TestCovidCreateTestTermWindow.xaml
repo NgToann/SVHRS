@@ -153,7 +153,7 @@
                 <DataGridTemplateColumn Header="{DynamicResource ResourceKey=createTestTestDate}" SortMemberPath="TestDate" ClipboardContentBinding="{Binding TestDate}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding TestDate, StringFormat=dd/MM/yyyy}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding TestDate, StringFormat=MM/dd/yyyy}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

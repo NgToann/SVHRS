@@ -503,6 +503,7 @@
     <system:String x:Key="menuCreateNewImportExcel">Chọn File Excel</system:String>
     <system:String x:Key="menuCreateNewInputWorkerId">Nhập Mã Worker</system:String>
     <system:String x:Key="menuCreateNewAdd">Thêm</system:String>
+    <system:String x:Key="reportExportExcel">Export Excel</system:String>
     
     <system:String x:Key="workerCheckInMessageNotYetCompleteCovidTest">Chưa hoàn thành test</system:String>
     
