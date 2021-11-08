@@ -252,6 +252,7 @@ namespace PersonalSV.Views
                 headerList.Add("TimeIn");
                 headerList.Add("TimeOut");
                 headerList.Add("Status");
+                headerList.Add("Remarks");
 
                 for (int i = 0; i < headerList.Count(); i++)
                 {
@@ -268,6 +269,7 @@ namespace PersonalSV.Views
                     worksheet.Cells[rowIndex, 6] = item.TimeIn;
                     worksheet.Cells[rowIndex, 7] = item.TimeOut;
                     worksheet.Cells[rowIndex, 8] = item.TestStatus;
+                    worksheet.Cells[rowIndex, 9] = item.Remarks;
 
                     rowIndex++;
                     Dispatcher.Invoke(new Action(() => {
@@ -290,6 +292,9 @@ namespace PersonalSV.Views
                         {
                             workbook.SaveAs(sfd.FileName);
                             MessageBox.Show("Export Successful !", "SV-HRS Export Excel File", MessageBoxButton.OK, MessageBoxImage.Information);
+                            excel.Quit();
+                            workbook = null;
+                            excel = null;
                         }
                     }
                 }));
@@ -299,13 +304,10 @@ namespace PersonalSV.Views
                 Dispatcher.Invoke(new Action(() =>
                 {
                     MessageBox.Show(ex.Message, "SV-HRS Export Excel File", MessageBoxButton.OK, MessageBoxImage.Error);
+                    excel.Quit();
+                    workbook = null;
+                    excel = null;
                 }));
-            }
-            finally
-            {
-                excel.Quit();
-                workbook = null;
-                excel = null;
             }
         }
         private void BwExportExcel_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

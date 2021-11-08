@@ -397,7 +397,7 @@
     <system:String x:Key="workerCheckInStatisticsCurrentScan">Đã Scan</system:String>
     <system:String x:Key="workerCheckInStatisticsRatio">Tỷ Lệ</system:String>    
     
-    <system:String x:Key="workerCheckOutStatisticsCheckOutDate">Ngày kiểm tra</system:String>
+    <system:String x:Key="workerCheckOutStatisticsCheckOutDate">Ngày</system:String>
     <system:String x:Key="workerCheckOutStatisticsCheckIn">Check In</system:String>
     <system:String x:Key="workerCheckOutStatisticsCheckOut">Check Out</system:String>
     

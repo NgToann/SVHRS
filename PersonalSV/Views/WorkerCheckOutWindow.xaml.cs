@@ -70,7 +70,6 @@ namespace PersonalSV.Views
             {
                 employeeList = EmployeeController.GetForScan();
                 workerCheckInList = WorkerCheckInController.GetByDate(toDay);
-                //workList = WorkListController.Get();
                 workListByDate = WorkListController.GetByDate(toDay);
             }
             catch (Exception ex)
@@ -103,7 +102,7 @@ namespace PersonalSV.Views
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBox.Show(ex.Message, this.Title, MessageBoxButton.OK, MessageBoxImage.Error);
                         SetTxtDefault();
                         return;
                     }
@@ -159,34 +158,36 @@ namespace PersonalSV.Views
         {
             var record = new WorkerCheckInModel()
             {
-                Id = Guid.NewGuid().ToString(),
-                EmployeeCode = empById.EmployeeCode,
-                EmployeeID = empById.EmployeeID,
-                EmployeeName = empById.EmployeeName,
-                DepartmentName = empById.DepartmentName,
-                CheckType = 1,
-                CheckInDate = DateTime.Now,
-                RecordTime = String.Format("{0:HH:mm}", DateTime.Now)
+                Id              = Guid.NewGuid().ToString(),
+                EmployeeCode    = empById.EmployeeCode,
+                EmployeeID      = empById.EmployeeID,
+                EmployeeName    = empById.EmployeeName,
+                DepartmentName  = empById.DepartmentName,
+                CheckType       = 1,
+                CheckInDate     = DateTime.Now,
+                RecordTime      = String.Format("{0:HH:mm}", DateTime.Now),
+                Foreground      = Brushes.DarkGreen
             };
 
             try
             {
-                grDisplay.DataContext = record;
                 WorkerCheckInController.Insert(record);
                 workerCheckInList = WorkerCheckInController.GetByDate(toDay);
-                workListByDate = WorkListController.GetByDate(toDay);
-                var workListModelUpdate = new WorkListModel
+
+                var workerTestOKToday = new WorkListModel
                 {
                     EmployeeID = record.EmployeeID,
                     TestDate = DateTime.Now.Date,
-                    TestStatus = 1
+                    TestStatus = 1,
                 };
-                WorkListController.UpdateTestStatus(workListModelUpdate);
+                WorkListController.UpdateTestStatus(workerTestOKToday);
+
+                grDisplay.DataContext = record;
                 SetTxtDefault();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message.ToString());
+                MessageBox.Show(ex.InnerException.Message, this.Title, MessageBoxButton.OK, MessageBoxImage.Error);
                 SetTxtDefault();
             }
         }
@@ -197,7 +198,6 @@ namespace PersonalSV.Views
             var employeeByWorkListToday = employeeList.Where(w => workListIdToday.Contains(w.EmployeeID)).Select(s => s.EmployeeCode).Distinct().ToList();
             var totalCheckedIn = workerCheckInList.Where(w => !string.IsNullOrEmpty(w.RecordTime) && w.CheckType == 0
                                                             && employeeByWorkListToday.Contains(w.EmployeeCode)).Select(s => s.EmployeeCode).Distinct().ToList().Count();
-
             var totalCheckedOut = workerCheckInList.Where(w => !string.IsNullOrEmpty(w.RecordTime) && w.CheckType == 1).Select(s => s.EmployeeCode).Distinct().ToList().Count();
 
             var displayModel = new CheckOutStatistics

@@ -133,6 +133,9 @@ namespace PersonalSV.Views
                         SetTxtDefault();
                         return;
                     }
+
+                    
+
                     // Check in worklist
                     if (workList.Count() > 0)
                     {
@@ -292,6 +295,7 @@ namespace PersonalSV.Views
 
         private void CheckWorkerTestBeforeToday(List<WorkListModel> testBefore, EmployeeModel empById)
         {
+            //testBefore.RemoveAll(r => r.TestTime.Contains("F1") && r.TestStatus == 0);
             var workerTestLatest = testBefore.OrderBy(o => o.TestDate).LastOrDefault();
             if (workerTestLatest.TestStatus == 0)
             {
