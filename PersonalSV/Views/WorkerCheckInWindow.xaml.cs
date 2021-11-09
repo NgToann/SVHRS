@@ -195,7 +195,12 @@ namespace PersonalSV.Views
                                     && testLatest.TestStatus < 2)
                             {
                                 if (testTodayHasRemarks.Where(w => w.TestStatus == 1).Count() > 0)
-                                    CheckWorkerTestToday(testTodayHasRemarks, empById, testBefore);
+                                {
+                                    if (testNextDay.Count() > 0)
+                                        CheckWorkerTestNextday(testNextDay, empById);
+                                    else
+                                        CheckWorkerTestToday(testTodayHasRemarks, empById, testBefore);
+                                }    
                                 else
                                     CheckWorkerAbsentYesterday(empById, absentYesterday);
                             }
