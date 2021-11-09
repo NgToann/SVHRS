@@ -121,11 +121,13 @@ namespace PersonalSV.Views
                 var empById = employeeList.FirstOrDefault(f => f.EmployeeCode.Trim().ToUpper().ToString() == scanWhat);
                 if (empById != null)
                 {
+                    var worklistForNextDay = new List<WorkListModel>();
                     try
                     {
-                        workList = WorkListController.GetByEmpId(empById.EmployeeID);
-                        defModel = CommonController.GetDefineProps();
-                        workerLeaveDetailList = WorkerLeaveDetailController.GetByEmpId(empById.EmployeeID).ToList();
+                        workList                = WorkListController.GetByEmpId(empById.EmployeeID);
+                        worklistForNextDay      = WorkListController.GetByEmpIdFull(empById.EmployeeID);
+                        defModel                = CommonController.GetDefineProps();
+                        workerLeaveDetailList   = WorkerLeaveDetailController.GetByEmpId(empById.EmployeeID).ToList();
                     }
                     catch (Exception ex)
                     {
@@ -134,15 +136,14 @@ namespace PersonalSV.Views
                         return;
                     }
 
-                    
-
                     // Check in worklist
                     if (workList.Count() > 0)
                     {
                         var testToday           = workList.Where(w => w.TestDate == toDay && string.IsNullOrEmpty(w.Remarks)).ToList();
                         var testTodayHasRemarks = workList.Where(w => w.TestDate == toDay && !string.IsNullOrEmpty(w.Remarks)).ToList();
-                        var testNextDay         = workList.Where(w => w.TestDate > toDay).ToList();
+                        var testNextDay         = worklistForNextDay.Where(w => w.TestDate > toDay).ToList();
                         var testBefore          = workList.Where(w => w.TestDate < toDay).ToList();
+                        testBefore.RemoveAll(r => r.TestTime.Contains("F1") && r.TestStatus == 0);
 
                         // Check Absent Yesterday
                         var yesterday = toDay.AddDays(-1);
@@ -160,8 +161,11 @@ namespace PersonalSV.Views
                             {
                                 CheckWorkerTestToday(testToday, empById, testBefore);
                             }
-                            else if (absentYesterday != null && string.IsNullOrEmpty(absentYesterday.TimeInUpdate) && !empById.DepartmentName.Equals("CHECK IN")
-                                && testLatest != null && testLatest.TestStatus < 2 )
+                            else if (absentYesterday != null 
+                                    && string.IsNullOrEmpty(absentYesterday.TimeInUpdate) 
+                                    && !empById.DepartmentName.Equals("CHECK IN")
+                                    && testLatest != null 
+                                    && testLatest.TestStatus < 2)
                             {
                                 if (testTodayHasRemarks.Where(w => w.TestStatus == 1).Count() > 0)
                                     CheckWorkerTestToday(testTodayHasRemarks, empById, testBefore);
@@ -184,8 +188,11 @@ namespace PersonalSV.Views
                                 else
                                     CheckWorkerTestToday(testToday, empById, testBefore);
                             }
-                            else if (absentYesterday != null && string.IsNullOrEmpty(absentYesterday.TimeInUpdate) && !empById.DepartmentName.Equals("CHECK IN")
-                                && testLatest != null && testLatest.TestStatus < 2)
+                            else if (absentYesterday != null 
+                                    && string.IsNullOrEmpty(absentYesterday.TimeInUpdate) 
+                                    && !empById.DepartmentName.Equals("CHECK IN")
+                                    && testLatest != null 
+                                    && testLatest.TestStatus < 2)
                             {
                                 if (testTodayHasRemarks.Where(w => w.TestStatus == 1).Count() > 0)
                                     CheckWorkerTestToday(testTodayHasRemarks, empById, testBefore);
@@ -249,13 +256,24 @@ namespace PersonalSV.Views
             AddRecord(empById, nextTestDate, false, false, "", testTime, true);
         }
         
-        private void CheckWorkerTestToday(List<WorkListModel> testToday, EmployeeModel empById, List<WorkListModel> testBeforeToday)
+        private void CheckWorkerTestToday(List<WorkListModel> testToday, EmployeeModel empById, List<WorkListModel> testBefore)
         {
+            var workerTestLatest = testBefore.OrderBy(o => o.TestDate).LastOrDefault();
+            // F1 Not Enough DistanceTime
+            if (workerTestLatest != null && ( workerTestLatest.TestStatus == 2 || workerTestLatest.TestStatus == 3 ) &&
+                (toDay - workerTestLatest.TestDate).TotalDays < defModel.F1Round)
+            {
+                AlertScan(lblNotAllowed, Brushes.Red, empById);
+                playAlarmSound();
+                SetTxtDefault();
+                return;
+            }
+
             var workerTestToday = testToday.FirstOrDefault();
             if (workerTestToday.TestStatus == 0)
             {
                 string workTime = "";
-                if (testBeforeToday.Count() == 0)
+                if (testBefore.Count() == 0)
                     brDisplay.Background = Brushes.Yellow;
                 else if (string.Compare(workerTestToday.TestTime, "12:00") < 1)
                     brDisplay.Background = Brushes.Yellow;
@@ -295,7 +313,6 @@ namespace PersonalSV.Views
 
         private void CheckWorkerTestBeforeToday(List<WorkListModel> testBefore, EmployeeModel empById)
         {
-            //testBefore.RemoveAll(r => r.TestTime.Contains("F1") && r.TestStatus == 0);
             var workerTestLatest = testBefore.OrderBy(o => o.TestDate).LastOrDefault();
             if (workerTestLatest.TestStatus == 0)
             {
@@ -357,7 +374,7 @@ namespace PersonalSV.Views
         {
             testNextDay = testNextDay.OrderBy(o => o.TestDate).ToList();
             var workerTestNextDay = testNextDay.FirstOrDefault();
-            if (string.Compare(workerTestNextDay.TestTime, "12:00") < 1)
+            if (string.Compare(workerTestNextDay.TestTime, defModel.AfternoonStone) < 1)
                 brDisplay.Background = Brushes.Yellow;
             else
                 brDisplay.Background = greenYellowColor;
@@ -470,7 +487,7 @@ namespace PersonalSV.Views
             grStatistics.DataContext = displayModel;
         }
 
-        private void AlertScan(string msg, SolidColorBrush color ,EmployeeModel empById)
+        private void AlertScan(string msg, SolidColorBrush color, EmployeeModel empById)
         {
             brDisplay.Background = color;
             var alert = new CheckInInfoDisplay

@@ -98,7 +98,7 @@
                 <TextBlock Grid.Row="5" Grid.Column="2" Text="IT Saoviet" FontStyle="Italic"/>
                 <TextBlock Grid.Row="7" Text="{DynamicResource aboutWindowContact}" VerticalAlignment="Center"/>
                 <TextBox   Grid.Row="7" Grid.Column="2" Text="it01@sv.chungphi.com" FontStyle="Italic" Background="Transparent" BorderThickness="0,0,0,0"/>
-                <TextBox   Grid.Row="8" Grid.Column="2" Text="nguyentoan712@gmail.com" FontStyle="Italic" Background="Transparent" BorderThickness="0,0,0,0"/>
+                <TextBox   Grid.Row="8" Grid.Column="2" Text="nguyentoan712@outlook.com" FontStyle="Italic" Background="Transparent" BorderThickness="0,0,0,0"/>
             </Grid>
         </Grid>
     </Grid>
